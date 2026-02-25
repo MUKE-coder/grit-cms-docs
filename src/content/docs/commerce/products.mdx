@@ -1,0 +1,109 @@
+---
+title: "Products"
+description: "Create and manage digital and physical products, configure pricing tiers, variants, and list products on your public storefront."
+---
+
+## Overview
+
+Products are at the heart of your commerce module. Whether you sell digital downloads, physical goods, online courses, memberships, or services, every item you offer is managed from the **Commerce > Products** section in your admin dashboard. Each product can have multiple price tiers, variants, and images, giving you the flexibility to sell however you need to.
+
+## Creating a Product
+
+1. Navigate to **Commerce > Products** in the admin sidebar.
+2. Click the **New Product** button.
+3. Fill in the product details and save.
+
+### Product Fields
+
+Every product has the following core fields:
+
+| Field | Description |
+|---|---|
+| **Name** | The display name of your product, shown to customers on the storefront. |
+| **Slug** | A URL-friendly identifier auto-generated from the name (e.g., `premium-ebook`). You can edit it manually. |
+| **Description** | A rich text description of the product. Use this to explain what the customer will receive. |
+| **Type** | The kind of product: `digital`, `physical`, `course`, `membership`, or `service`. |
+| **Status** | Controls visibility: `active` (listed publicly), `inactive` (hidden), or `archived` (removed from listings). |
+| **Images** | One or more product images. The first image is used as the featured image on the storefront. |
+| **Downloadable Files** | For digital products, attach the files that customers will receive after purchase. |
+
+### Product Types
+
+Choose a type that matches what you are selling:
+
+- **Digital** -- Downloadable files such as ebooks, templates, or software.
+- **Physical** -- Tangible goods that require shipping.
+- **Course** -- Links to a course in the Courses module. When a customer purchases a course product, they are automatically enrolled.
+- **Membership** -- Recurring access to gated content or community spaces.
+- **Service** -- One-time or ongoing services you provide.
+
+## Product Variants
+
+Variants let you offer different options for a single product, such as size, color, or format. Each variant can have its own SKU, stock quantity, and an optional price override.
+
+### Adding Variants
+
+1. Open the product you want to edit.
+2. Scroll to the **Variants** section and click **Add Variant**.
+3. Provide a name (e.g., "Large / Blue"), an optional SKU, and any attributes.
+4. If this variant has a different price, set a **Price Override**. Otherwise it uses the product's default pricing.
+5. For physical products, set the **Stock Quantity** to track inventory.
+
+| Variant Field | Description |
+|---|---|
+| **Name** | A descriptive label for the variant, such as "Small" or "PDF Format". |
+| **SKU** | An optional stock-keeping unit code for inventory management. |
+| **Price Override** | If set, this price is used instead of the product's default price. |
+| **Stock Quantity** | The number of units available. Leave empty for unlimited stock. |
+| **Attributes** | Custom key-value pairs for additional variant details (e.g., color, weight). |
+
+## Pricing
+
+Each product can have one or more price tiers. This allows you to offer both one-time purchases and recurring subscriptions for the same product, or to provide multiple pricing options at different amounts.
+
+### One-Time Pricing
+
+A one-time price charges the customer a single amount at checkout. This is the default pricing type and is suitable for digital downloads, physical goods, and standalone services.
+
+### Recurring Pricing (Subscriptions)
+
+A recurring price charges the customer on an ongoing basis -- either monthly or yearly. Use this for memberships, ongoing services, or any product that requires a subscription.
+
+When creating a recurring price, you can also set a **Trial Period** (in days). During the trial, the customer has access to the product before their first payment is collected.
+
+### Adding a Price Tier
+
+1. Open the product and scroll to the **Pricing** section.
+2. Click **Add Price**.
+3. Set the **Amount** and **Currency** (defaults to USD).
+4. Choose the **Type**: one-time or subscription.
+5. For subscriptions, select the **Interval** (month or year) and optionally set **Trial Days**.
+6. Use **Sort Order** to control which price appears first on the storefront.
+
+You can add multiple price tiers to give customers options. For example, a membership product might offer a $9/month tier and a $89/year tier.
+
+## Product Listing on the Public Site
+
+Only products with an **active** status appear on your public storefront. Visitors can browse your product catalog, view individual product pages by slug, and see all available prices and variants.
+
+The public storefront supports pagination, so customers can browse through your catalog even if you have a large number of products. Products are displayed in reverse chronological order by default, with the newest products shown first.
+
+### Public Product Page
+
+Each active product has a public page accessible at its slug URL. The product page displays the product name, description, images, all available price tiers, and any variants. Customers can select a variant and price tier before proceeding to checkout.
+
+## Managing Products
+
+The **Commerce > Products** list shows all of your products with their name, type, status, pricing, and sales count. From this list you can:
+
+- **Search** products by name using the search bar.
+- **Filter** by status (active, inactive, archived) or by type (digital, physical, course, membership, service).
+- **Edit** a product by clicking on its name.
+- **Delete** a product you no longer sell.
+
+### Tips for Product Management
+
+- Start with an **inactive** status while you are setting up the product, then switch to **active** when it is ready.
+- Use clear, descriptive names and thorough descriptions to help customers understand what they are purchasing.
+- Add multiple images so customers can see the product from different angles or preview digital content.
+- For course products, link the product to the appropriate course so that enrollment happens automatically after purchase.

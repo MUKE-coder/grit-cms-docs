@@ -1,0 +1,110 @@
+---
+title: "Modules & Lessons"
+description: "Organize your course content into modules and create lessons with text, video, and more."
+---
+
+## Overview
+
+Courses in GritCMS are organized into **modules** and **lessons**. Modules are the top-level sections of your course -- think of them as chapters. Each module contains one or more lessons, which are the individual pieces of content your students will consume. This two-level structure keeps your course organized and makes it easy for students to track their progress.
+
+## Working with Modules
+
+### Creating a Module
+
+1. Open the course you want to add a module to from **Courses** in the admin sidebar.
+2. Click **Add Module** on the course detail page.
+3. Enter the module settings and save.
+
+### Module Settings
+
+| Setting | Description |
+|---|---|
+| **Title** | The module name as displayed to students (e.g., "Getting Started" or "Advanced Techniques"). |
+| **Description** | An optional summary of what the module covers. Shown on the course page beneath the module title. |
+| **Sort Order** | A number that determines the module's position in the course. Lower numbers appear first. |
+
+### Reordering Modules
+
+Modules are displayed in ascending sort order. To rearrange your modules, update the **Sort Order** value for each module. For example, if you want to move "Advanced Techniques" before "Intermediate Topics", give it a lower sort order number.
+
+The admin interface may support drag-and-drop reordering, which automatically updates sort order values for you.
+
+### Editing and Deleting Modules
+
+Click on a module title to open it for editing. You can update the title, description, and sort order at any time. Deleting a module will also delete all lessons within it, so use caution.
+
+## Working with Lessons
+
+### Creating a Lesson
+
+1. Open the module you want to add a lesson to.
+2. Click **Add Lesson**.
+3. Choose the lesson type, fill in the content, and save.
+
+### Lesson Settings
+
+| Setting | Description |
+|---|---|
+| **Title** | The lesson name as displayed to students. |
+| **Slug** | The URL-friendly identifier (auto-generated from the title). |
+| **Type** | The content type for this lesson (see lesson types below). |
+| **Sort Order** | The lesson's position within its module. Lower numbers appear first. |
+| **Duration (minutes)** | Optional estimated duration, shown to students so they know how long the lesson takes. |
+| **Free Preview** | When enabled, this lesson is accessible to visitors who have not enrolled, useful for giving potential students a taste of the course. |
+| **Drip Delay (days)** | Optionally restrict access to this lesson until a set number of days after enrollment. Use this to release content gradually. |
+
+### Lesson Types
+
+GritCMS supports several lesson content types:
+
+| Type | Description |
+|---|---|
+| **Text** | Written content delivered through the rich text/JSON content editor. Ideal for articles, guides, and written tutorials. |
+| **Video** | A video lesson. Set the **Video URL** field to the URL of your hosted video (e.g., YouTube, Vimeo, or a self-hosted MP4 file). |
+| **Audio** | An audio lesson for podcasts or narrated content. |
+| **PDF** | A downloadable PDF document. |
+| **Embed** | An embedded external resource such as a slide deck, interactive tool, or third-party widget. |
+
+The most commonly used types are **Text** and **Video**. Choose the type that best fits the content you are delivering.
+
+### Lesson Content Editor
+
+For text lessons, the content field accepts structured JSON content that powers the rich text editor. You can write formatted text with headings, lists, links, images, and code blocks.
+
+For video lessons, the primary content is the video URL. You can optionally add supplementary text content below the video for notes, transcripts, or additional resources.
+
+### Reordering Lessons
+
+Like modules, lessons are displayed in ascending sort order within their parent module. Update the **Sort Order** field to reposition lessons, or use drag-and-drop reordering if available in the admin interface.
+
+### Free Preview Lessons
+
+Marking a lesson as **Free Preview** allows visitors who have not enrolled in the course to access it. This is a powerful way to give potential students a preview of your teaching style and content quality before they commit to enrolling or purchasing.
+
+Typically, the first lesson of a course is set as a free preview.
+
+### Drip Content
+
+The **Drip Delay Days** setting lets you control when a lesson becomes available relative to the student's enrollment date. For example:
+
+| Lesson | Drip Delay | Available |
+|---|---|---|
+| Welcome | 0 days | Immediately on enrollment |
+| Module 1 Lesson 1 | 0 days | Immediately on enrollment |
+| Module 2 Lesson 1 | 7 days | 7 days after enrollment |
+| Module 3 Lesson 1 | 14 days | 14 days after enrollment |
+
+Drip scheduling is useful for courses that are designed to be consumed over time, such as a 4-week program where you release one module per week.
+
+## Quizzes
+
+Lessons can have **quizzes** attached to them. Quizzes let you assess student understanding with multiple choice, true/false, and short answer questions. Each quiz has a configurable passing score and optional attempt limits. See the lesson detail page to add and manage quizzes.
+
+## Tips for Organizing Your Course
+
+- **Keep modules focused.** Each module should cover a single topic or theme.
+- **Use descriptive titles.** Students should be able to tell what a module or lesson covers from the title alone.
+- **Start with an introductory module.** Provide context and set expectations before diving into the main content.
+- **Mix content types.** Combining text and video lessons keeps students engaged.
+- **Set free preview on your best content.** Show potential students the quality of your teaching to encourage enrollment.
+- **Use drip delays thoughtfully.** Releasing content over time can improve completion rates by preventing students from feeling overwhelmed.

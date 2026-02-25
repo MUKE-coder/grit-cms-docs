@@ -1,0 +1,142 @@
+---
+title: "Triggers & Actions"
+description: "Reference for all available workflow trigger events and action types in GritCMS."
+---
+
+Workflows are powered by a combination of **triggers** (the events that start a workflow) and **actions** (the steps that execute when a workflow runs). This page covers every trigger and action available in GritCMS.
+
+## Available Trigger Events
+
+Trigger events are emitted by GritCMS whenever something significant happens. Each workflow listens for exactly one trigger event. When that event fires, the workflow execution begins.
+
+### Contact Events
+
+| Event | Description |
+|---|---|
+| `contact.created` | A new contact is added to the system |
+| `contact.updated` | An existing contact's details are modified |
+| `contact.tagged` | A tag is added to a contact |
+
+### Commerce Events
+
+| Event | Description |
+|---|---|
+| `order.completed` | An order is successfully completed and paid |
+| `order.refunded` | An order is refunded |
+| `subscription.created` | A new subscription is started |
+| `subscription.cancelled` | A subscription is cancelled |
+
+### Email Events
+
+| Event | Description |
+|---|---|
+| `subscriber.added` | A new subscriber joins a mailing list |
+| `subscriber.removed` | A subscriber is removed from a list |
+
+### Course Events
+
+| Event | Description |
+|---|---|
+| `course.enrolled` | A contact enrolls in a course |
+| `course.completed` | A contact completes all lessons in a course |
+
+### Booking Events
+
+| Event | Description |
+|---|---|
+| `appointment.booked` | A new appointment is scheduled |
+| `appointment.cancelled` | An existing appointment is cancelled |
+
+### Community Events
+
+| Event | Description |
+|---|---|
+| `community.member_joined` | A new member joins a community space |
+| `community.thread_created` | A new thread is posted in a community |
+
+The trigger event payload is passed to every action in the workflow, so actions can reference data from the event (e.g., the contact's email address or the order total).
+
+## Available Actions
+
+Actions are the building blocks of a workflow. After the trigger fires, actions execute in sequence from top to bottom.
+
+### send_email
+
+Sends an email to the contact associated with the trigger event.
+
+- **Template** -- select an existing email template from your Email module
+- **Subject Override** -- optionally override the template's subject line
+- **From Name** -- optionally override the sender name
+
+The recipient is automatically determined from the trigger event's contact data.
+
+### add_tag
+
+Adds a tag to the contact associated with the trigger event.
+
+- **Tag Name** -- the tag to add (e.g., "customer", "vip", "webinar-attendee")
+
+If the contact already has the tag, this action is silently skipped.
+
+### remove_tag
+
+Removes a tag from the contact associated with the trigger event.
+
+- **Tag Name** -- the tag to remove
+
+If the contact does not have the tag, this action is silently skipped.
+
+### add_to_list
+
+Adds the contact to a mailing list in the Email module.
+
+- **List** -- select the target mailing list from a dropdown
+
+This is useful for segmenting contacts into different email lists based on their behavior.
+
+### webhook
+
+Sends an HTTP POST request to an external URL with the trigger event data as the JSON body.
+
+- **URL** -- the endpoint to call (must be HTTPS)
+- **Headers** -- optional custom headers (e.g., an authorization token)
+
+Use this to integrate with external services like Slack, Zapier, or your own APIs.
+
+### delay
+
+Pauses the workflow execution for a specified duration before continuing to the next action.
+
+- **Duration** -- the amount of time to wait
+- **Unit** -- minutes, hours, or days
+
+This is useful for spacing out actions, such as sending a follow-up email 24 hours after a purchase.
+
+## Chaining Multiple Actions
+
+A single workflow can contain as many actions as you need. Actions execute in the order they appear. For example, a "New Customer" workflow might chain these actions:
+
+1. **add_tag** -- tag the contact as "customer"
+2. **add_to_list** -- add them to the "Customers" mailing list
+3. **send_email** -- send a thank-you email immediately
+4. **delay** -- wait 3 days
+5. **send_email** -- send a feedback request email
+
+You can reorder actions by dragging them in the workflow editor. Adding a new action places it at the end by default.
+
+## Conditional Logic
+
+GritCMS workflows support basic conditional logic through the trigger event data. When configuring an action, you can set **conditions** that must be true for the action to execute:
+
+- **Field** -- a property from the trigger event payload (e.g., `order.total`, `contact.country`)
+- **Operator** -- equals, not equals, greater than, less than, contains
+- **Value** -- the value to compare against
+
+If the condition is not met, the action is skipped and the workflow continues to the next action. This allows you to build branching logic within a single workflow -- for example, only sending a VIP welcome email if the order total exceeds a certain amount.
+
+## Tips
+
+- Start with simple workflows (one trigger, one or two actions) and add complexity as needed.
+- Use the **delay** action to avoid overwhelming contacts with too many messages at once.
+- Test workflows in **draft** status by manually triggering events before setting them to **active**.
+- Monitor the execution history regularly to catch and fix any failed actions.

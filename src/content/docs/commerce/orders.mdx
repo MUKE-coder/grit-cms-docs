@@ -1,0 +1,118 @@
+---
+title: "Orders"
+description: "View and manage customer orders, track order statuses, process refunds, and monitor your sales activity."
+---
+
+## Overview
+
+Every time a customer completes a purchase, an order is created in GritCMS. The order management dashboard gives you a centralized view of all transactions, including the customer details, items purchased, totals, payment information, and current status. You can find orders under **Commerce > Orders** in the admin sidebar.
+
+## Order Dashboard
+
+The orders list displays all orders sorted by date, with the most recent orders shown first. Each row shows the order number, customer name, status, total amount, and date.
+
+### Filtering and Searching
+
+You can narrow down the orders list using the available filters:
+
+- **Status** -- Filter by a specific order status such as pending, paid, or refunded.
+- **Contact** -- View all orders from a particular customer by filtering on their contact ID.
+
+Orders are paginated, so you can browse through your order history page by page.
+
+## Order Statuses
+
+Every order moves through one or more of the following statuses:
+
+| Status | Description |
+|---|---|
+| **Pending** | The order has been created but payment has not been completed yet. This is the default status for new orders. |
+| **Paid** | Payment has been received and confirmed. The order is fulfilled -- for course products, the customer is automatically enrolled. |
+| **Failed** | The payment attempt was unsuccessful. The customer may need to retry. |
+| **Refunded** | The full order amount has been returned to the customer. |
+| **Partially Refunded** | A portion of the order amount has been refunded. |
+
+### Updating Order Status
+
+To change an order's status:
+
+1. Open the order by clicking on its order number in the list.
+2. Select the new status from the status options.
+3. Save the change.
+
+When you mark an order as **Paid**, several things happen automatically:
+
+- The **Paid At** timestamp is recorded.
+- If the order contains course products, the customer is automatically enrolled in the linked courses.
+- A **purchase completed** event is emitted, which can trigger workflow automations (e.g., sending a confirmation email).
+
+When you mark an order as **Refunded**, a **purchase refunded** event is emitted for automation triggers.
+
+## Order Details
+
+Click on any order to view its full details. The order detail view includes:
+
+### Customer Information
+
+The contact associated with the order is displayed at the top, showing their name and email. You can click through to the contact's profile for more details.
+
+### Order Items
+
+A table of all items in the order, showing:
+
+| Column | Description |
+|---|---|
+| **Product** | The name of the product purchased. |
+| **Variant** | The selected variant, if applicable. |
+| **Unit Price** | The price per unit at the time of purchase. |
+| **Quantity** | How many units were ordered. |
+| **Total** | The line item total (unit price multiplied by quantity). |
+
+### Financial Summary
+
+- **Subtotal** -- The sum of all line item totals before discounts.
+- **Discount** -- The amount deducted if a coupon was applied. The coupon details are shown alongside.
+- **Tax** -- Any tax amount applied to the order.
+- **Total** -- The final amount charged to the customer.
+
+### Payment Details
+
+If the order was processed through a payment provider, you will see the payment provider name and the external payment ID. This is useful for cross-referencing transactions in your payment provider's dashboard.
+
+## Processing Refunds
+
+To refund a paid order:
+
+1. Open the order from the orders list.
+2. Click the **Refund** button.
+3. Confirm the refund.
+
+Refunds can only be processed on orders that are currently in the **Paid** status. Once refunded, the order status changes to **Refunded** and a refund event is emitted for any connected automations.
+
+If you need to issue a partial refund, update the order status to **Partially Refunded** and handle the actual refund through your payment provider's dashboard.
+
+## Order Notifications and Automations
+
+GritCMS emits events at key points in the order lifecycle. You can use these events in the **Automation > Workflows** module to trigger actions:
+
+- **Purchase Completed** -- Fires when an order moves to the Paid status. Use this to send order confirmation emails, grant access to content, or update CRM tags.
+- **Purchase Refunded** -- Fires when an order is refunded. Use this to send refund confirmation emails or revoke access.
+
+## Viewing Order History
+
+To see all orders for a specific customer:
+
+1. Navigate to **Contacts** and open the customer's profile.
+2. The activity timeline will show their purchase history.
+3. Alternatively, use the **contact_id** filter on the orders list to see all orders from that contact.
+
+### Revenue Dashboard
+
+For a high-level overview of your sales performance, visit the **Commerce > Dashboard** section. The revenue dashboard shows:
+
+- **Total Revenue** -- Sum of all paid orders.
+- **Monthly Revenue** -- Revenue for the current month.
+- **Total Orders** -- Count of all paid orders.
+- **Active Subscriptions** -- Number of currently active subscriptions.
+- **MRR (Monthly Recurring Revenue)** -- Calculated from all active subscription prices.
+- **Recent Orders** -- The five most recent paid orders.

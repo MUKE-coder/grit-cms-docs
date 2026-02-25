@@ -1,0 +1,149 @@
+---
+title: "Commissions & Payouts"
+description: "Learn how affiliate commissions are calculated, the approval workflow, payout management, and reporting."
+---
+
+## Overview
+
+When an affiliate's referral leads to a sale, GritCMS creates a commission record. Commissions go through an approval workflow before they are paid out. This guide explains how commissions are calculated, how the approval process works, and how to manage payouts to your affiliates.
+
+## How Commissions Are Calculated
+
+When a purchase is attributed to an affiliate (via their referral cookie), GritCMS creates a commission record based on the program's settings:
+
+### Percentage Commissions
+
+If the program uses percentage-based commissions, the commission amount is calculated as:
+
+```
+commission = order_amount * (commission_rate / 100)
+```
+
+For example, if the program's commission rate is 30% and the order total is $100.00, the affiliate earns a $30.00 commission (stored as 3000 cents).
+
+### Fixed Commissions
+
+If the program uses fixed commissions, the affiliate earns the flat amount defined in the program for every qualifying sale, regardless of the order value.
+
+For example, if the fixed commission amount is $15.00 (1500 cents), the affiliate earns $15.00 whether the order is for $50 or $500.
+
+### Commission Record Fields
+
+Each commission record contains:
+
+| Field | Description |
+|---|---|
+| **Account ID** | The affiliate account that earned the commission. |
+| **Order ID** | The order that triggered the commission (if applicable). |
+| **Product ID** | The product that was purchased (if applicable). |
+| **Amount** | The commission amount in cents. |
+| **Status** | The current status: `pending`, `approved`, `paid`, or `rejected`. |
+| **Approved At** | The timestamp when the commission was approved. |
+| **Paid At** | The timestamp when the commission was included in a payout. |
+
+## Commission Statuses
+
+Commissions move through a lifecycle of statuses:
+
+| Status | Description |
+|---|---|
+| **Pending** | The commission has been created but not yet reviewed. This is the default status for new commissions. |
+| **Approved** | The commission has been reviewed and approved by an admin. The commission amount is added to the affiliate's available balance. |
+| **Paid** | The commission has been included in a completed payout to the affiliate. |
+| **Rejected** | The commission was reviewed and rejected. This might happen if the underlying order was refunded or if the referral was determined to be invalid. |
+
+### Approval Workflow
+
+1. A sale attributed to an affiliate creates a commission with **pending** status.
+2. An admin reviews the commission in **Affiliates > Commissions**.
+3. The admin either **approves** or **rejects** the commission.
+4. If approved, the commission amount is added to the affiliate's balance.
+5. If rejected, the commission is marked as rejected and no balance change occurs.
+
+To approve a commission from the admin dashboard:
+
+1. Navigate to **Affiliates > Commissions**.
+2. Find the pending commission in the list (you can filter by status).
+3. Click **Approve**.
+
+The commission status changes to **approved**, the `approved_at` timestamp is set, and the affiliate's account balance is incremented by the commission amount.
+
+To reject a commission, click **Reject** instead. The commission is marked as rejected and the affiliate's balance is not affected.
+
+## Payout Management
+
+Once an affiliate has accumulated enough approved commissions, you can issue a payout to transfer the funds.
+
+### Creating a Payout
+
+1. Navigate to **Affiliates > Payouts**.
+2. Click **New Payout**.
+3. Fill in the payout details:
+
+| Field | Description |
+|---|---|
+| **Account ID** | The affiliate account to pay. |
+| **Amount** | The payout amount in cents. Must not exceed the affiliate's current balance. |
+| **Method** | The payment method (e.g., `paypal`, `bank_transfer`, `stripe`). |
+
+4. Click **Create**. The payout is created with **pending** status.
+
+GritCMS validates that the affiliate's balance is sufficient before allowing the payout to be created. If the requested amount exceeds the balance, the payout is rejected.
+
+### Processing a Payout
+
+After you have transferred the funds to the affiliate through your payment provider:
+
+1. Open the payout from the **Affiliates > Payouts** list.
+2. Click **Process Payout**.
+3. The payout status changes to **completed** and the following updates happen automatically:
+   - The payout amount is deducted from the affiliate's balance.
+   - The payout amount is added to the affiliate's total paid.
+   - All approved commissions for that affiliate are marked as **paid** with the current timestamp.
+
+### Payout Statuses
+
+| Status | Description |
+|---|---|
+| **Pending** | The payout has been created but the funds have not yet been transferred. |
+| **Processing** | The payout is being processed (optional intermediate state). |
+| **Completed** | The funds have been transferred and the affiliate's balance has been updated. |
+
+## Minimum Payout Thresholds
+
+Each affiliate program has a **Minimum Payout Amount** setting (default: $50.00 / 5000 cents). This is the minimum balance an affiliate must have before a payout can be issued. This prevents frequent small payouts and reduces transaction overhead.
+
+You can adjust the minimum payout amount on each program's settings page. Set it to 0 if you want to allow payouts of any amount.
+
+## Commission Reports and Analytics
+
+The **Affiliates > Dashboard** in the admin panel provides a high-level overview of your affiliate program's performance:
+
+| Metric | Description |
+|---|---|
+| **Total Affiliates** | The total number of affiliate accounts across all programs. |
+| **Active Affiliates** | The number of accounts with **active** status. |
+| **Pending Commissions** | The number of commissions waiting for approval. |
+| **Total Commission Value** | The sum of all approved and paid commissions. |
+| **Total Paid Out** | The sum of all completed payouts. |
+| **Top Affiliates** | The five highest-earning affiliates ranked by total earned, with their conversion counts. |
+
+### Filtering Commissions
+
+The commissions list supports filtering by:
+
+- **Status** -- View only pending, approved, paid, or rejected commissions.
+- **Account** -- View commissions for a specific affiliate account.
+
+Use these filters to quickly find commissions that need approval or to review a specific affiliate's earning history.
+
+### Filtering Payouts
+
+The payouts list supports filtering by status, letting you see pending payouts that need processing or review completed payout history.
+
+## Best Practices
+
+- **Review commissions regularly.** Do not let pending commissions accumulate. Regular reviews keep affiliates motivated and reduce disputes.
+- **Set reasonable payout thresholds.** A threshold that is too high may discourage affiliates. A threshold that is too low increases your administrative overhead.
+- **Document your payout schedule.** Let affiliates know when to expect payouts (e.g., monthly on the 15th) so they can plan accordingly.
+- **Use rejection sparingly.** Only reject commissions for legitimate reasons such as refunded orders or fraudulent referrals. Unexplained rejections erode trust with your affiliates.

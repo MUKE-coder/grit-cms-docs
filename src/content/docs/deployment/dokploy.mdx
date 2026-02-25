@@ -1,0 +1,133 @@
+---
+title: "Dokploy Deployment"
+description: "Deploy GritCMS to a VPS using Dokploy, a self-hosted PaaS with automatic SSL and GitHub integration."
+---
+
+Dokploy is a self-hosted Platform-as-a-Service (PaaS) that simplifies deploying applications on your own VPS. It provides a web-based dashboard for managing deployments, databases, domains, and SSL certificates -- similar to platforms like Heroku or Railway, but running on infrastructure you control.
+
+This guide walks you through deploying GritCMS on a VPS using Dokploy.
+
+## Prerequisites
+
+- A **VPS** running Ubuntu 22.04 or later (e.g., from Hetzner, DigitalOcean, or Vultr)
+- Minimum **2 GB RAM** (4 GB recommended for comfortable performance)
+- A **domain name** pointed to your VPS IP address (e.g., `cms.yourdomain.com`)
+- Your GritCMS code in a **GitHub repository** (public or private)
+
+## Step 1: Install Dokploy on Your VPS
+
+SSH into your VPS and run the Dokploy installation script:
+
+```bash
+ssh root@your-server-ip
+curl -sSL https://dokploy.com/install.sh | sh
+```
+
+Once the installation completes, Dokploy's dashboard is available at `http://your-server-ip:3000`. Open it in your browser and create your admin account.
+
+## Step 2: Create a New Project
+
+In the Dokploy dashboard:
+
+1. Click **Projects** in the sidebar.
+2. Click **Create Project**.
+3. Name it "GritCMS" and save.
+
+A project in Dokploy is a logical grouping for related services. You will add three services (API, Admin, Web) and one database under this project.
+
+## Step 3: Connect Your GitHub Repository
+
+1. Go to **Settings > Git Providers** in Dokploy.
+2. Click **Add GitHub** and follow the OAuth flow to authorize Dokploy to access your repositories.
+3. Select the GritCMS repository.
+
+Once connected, Dokploy can pull your code and build Docker images directly from your repository.
+
+## Step 4: Configure Environment Variables
+
+For each service you create (API, Admin, Web), you need to set environment variables. In Dokploy, navigate to a service and click the **Environment** tab.
+
+### API Service Variables
+
+```
+DATABASE_URL=postgres://gritcms:your_secure_password@your-db-host:5432/gritcms?sslmode=disable
+JWT_SECRET=your_jwt_secret_here
+PORT=8080
+```
+
+### Admin Service Variables
+
+```
+NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+```
+
+### Web Service Variables
+
+```
+NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+```
+
+Replace the placeholder values with your actual credentials and domain.
+
+## Step 5: Set Up PostgreSQL Database
+
+1. In your GritCMS project, click **Add Service > Database**.
+2. Select **PostgreSQL** and choose version 16.
+3. Set the database name to `gritcms`, username to `gritcms`, and a strong password.
+4. Click **Deploy**.
+
+Dokploy provisions the PostgreSQL container and provides an internal connection string. Use this connection string as the `DATABASE_URL` for your API service.
+
+## Step 6: Configure Domains and SSL
+
+For each service, configure a custom domain and enable SSL:
+
+1. Navigate to the service (e.g., API).
+2. Click the **Domains** tab.
+3. Add your domain (e.g., `api.yourdomain.com` for the API, `admin.yourdomain.com` for the admin panel, `yourdomain.com` for the public site).
+4. Enable **HTTPS** -- Dokploy uses Let's Encrypt to automatically provision and renew SSL certificates.
+
+Make sure your DNS records point each subdomain to your VPS IP address:
+
+| Subdomain | Type | Value |
+|---|---|---|
+| `api.yourdomain.com` | A | Your VPS IP |
+| `admin.yourdomain.com` | A | Your VPS IP |
+| `yourdomain.com` | A | Your VPS IP |
+
+SSL certificates are issued automatically once DNS propagation is complete (usually within a few minutes).
+
+## Step 7: Deploy and Verify
+
+1. For each service (API, Admin, Web), go to the **Deployments** tab and click **Deploy**.
+2. Dokploy clones your repository, builds the Docker image using the appropriate Dockerfile, and starts the container.
+3. Monitor the build logs in real time from the Dokploy dashboard.
+
+Once all three services are deployed and running, verify:
+
+- **API:** Visit `https://api.yourdomain.com/api/health` -- you should see a health check response.
+- **Admin:** Visit `https://admin.yourdomain.com` -- the admin login page should load.
+- **Web:** Visit `https://yourdomain.com` -- the public site should render.
+
+After verifying, seed the database with defaults:
+
+```bash
+curl -X POST https://api.yourdomain.com/api/seed-defaults
+```
+
+## Updating the Deployment
+
+When you push changes to your GitHub repository, you can redeploy from the Dokploy dashboard:
+
+1. Navigate to the service you want to update.
+2. Click **Deploy** on the Deployments tab.
+3. Dokploy pulls the latest code, rebuilds the image, and restarts the container with zero downtime.
+
+You can also enable **auto-deploy** in the service settings to trigger a deployment automatically on every push to your main branch.
+
+## Tips
+
+- **Monitor resources.** Use Dokploy's built-in monitoring to track CPU and memory usage. If services are slow, consider upgrading your VPS.
+- **Database backups.** Set up scheduled backups for your PostgreSQL database through Dokploy's database management panel.
+- **Logs.** Access real-time logs for each service from the Dokploy dashboard to troubleshoot issues.
+- **Scaling.** If traffic grows, you can add more VPS instances and use Dokploy's multi-server support to distribute services.

@@ -1,0 +1,88 @@
+---
+title: "General Settings"
+description: "Configure your site name, tagline, social links, and SEO defaults from the Settings page."
+---
+
+The Settings page is your central hub for configuring how your GritCMS site presents itself to the world. Navigate to **Settings** in the admin sidebar to access it.
+
+## Settings Page Overview
+
+The Settings page is organized into four tabs:
+
+1. **General** -- core site identity (name, tagline, logo, favicon, footer)
+2. **Branding** -- visual customization (fonts and colors), covered in the [Branding](/settings/branding) page
+3. **Social** -- links to your social media profiles
+4. **SEO** -- default meta tags for search engines
+
+Each tab groups related settings together. Changes are saved per-tab -- click **Save** at the bottom of the active tab to persist your updates.
+
+## General Tab
+
+The General tab contains the foundational details of your site:
+
+### Site Name
+
+The name of your site, displayed in the header, browser tab title, and anywhere the site title is referenced. For example: "My Creator Hub" or "Acme Academy".
+
+### Tagline
+
+A short phrase that accompanies your site name. This often appears below the logo on the public site and may be used as a default meta description if no SEO description is set.
+
+### Logo URL
+
+The URL of your site's logo image. This is displayed in the site header and navigation. Upload your logo to the media library first, then paste the URL here. Recommended dimensions are 200x60 pixels or similar for a horizontal logo.
+
+### Favicon URL
+
+The URL of your favicon (the small icon shown in browser tabs). Upload a square image (32x32 or 64x64 pixels) and paste the URL here.
+
+### Footer Text
+
+Custom text displayed in the footer of your public site. This is commonly used for copyright notices, e.g., "2026 My Creator Hub. All rights reserved."
+
+## Social Tab
+
+The Social tab lets you link your social media profiles. These links are displayed in your site's header or footer, depending on your theme layout. All fields are optional -- leave a field blank to hide that social icon.
+
+### Available Social Links
+
+- **Twitter / X** -- your X (formerly Twitter) profile URL
+- **GitHub** -- your GitHub profile or organization URL
+- **LinkedIn** -- your LinkedIn profile URL
+- **YouTube** -- your YouTube channel URL
+
+Enter the full URL for each platform (e.g., `https://x.com/yourhandle`). The public site renders appropriate icons for each platform that has a URL set.
+
+## SEO Tab
+
+The SEO tab lets you set default meta tags that apply across your public site:
+
+- **Meta Title** -- the default `<title>` tag for pages that do not define their own
+- **Meta Description** -- the default meta description for search engine results
+- **OG Image URL** -- the default Open Graph image used when your site is shared on social media
+
+Individual pages (blog posts, landing pages, etc.) can override these defaults with their own SEO settings.
+
+## How Settings Are Stored
+
+Under the hood, GritCMS stores settings as **key-value pairs** in the database, grouped by category. For example:
+
+| Key | Category | Value |
+|---|---|---|
+| `site_name` | general | My Creator Hub |
+| `tagline` | general | Build your audience |
+| `twitter_url` | social | https://x.com/mycreatorhub |
+| `meta_title` | seo | My Creator Hub - Home |
+
+This key-value design means new settings can be added without database migrations. The admin panel reads and writes these values through the Settings API endpoints.
+
+## Settings and the Public Site
+
+Settings are applied to your public website through the **theme API**. When the public site (the `web` app) renders a page, it fetches the current settings from the API and uses them to populate:
+
+- The site header (logo, site name, navigation)
+- The site footer (footer text, social links)
+- HTML `<head>` tags (favicon, meta title, meta description, OG image)
+- Font and color theming (see [Branding](/settings/branding))
+
+Changes to settings take effect on the next page load -- there is no build step or deployment needed. Update a setting in the admin panel, save it, and refresh your public site to see the change.

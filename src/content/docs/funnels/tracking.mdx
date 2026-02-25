@@ -1,0 +1,98 @@
+---
+title: "Funnel Tracking & Analytics"
+description: "Understand how GritCMS tracks funnel visits and conversions, and how to use analytics to optimize your funnels."
+---
+
+## Overview
+
+GritCMS automatically tracks how visitors interact with your funnels. Every time someone views a funnel step or completes a conversion action, the system records the event. This data powers the funnel analytics dashboard, giving you the numbers you need to understand what is working and where visitors are dropping off.
+
+## Visit Tracking
+
+A **visit** is recorded each time a visitor loads a funnel step. Visit tracking happens automatically when the public funnel page renders. Each visit record captures:
+
+| Field | Description |
+|---|---|
+| **Funnel ID** | Which funnel the visit belongs to. |
+| **Step ID** | Which specific step was viewed. |
+| **Contact ID** | The contact who visited, if they are a known contact (optional). |
+| **IP Address** | The visitor's IP address, captured automatically from the request. |
+| **User Agent** | The visitor's browser and device information. |
+| **Referrer** | The URL the visitor came from before arriving at the funnel step. |
+| **Visited At** | The timestamp of the visit. |
+
+Visit tracking does not require any manual setup. As long as the funnel status is set to **active**, visits are recorded for every page view.
+
+### Tracking API Endpoint
+
+Visits are recorded through the public tracking endpoint:
+
+```
+POST /api/funnels/track/visit
+```
+
+The request body includes the `funnel_id` and `step_id`. The server automatically fills in the IP address, user agent, and timestamp. If the visitor is a known contact, their `contact_id` is included as well.
+
+## Conversion Tracking
+
+A **conversion** is recorded when a visitor completes a desired action on a funnel step, such as submitting an email opt-in form or completing a purchase. Each conversion record captures:
+
+| Field | Description |
+|---|---|
+| **Funnel ID** | Which funnel the conversion belongs to. |
+| **Step ID** | Which step the conversion happened on. |
+| **Contact ID** | The contact who converted, if known (optional). |
+| **Type** | The kind of conversion: `optin` for email signups, `purchase` for completed orders. |
+| **Value** | The monetary value of the conversion in cents (0 for non-purchase conversions). |
+| **Converted At** | The timestamp of the conversion. |
+
+### Tracking API Endpoint
+
+Conversions are recorded through the public tracking endpoint:
+
+```
+POST /api/funnels/track/conversion
+```
+
+The request body includes the `funnel_id`, `step_id`, `type`, and optionally `value` and `contact_id`. The server sets the timestamp automatically.
+
+## Funnel Analytics Dashboard
+
+The analytics dashboard is available in the admin panel for each funnel. Navigate to a funnel and click the **Analytics** tab to view the data. The dashboard provides:
+
+### Overall Metrics
+
+| Metric | Description |
+|---|---|
+| **Total Visits** | The total number of page views across all steps in the funnel. |
+| **Total Conversions** | The total number of conversion events recorded. |
+| **Total Value** | The sum of all conversion values in cents. |
+| **Overall Conversion Rate** | The percentage of visits that resulted in a conversion, calculated as `(conversions / visits) * 100`. |
+
+### Per-Step Breakdown
+
+The dashboard also shows a breakdown for each step in the funnel, ordered by their position in the sequence:
+
+| Metric | Description |
+|---|---|
+| **Step Name** | The name of the step. |
+| **Step Type** | The type of step (landing, sales, checkout, etc.). |
+| **Visits** | How many times this specific step was viewed. |
+| **Conversions** | How many conversions happened on this step. |
+| **Conversion Rate** | The step-level conversion rate as a percentage. |
+
+This per-step breakdown is the most valuable tool for identifying where visitors drop off. If your landing page has 1,000 visits but only 200 reach the checkout step, you know the sales page needs improvement.
+
+## Using Funnel Data to Optimize
+
+Here are practical ways to use your funnel analytics:
+
+- **Identify drop-off points.** Compare visit counts between consecutive steps. A large drop between two steps means the content on the earlier step is not compelling enough to move visitors forward.
+- **Test different headlines.** If your landing page has a low conversion rate, experiment with different headlines, images, or calls to action and monitor the numbers.
+- **Track revenue per funnel.** The total value metric tells you how much revenue each funnel has generated, helping you decide where to invest more effort.
+- **Compare funnel types.** If you have multiple funnels, compare their overall conversion rates to see which funnel structure works best for your audience.
+- **Monitor over time.** Check analytics regularly to spot trends. A sudden drop in conversions might indicate a broken page, an expired offer, or a change in traffic quality.
+
+## Events and Automation
+
+Every tracked visit emits a `funnel.visited` event, and every conversion emits a `funnel.converted` event. These events can be used in GritCMS workflow automations to trigger follow-up actions such as sending an email, tagging a contact, or notifying your team. See the [Workflow Automation](/automation/workflows) documentation for details on building automated sequences based on funnel events.

@@ -1,0 +1,89 @@
+---
+title: "Course Platform Overview"
+description: "Create and sell online courses with modules, lessons, and student progress tracking."
+---
+
+## Overview
+
+The GritCMS course platform lets you create, organize, and deliver online courses to your audience. Each course contains modules and lessons that students work through at their own pace. You can offer courses for free to grow your audience or set a price and sell them as digital products. Manage courses from the **Courses** section in the admin dashboard.
+
+## Creating a Course
+
+1. Navigate to **Courses** in the admin sidebar.
+2. Click **New Course**.
+3. Fill in the course details and save.
+
+### Course Settings
+
+| Setting | Description |
+|---|---|
+| **Title** | The name of your course as it appears to students and on your public site. |
+| **Slug** | The URL-friendly identifier for the course (auto-generated from the title, but editable). The course will be accessible at `/courses/{slug}`. |
+| **Description** | A full description of the course content, target audience, and what students will learn. Displayed on the course landing page. |
+| **Short Description** | A brief summary used in course listings and cards. Keep it to one or two sentences. |
+| **Thumbnail** | A featured image for the course. Displayed on the course listing page and as a preview when shared on social media. |
+| **Instructor** | Optionally assign an instructor to the course. The instructor's name is displayed on the course page. |
+
+### Course Status
+
+Courses have three statuses that control visibility:
+
+| Status | Behavior |
+|---|---|
+| **Draft** | The course is being built and is not visible on the public site. Only admins can see it. |
+| **Published** | The course is live and visible to visitors. Students can enroll if they meet the access requirements. |
+| **Archived** | The course is hidden from new visitors but existing enrolled students can still access their content. |
+
+Set your course to **Draft** while you are adding modules and lessons. Once everything is ready, change the status to **Published** to make it available.
+
+### Access Type
+
+The access type determines who can enroll in your course:
+
+| Access Type | Description |
+|---|---|
+| **Free** | Anyone can enroll without payment. Great for lead magnets or introductory content. |
+| **Paid** | Students must purchase the course before they can access the content. Set the **Price** and **Currency** fields to define the cost. |
+| **Membership** | Access is granted through a membership or subscription plan rather than a one-time purchase. |
+
+For paid courses, you can link the course to a product in the Commerce module. When a customer purchases that product, they are automatically enrolled in the course.
+
+## Course Listing on Your Public Site
+
+Published courses appear on your site's course catalog page. Each course displays its title, short description, thumbnail, price (if paid), and enrollment count. Visitors can click into a course to see the full description, module outline, and an enroll button.
+
+Free courses show an **Enroll** button that grants immediate access. Paid courses show the price and a **Buy** button that directs visitors to checkout.
+
+## Sample Course
+
+When you seed defaults on a fresh GritCMS installation (via the admin settings), a sample course called **"Getting Started with GritCMS"** is created automatically. This sample course includes:
+
+- **Introduction** module with "Welcome to the Course" and "How to Navigate" lessons.
+- **Core Concepts** module with "Understanding Modules", "Creating Lessons", and "Adding Video Content" lessons.
+- **Wrap Up** module with a "Summary & Next Steps" lesson.
+
+The sample course is created in **Draft** status with **Free** access so it is not visible to the public. You can edit it, use it as a reference while building your own courses, or delete it when you no longer need it.
+
+## Course Structure at a Glance
+
+A course is organized in a hierarchy:
+
+```
+Course
+  Module 1
+    Lesson 1
+    Lesson 2
+  Module 2
+    Lesson 3
+    Lesson 4
+    Lesson 5
+  Module 3
+    Lesson 6
+```
+
+Modules group related lessons together and give your course a clear structure. Students progress through modules in order, completing each lesson as they go. See the [Modules & Lessons](/docs/courses/modules-lessons) page for details on creating and organizing content.
+
+## Next Steps
+
+- **[Modules & Lessons](/docs/courses/modules-lessons)** -- Learn how to structure your course content with modules and different lesson types.
+- **[Students](/docs/courses/students)** -- Manage enrollments, track student progress, and issue completion certificates.

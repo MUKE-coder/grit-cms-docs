@@ -1,0 +1,105 @@
+---
+title: "Affiliate Links"
+description: "Understand how affiliates generate referral links, how click tracking works, and how referrals are attributed."
+---
+
+## Overview
+
+Affiliate links are the mechanism that connects a visitor's purchase back to the affiliate who referred them. Each affiliate account has a unique referral code, and links built with that code allow GritCMS to track clicks, attribute sales, and calculate commissions. This guide covers how referral links work, how clicks are tracked, and how affiliates manage their links.
+
+## How Affiliates Generate Referral Links
+
+Once an affiliate account is approved and has **active** status, referral links can be created. Links are managed from the affiliate's account detail page in the admin dashboard.
+
+To create a referral link:
+
+1. Navigate to **Affiliates > Accounts** and open the affiliate's account.
+2. Click **Add Link**.
+3. Provide the following:
+
+| Field | Description |
+|---|---|
+| **URL** | The destination URL the visitor should land on after clicking the link. This is typically a product page, funnel, or landing page on your site (e.g., `https://yoursite.com/products/online-course`). |
+| **Slug** | An optional custom slug for the link. If provided, it can be used to create friendlier referral URLs. |
+
+4. Click **Create**. The link is saved and associated with the affiliate's account.
+
+An affiliate can have multiple links, each pointing to a different destination. This is useful when you want to track which pages or products an affiliate is promoting most effectively.
+
+## Referral Link Format
+
+When a visitor clicks a referral link, they are routed through the GritCMS referral tracking endpoint:
+
+```
+GET /api/ref/{referral-code}
+```
+
+The `{referral-code}` is the unique 12-character hex code assigned to the affiliate's account (e.g., `a1b2c3d4e5f6`). This endpoint:
+
+1. Validates that the referral code belongs to an active affiliate account.
+2. Records a click by incrementing the click counter on the affiliate's links.
+3. Emits an `affiliate.referral` event with the account ID and referral code.
+4. Returns the referral data so the frontend can set a tracking cookie and redirect the visitor to the destination page.
+
+A typical referral URL shared by an affiliate looks like:
+
+```
+https://yoursite.com/ref/a1b2c3d4e5f6
+```
+
+## Click Tracking and Attribution
+
+### How Clicks Are Tracked
+
+Every time a visitor accesses the `/api/ref/{code}` endpoint, GritCMS increments the `clicks` counter on the affiliate's links. This gives you a running total of how many times each affiliate's referral links have been clicked.
+
+Click tracking happens automatically and requires no additional configuration. The system captures every valid click against an active affiliate account.
+
+### Cookie-Based Attribution
+
+When a visitor clicks a referral link, a tracking cookie is set in their browser. This cookie contains the affiliate's referral code and persists for the number of days configured in the program's **Cookie Duration** setting (default: 30 days).
+
+If the visitor makes a purchase within the cookie window, the sale is attributed to the affiliate and a commission is generated. This means the affiliate gets credit even if the visitor does not buy immediately -- as long as they return and purchase before the cookie expires.
+
+### Attribution Rules
+
+- **First click wins.** The referral is attributed to the affiliate whose link the visitor clicked first.
+- **Cookie expiration.** If the cookie duration passes without a purchase, the referral attribution expires and no commission is generated.
+- **Active accounts only.** Referral tracking only works for accounts with **active** status. Clicks on links belonging to pending or suspended accounts are not tracked.
+
+## Link Performance Metrics
+
+Each affiliate link tracks two metrics:
+
+| Metric | Description |
+|---|---|
+| **Clicks** | The total number of times the referral link has been accessed. |
+| **Conversions** | The total number of purchases attributed to this link. |
+
+These numbers let you and your affiliates see which links are driving the most traffic and which are converting into sales. A link with many clicks but few conversions might need a better destination page. A link with a high conversion rate is performing well.
+
+## Dashboard for Affiliates
+
+The affiliate account detail page in the admin dashboard serves as the affiliate's performance dashboard. It shows:
+
+- All referral links with their click and conversion counts.
+- The account's current balance, total earned, and total paid.
+- Recent commission history showing individual commission records.
+
+If you are building a self-service affiliate portal on your frontend, you can use the affiliate account API to display this same data to your affiliates directly.
+
+## Managing Links
+
+### Deleting a Link
+
+To remove a referral link, open the affiliate's account and click the delete action next to the link. Deleting a link removes it from the system. Historical click and conversion data associated with the link is lost. Commissions that were already generated from the link are not affected.
+
+### Best Practices
+
+- **Create separate links for different campaigns.** This lets affiliates and admins see which campaigns perform best.
+- **Use descriptive slugs.** A slug like `summer-sale` is easier to remember than a random code.
+- **Monitor click-to-conversion ratios.** Links with high clicks but low conversions may indicate that the landing page needs improvement or the audience is not well-targeted.
+
+## Next Steps
+
+When an affiliate's referral link leads to a sale, a commission is generated. See the [Commissions & Payouts](/affiliates/commissions) guide to learn how commissions are calculated, approved, and paid out.

@@ -1,0 +1,74 @@
+---
+title: "Booking Calendars"
+description: "Create and manage booking calendars that organize your event types, availability, and appointments."
+---
+
+## Overview
+
+Calendars are the foundation of the GritCMS booking system. A calendar is a container that groups related event types and their availability windows. For example, you might create one calendar for coaching sessions and another for sales calls. Each calendar has its own timezone, status, and set of availability rules.
+
+You manage calendars from the **Booking > Calendars** section in the admin dashboard.
+
+## Creating a Calendar
+
+1. Navigate to **Booking > Calendars** in the admin sidebar.
+2. Click **New Calendar**.
+3. Fill in the calendar details:
+
+| Field | Description |
+|---|---|
+| **Name** | A descriptive name for the calendar (e.g., "Coaching Sessions" or "Sales Calls"). |
+| **Slug** | A URL-friendly identifier auto-generated from the name. Must be unique across all calendars. |
+| **Description** | An optional note about what this calendar is used for. |
+| **Timezone** | The timezone used for all availability windows and appointment times on this calendar. Defaults to `UTC` if not specified. Common values include `America/New_York`, `Europe/London`, and `Asia/Tokyo`. |
+
+4. Click **Create**. The calendar is created with an **active** status.
+
+The slug is used internally and in API requests. If a name conflicts with an existing slug, GritCMS appends a number to keep it unique (e.g., `coaching-sessions-2`).
+
+## Calendar Settings
+
+### Timezone
+
+The timezone setting is important because it determines how availability windows are interpreted. If you set your calendar to `America/New_York`, then an availability window of 09:00 to 17:00 means 9 AM to 5 PM Eastern Time. Visitors booking through the public booking page will see available time slots converted to their local time.
+
+Choose the timezone that matches the location where you will be hosting the sessions or meetings.
+
+### Status
+
+Calendars have two statuses:
+
+- **Active** -- The calendar is operational. Event types under this calendar can be booked through public booking pages. This is the default status when you create a calendar.
+- **Inactive** -- The calendar is paused. Public booking pages for event types under this calendar will return a "Calendar is inactive" message. Existing appointments are not affected.
+
+To temporarily stop accepting new bookings, set the calendar status to **inactive**. Switch it back to **active** when you are ready to resume.
+
+## Managing Multiple Calendars
+
+You can create as many calendars as you need. Common use cases for multiple calendars include:
+
+- **Separate calendars by service type.** One calendar for free consultations, another for paid coaching sessions.
+- **Separate calendars by team member.** If multiple people handle bookings, each person can have their own calendar with their own availability.
+- **Separate calendars by timezone.** If you serve clients in different regions, you can create calendars with different timezone settings.
+
+The calendar list in the admin dashboard shows all your calendars along with their event types and availability windows. You can edit or delete any calendar from this list.
+
+## Calendar Public URL
+
+Each event type under a calendar has its own public booking URL based on the event type's slug:
+
+```
+/api/book/{event-type-slug}
+```
+
+The calendar itself does not have a standalone public URL -- visitors book through specific event types. However, the calendar's timezone and availability rules apply to all event types within it. When a visitor requests available time slots, the system uses the calendar's availability windows and timezone to calculate which slots are open.
+
+## Editing and Deleting Calendars
+
+To edit a calendar, click on it in the calendar list and update any fields. Changes to the timezone will affect how future availability is calculated but will not modify existing appointments.
+
+To delete a calendar, click the delete action in the calendar list. Deleting a calendar also removes its associated event types and availability records. Existing appointments are preserved but will no longer be linked to an event type.
+
+## Next Steps
+
+After creating a calendar, you need to define what kinds of sessions you offer. See the [Event Types](/booking/event-types) guide to learn how to create event types with specific durations, availability windows, and buffer times.

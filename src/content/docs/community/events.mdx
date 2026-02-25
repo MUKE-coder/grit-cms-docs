@@ -1,0 +1,113 @@
+---
+title: "Community Events"
+description: "Create and manage community events, handle RSVPs and attendee tracking, and run both virtual and in-person gatherings."
+---
+
+## Overview
+
+Community events bring your members together around a shared experience, whether it is a live webinar, a workshop, a meetup, or an in-person gathering. You can create events tied to specific spaces, manage RSVPs, track attendees, and update event statuses as they progress. Events are managed from the **Community > Events** section in the admin dashboard.
+
+## Creating an Event
+
+1. Navigate to **Community > Events** in the admin sidebar.
+2. Click **New Event**.
+3. Fill in the event details and save.
+
+### Event Fields
+
+| Field | Description |
+|---|---|
+| **Title** | The name of the event displayed to members. |
+| **Description** | A detailed description of the event, including what attendees can expect, the agenda, or any preparation required. |
+| **Space** | The community space this event belongs to. Events are always associated with a space. |
+| **Type** | Whether the event is `virtual` (online) or `in_person` (physical location). |
+| **Location** | The physical address for in-person events. |
+| **URL** | The meeting link or streaming URL for virtual events (e.g., a Zoom or Google Meet link). |
+| **Start At** | The date and time when the event begins. |
+| **End At** | The date and time when the event ends. |
+| **Max Attendees** | The maximum number of people who can register. Set to `0` for unlimited capacity. |
+| **Status** | The current state of the event: `upcoming`, `live`, `completed`, or `cancelled`. |
+
+### Event Types
+
+- **Virtual** -- Online events such as webinars, live streams, or virtual workshops. Provide a **URL** so attendees know where to join.
+- **In Person** -- Physical events such as meetups, conferences, or workshops. Provide a **Location** with the venue address.
+
+## Event Statuses
+
+Events progress through the following statuses:
+
+| Status | Description |
+|---|---|
+| **Upcoming** | The event has been created and is scheduled for a future date. This is the default status. Members can register to attend. |
+| **Live** | The event is currently happening. Update to this status when the event begins. |
+| **Completed** | The event has ended. No new registrations are accepted. |
+| **Cancelled** | The event has been called off. Registered attendees should be notified. |
+
+Update the event status manually as the event progresses from upcoming to live to completed.
+
+## Attendee Management
+
+### Registering Attendees (RSVP)
+
+Members can register for an event by RSVPing. Each registration creates an attendee record linked to the event and the member's contact profile.
+
+To register an attendee from the admin dashboard:
+
+1. Open the event.
+2. Click **Add Attendee** or **Register**.
+3. Select the contact from your CRM.
+4. The attendee is added with a status of **Registered**.
+
+If a maximum attendee limit is set on the event, the system enforces the cap. Once the limit is reached, no additional registrations can be accepted.
+
+### Attendee Statuses
+
+Each attendee has one of the following statuses:
+
+| Status | Description |
+|---|---|
+| **Registered** | The attendee has RSVPd and is confirmed. |
+| **Attended** | The attendee was present at the event. Update this status after the event concludes. |
+| **Cancelled** | The attendee cancelled their registration. |
+
+### Cancelling a Registration
+
+To cancel an attendee's registration:
+
+1. Open the event and go to the attendees list.
+2. Find the attendee and click **Cancel Registration**.
+3. Their status changes to **Cancelled**, freeing up a spot if the event has a maximum attendee limit.
+
+## Viewing Events
+
+### Admin View
+
+The **Community > Events** admin list shows all events with their title, space, date, status, and attendee count. You can filter events by:
+
+- **Space** -- Show only events belonging to a particular space.
+- **Status** -- Filter by upcoming, live, completed, or cancelled events.
+
+Events are sorted by start date in ascending order, so the soonest events appear at the top.
+
+### Event Detail View
+
+Click on an event to see its full details, including the description, timing, location or URL, and a complete list of registered attendees with their contact information and registration status.
+
+## Managing Events
+
+From the events list you can:
+
+- **Edit** an event to update its title, description, dates, location, or capacity.
+- **Update Status** to reflect the event's current state (upcoming, live, completed, cancelled).
+- **View Attendees** to see who has registered and manage their statuses.
+- **Delete** an event to permanently remove it from the system.
+
+### Tips for Running Successful Community Events
+
+- Create events well in advance and share them in the associated space so members have time to plan.
+- For virtual events, include the meeting URL in the event details so attendees can join easily when the time comes.
+- Set a **Max Attendees** limit for smaller, more intimate events like workshops to ensure quality interaction.
+- Update the event status to **Live** when it starts and **Completed** when it ends to keep your event history accurate.
+- After an event, update attendee statuses to **Attended** for those who were present. This data helps you understand engagement levels.
+- Consider creating a dedicated space for event-related discussions so attendees can connect before and after the event.

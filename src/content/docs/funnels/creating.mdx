@@ -1,0 +1,67 @@
+---
+title: "Creating Funnels"
+description: "Learn what sales funnels are, the different funnel types available in GritCMS, and how to create your first funnel."
+---
+
+## What Is a Sales Funnel
+
+A sales funnel is a series of pages that guide a visitor toward a specific goal -- signing up for a newsletter, purchasing a product, registering for a webinar, or joining a launch sequence. Each page in the funnel is called a "step," and visitors move through the steps in order. Funnels let you design a focused, distraction-free path that converts visitors more effectively than a general-purpose website.
+
+In GritCMS, funnels are managed from the **Funnels** section of the admin dashboard. Each funnel has its own set of steps, a unique public URL based on its slug, and built-in analytics so you can measure performance.
+
+## Funnel Types
+
+When you create a funnel, you choose one of four types. The type determines the default structure and the kind of conversion the funnel is optimized for.
+
+| Type | Purpose | Typical Steps |
+|---|---|---|
+| **Opt-in** | Collect email subscribers | Landing page, Thank you page |
+| **Sales** | Sell a product or service | Landing page, Sales page, Checkout, Thank you |
+| **Webinar** | Drive webinar registrations | Landing page, Registration confirmation, Thank you |
+| **Launch** | Build anticipation for a product launch | Pre-launch landing, Launch sales page, Checkout, Thank you |
+
+You can always add, remove, or rearrange steps after creating the funnel, regardless of which type you choose.
+
+## Creating a Funnel
+
+1. Navigate to **Funnels** in the admin sidebar.
+2. Click **New Funnel**.
+3. Fill in the funnel details:
+
+| Field | Description |
+|---|---|
+| **Name** | A descriptive name shown in the admin dashboard (e.g., "Summer Course Launch"). |
+| **Slug** | The URL-friendly identifier. Auto-generated from the name, but you can customize it. The public URL will be `/funnels/{slug}`. |
+| **Description** | An optional internal note about the funnel's purpose. |
+| **Type** | One of `optin`, `sales`, `webinar`, or `launch`. |
+
+4. Click **Create**. The funnel is saved in **draft** status.
+
+The slug must be unique across all your funnels. If you enter a name that conflicts with an existing slug, GritCMS will automatically append a number to make it unique (e.g., `summer-course-launch-2`).
+
+## Pre-built Funnel Templates
+
+GritCMS seeds a set of starter funnel templates during initial setup. These templates give you a working funnel structure for each type so you do not have to start from scratch. When you create a new funnel, you can select a template and GritCMS will pre-populate the funnel with the appropriate steps and default content.
+
+Templates are available for:
+
+- **Simple Opt-in** -- A two-step funnel with a landing page and a thank-you page.
+- **Product Sales** -- A four-step funnel: landing, sales copy, checkout, and thank-you.
+- **Webinar Registration** -- A three-step funnel for webinar signups.
+- **Product Launch** -- A multi-step funnel with pre-launch, sales, checkout, and confirmation pages.
+
+You can customize every aspect of a template after creating the funnel.
+
+## Funnel Status
+
+Every funnel has a status that controls whether it is accessible to the public.
+
+- **Draft** -- The funnel is only visible in the admin dashboard. Visitors cannot access it through its public URL. Use this status while you are building and testing the funnel.
+- **Active** -- The funnel is live. Visitors can access it at `/funnels/{slug}` and navigate through its steps. Visits and conversions are tracked automatically.
+- **Archived** -- The funnel is no longer active and is hidden from the main funnel list. Use this to retire old funnels without deleting them.
+
+To change a funnel's status, open the funnel in the admin dashboard and update the status field. You can switch between draft and active at any time. When you are ready to go live, set the status to **active** and share the funnel URL with your audience.
+
+## Next Steps
+
+Once your funnel is created, you will want to add steps to define the visitor journey. See the [Steps](/funnels/steps) guide to learn about step types and how to build out your funnel flow.

@@ -1,0 +1,165 @@
+---
+title: "Installation"
+description: "Set up GritCMS locally for development in under 10 minutes."
+---
+
+## Prerequisites
+
+Before you begin, make sure you have the following installed on your machine:
+
+| Tool | Minimum Version | Purpose |
+|------|----------------|---------|
+| **Go** | 1.21+ | Backend API server |
+| **Node.js** | 18+ | Frontend applications |
+| **pnpm** | 10+ | Package manager for the monorepo |
+| **Docker** (optional) | 20+ | PostgreSQL, Redis, MinIO, MailHog |
+| **Air** (optional) | latest | Go live-reload for development |
+
+If you have Docker installed, you do not need to install PostgreSQL, Redis, or MinIO separately -- the included `docker-compose.yml` handles everything.
+
+## Step 1: Clone the Repository
+
+```bash
+git clone https://github.com/MUKE-coder/gritcms.git
+cd gritcms
+```
+
+## Step 2: Install Frontend Dependencies
+
+From the monorepo root, install all JavaScript dependencies for the admin, web, and shared packages:
+
+```bash
+pnpm install
+```
+
+This uses pnpm workspaces to install dependencies for all three apps and the shared types package in a single command.
+
+## Step 3: Start Infrastructure Services
+
+Use Docker Compose to spin up PostgreSQL, Redis, MinIO (file storage), and MailHog (email testing):
+
+```bash
+docker compose up -d
+```
+
+This starts the following services:
+
+| Service | Port | Credentials |
+|---------|------|-------------|
+| **PostgreSQL** | 5432 | `grit` / `grit` / db: `gritcms` |
+| **Redis** | 6379 | No auth |
+| **MinIO** (S3 storage) | 9000 (API), 9001 (Console) | `minioadmin` / `minioadmin` |
+| **MailHog** (email) | 1025 (SMTP), 8025 (UI) | None |
+
+## Step 4: Configure Environment Variables
+
+Copy the example environment file and adjust as needed:
+
+```bash
+cp .env.example .env
+```
+
+The defaults work out of the box with the Docker Compose services. The key variables to verify:
+
+```env
+APP_PORT=8080
+DATABASE_URL=postgres://grit:grit@localhost:5432/gritcms?sslmode=disable
+REDIS_URL=redis://localhost:6379
+STORAGE_DRIVER=minio
+JWT_SECRET=change-me-in-production
+```
+
+See the [Environment Variables](/configuration/environment) reference for the full list.
+
+## Step 5: Start the Backend API
+
+Navigate to the API directory and start the Go server:
+
+```bash
+cd apps/api && go run ./cmd/server
+```
+
+Or, if you have [Air](https://github.com/air-verse/air) installed for live-reload:
+
+```bash
+pnpm dev:api
+```
+
+The API server starts on **port 8080** by default. You will see output confirming database connection, Redis, storage, and available dashboards:
+
+```
+Server starting on port 8080
+GORM Studio available at http://localhost:8080/studio
+API Documentation at http://localhost:8080/docs
+```
+
+GORM auto-migrates all tables on startup -- no manual migration step is needed.
+
+## Step 6: Start the Admin Dashboard
+
+In a new terminal, from the monorepo root:
+
+```bash
+pnpm --filter admin dev
+```
+
+The admin dashboard starts on **http://localhost:3000**. This is where you manage all content, products, contacts, and settings.
+
+## Step 7: Start the Public Website
+
+In another terminal, from the monorepo root:
+
+```bash
+pnpm --filter web dev
+```
+
+The public website starts on **http://localhost:3001**. This is the visitor-facing frontend that renders your pages, blog, courses, and storefront.
+
+## All-in-One Development
+
+You can also start all three frontend services simultaneously using Turborepo:
+
+```bash
+pnpm dev
+```
+
+This runs the admin and web dev servers in parallel. You still need to start the Go API separately (Step 5).
+
+## Verify the Setup
+
+Once all services are running, verify everything is working:
+
+| URL | What to expect |
+|-----|----------------|
+| `http://localhost:8080/docs` | API documentation page |
+| `http://localhost:8080/studio` | GORM Studio database browser |
+| `http://localhost:3000` | Admin dashboard (login/setup page) |
+| `http://localhost:3001` | Public website |
+| `http://localhost:8025` | MailHog email testing UI |
+| `http://localhost:9001` | MinIO console (file storage) |
+
+## Troubleshooting
+
+### Port already in use
+
+If port 8080, 3000, or 3001 is already taken, change the port in your `.env` file (`APP_PORT`) or in the respective `next.config` files for the frontend apps.
+
+### Database connection refused
+
+Make sure the Docker containers are running: `docker compose ps`. If PostgreSQL is not healthy, check logs with `docker compose logs postgres`.
+
+### pnpm install fails
+
+Ensure you are using pnpm 10 or later. Check your version with `pnpm --version`. If you need to upgrade: `npm install -g pnpm@latest`.
+
+### Go module download errors
+
+Run `go mod download` inside the `apps/api` directory to pre-fetch all Go dependencies. If you are behind a proxy, set `GOPROXY=https://proxy.golang.org,direct`.
+
+### Redis connection warning
+
+Redis is optional for development. If Redis is not running, the API will log a warning and disable caching and background jobs. Everything else works normally.
+
+### MinIO bucket not found
+
+On first startup, you may need to create the upload bucket manually via the MinIO Console at `http://localhost:9001`. Create a bucket named `gritcms-uploads` (or whatever `MINIO_BUCKET` is set to in your `.env`).

@@ -1,0 +1,117 @@
+---
+title: "Blog Posts"
+description: "Write, schedule, and publish blog posts with rich text editing, categories, tags, and built-in SEO features."
+---
+
+## Overview
+
+The blog is where you publish articles, tutorials, updates, and other time-based content. Each post gets its own page on your site and appears in your blog feed. Blog posts also automatically generate RSS and structured data for search engines. You manage all posts from **Website > Blog Posts** in the admin dashboard.
+
+## Creating a New Blog Post
+
+1. Navigate to **Website > Blog Posts** in the admin sidebar.
+2. Click the **New Post** button.
+3. Write your content in the rich text editor and configure the post settings.
+
+### Using the Rich Text Editor
+
+The blog post editor is the same rich text editor used for pages. It includes a formatting toolbar with support for:
+
+- **Bold** and **Italic** text
+- **Headings** (H1, H2, H3) for structuring your article
+- **Bulleted** and **Numbered lists** for organized information
+- **Links** to external or internal pages
+- **Images** embedded inline within your content
+- **Code blocks** for technical content with syntax formatting
+
+Write your content in a natural flow. Use headings to break long articles into sections so readers can scan and find what they need.
+
+## Post Settings
+
+Each blog post has several settings that control how it appears on your site and in search results.
+
+### Title
+
+The main headline of your post. This appears at the top of the article, in the blog feed, and in browser tabs. Write titles that are clear and engaging.
+
+### Slug
+
+The URL path for your post. A post titled "Getting Started with GritCMS" would get the slug `getting-started-with-gritcms`. The slug is generated automatically from the title, but you can customize it. Keep slugs concise and keyword-rich for better SEO.
+
+### Excerpt
+
+A short summary of your post (one or two sentences). The excerpt appears in the blog feed and may be used as the meta description for search engines. If you leave it blank, search engines will pull text from the beginning of your article.
+
+### Featured Image
+
+The featured image appears at the top of your post and as the preview image in the blog feed and social media shares. Use a high-quality image that represents the topic of your post. Recommended dimensions depend on your theme, but a 16:9 aspect ratio (such as 1200x675 pixels) works well in most cases.
+
+### Status
+
+Blog posts have two statuses:
+
+- **Draft** -- Saved but not visible to the public. Use this while writing.
+- **Published** -- Live on your site and included in the blog feed and RSS.
+
+## Categories and Tags
+
+You can organize your posts by assigning categories and tags. This helps visitors browse related content and improves your site structure for SEO.
+
+- **Categories** represent broad topics (e.g., "Tutorials", "News", "Product Updates").
+- **Tags** are more specific keywords (e.g., "email-marketing", "getting-started", "api").
+
+To assign categories or tags, use the dropdown selectors in the post settings panel. You can select multiple categories and tags per post. See the [Categories & Tags](/docs/website/categories-tags) page for details on creating and managing them.
+
+## Post Scheduling and Publishing
+
+### Publishing Immediately
+
+To publish a post right away:
+
+1. Write your content and configure settings.
+2. Set the status to **Published**.
+3. Click **Save**.
+
+The post will immediately appear on your public site.
+
+### Saving as a Draft
+
+If you are not ready to publish, keep the status as **Draft** and click **Save**. You can return to edit and publish it later.
+
+### Best Practices for Publishing
+
+- Write your post as a Draft first, review it, then publish.
+- Fill in the excerpt for a polished appearance in the blog feed.
+- Always set a featured image -- posts with images get more engagement.
+- Assign at least one category to keep your blog organized.
+
+## RSS Feed
+
+GritCMS automatically generates an RSS feed for your blog at:
+
+```
+https://yoursite.com/api/rss.xml
+```
+
+The RSS feed includes all published blog posts with their title, excerpt, publication date, and a link to the full article. RSS readers and podcast apps can subscribe to this feed to get notified when you publish new content. You do not need to configure anything -- the feed is generated automatically from your published posts.
+
+## JSON-LD Structured Data
+
+Every published blog post automatically includes JSON-LD structured data in its HTML. This is invisible to visitors but tells search engines detailed information about your content, including:
+
+- Article title and description
+- Author information
+- Publication and modification dates
+- Featured image
+
+This structured data helps search engines display rich results (such as article previews with images and dates) when your content appears in search results. No configuration is required -- it is handled automatically for every post.
+
+## Managing Existing Posts
+
+The **Website > Blog Posts** list displays all your posts with their title, status, category, and date. From here you can:
+
+- **Edit** any post by clicking its title.
+- **Delete** posts you no longer need.
+- **Filter** posts by status to find drafts or published articles.
+
+Keep your blog active by publishing regularly. Even one post per week can significantly improve your search engine visibility over time.

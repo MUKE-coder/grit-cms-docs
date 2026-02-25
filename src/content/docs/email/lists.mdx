@@ -1,0 +1,85 @@
+---
+title: "Email Lists"
+description: "Create and manage email lists to organize your subscribers and grow your audience."
+---
+
+## Overview
+
+Email lists are the foundation of your email marketing in GritCMS. A list is a named group of subscribers who have opted in to receive your emails. You can create multiple lists for different purposes -- for example, a general newsletter list, a product launch list, or a VIP customers list. Manage your lists from the **Email > Lists** section in the admin dashboard.
+
+## Creating a New List
+
+1. Navigate to **Email > Lists** in the admin sidebar.
+2. Click the **New List** button.
+3. Fill in the list details and save.
+
+### List Settings
+
+Each list has the following settings:
+
+| Setting | Description |
+|---|---|
+| **Name** | A descriptive name for the list (e.g., "Weekly Newsletter"). |
+| **Description** | An optional note about the list's purpose, visible only to admins. |
+| **Welcome Email** | An optional email template sent automatically when someone subscribes. Select from your existing templates. |
+| **Double Opt-In** | When enabled, new subscribers must confirm their email address before being added to the list. |
+
+### Double Opt-In
+
+When double opt-in is enabled on a list, the subscription flow works as follows:
+
+1. A visitor submits their email address through a form or API call.
+2. Their subscription status is set to **Pending** and a confirmation email is sent.
+3. The subscriber clicks the confirmation link in the email.
+4. Their status changes to **Active** and they begin receiving emails from the list.
+
+Double opt-in helps ensure that subscribers genuinely want to receive your emails, reduces spam complaints, and improves deliverability. It is recommended for public-facing lists.
+
+## Managing Subscribers
+
+### Adding Subscribers Manually
+
+From a list's detail page, you can add individual subscribers by clicking **Add Subscriber** and entering their email address. The subscriber is linked to a contact in your CRM -- if no matching contact exists, one is created automatically.
+
+### Importing Subscribers
+
+To add subscribers in bulk, use the import feature. Prepare a CSV file with at least an `email` column. Optional columns include `first_name`, `last_name`, and any other contact fields. Upload the CSV from the list detail page and GritCMS will create contacts and subscriptions for each row.
+
+### Removing Subscribers
+
+You can remove a subscriber from a list by changing their status to **Unsubscribed** or by deleting the subscription entirely. Unsubscribed contacts remain in your CRM but will no longer receive emails sent to that list.
+
+### Subscription Statuses
+
+Each subscriber on a list has one of the following statuses:
+
+| Status | Meaning |
+|---|---|
+| **Active** | The subscriber is confirmed and will receive emails. |
+| **Pending** | Awaiting double opt-in confirmation. |
+| **Unsubscribed** | The subscriber opted out of the list. |
+| **Bounced** | The subscriber's email address returned a bounce. |
+| **Complained** | The subscriber marked an email as spam. |
+
+### Subscription Sources
+
+GritCMS tracks how each subscriber was added to a list. Possible sources include:
+
+- **form** -- Subscribed through a public form on your website.
+- **manual** -- Added by an admin from the dashboard.
+- **import** -- Added via CSV import.
+- **api** -- Added through the API.
+
+## Public Subscription Forms
+
+You can embed subscription forms on your website to let visitors join your lists. When a visitor submits the form, they are added to the selected list with the source recorded as `form`. If the list has double opt-in enabled, the visitor will receive a confirmation email before their subscription becomes active.
+
+Subscription forms can be placed on any page, blog post, or funnel step using the website builder.
+
+## Tips for Organizing Your Lists
+
+- **Keep lists focused.** Create separate lists for different topics or audiences rather than putting everyone on one giant list.
+- **Use descriptive names.** "Product Launch -- Spring 2025" is more useful than "List 3."
+- **Enable double opt-in for public lists.** This protects your sender reputation and ensures engaged subscribers.
+- **Clean your lists periodically.** Review bounced and complained subscribers and remove contacts that are no longer valid.
+- **Set a welcome email.** A welcome message sets expectations and confirms the subscription, improving engagement from the start.

@@ -1,0 +1,91 @@
+---
+title: "Segments"
+description: "Create audience segments to target the right contacts with your email campaigns."
+---
+
+## Overview
+
+Segments let you group contacts based on specific criteria without creating separate email lists. Instead of manually sorting subscribers, you define a set of conditions and GritCMS automatically finds all contacts that match. Use segments to send more targeted campaigns, personalize your messaging, and improve engagement. Manage segments from **Email > Segments** in the admin dashboard.
+
+## Creating a Segment
+
+1. Navigate to **Email > Segments** in the admin sidebar.
+2. Click **New Segment**.
+3. Give the segment a **Name** (e.g., "Active subscribers from January").
+4. Choose the segment **Type** (dynamic or static).
+5. Define your **Rules** -- the conditions contacts must match.
+6. Save the segment.
+
+## Segment Types
+
+### Dynamic Segments
+
+A dynamic segment re-evaluates its rules every time it is used. When you target a dynamic segment in a campaign, GritCMS queries your contacts at that moment and includes everyone who currently matches the conditions. If a contact's data changes and they no longer match, they are automatically excluded from future sends.
+
+Dynamic segments are the default and recommended type for most use cases.
+
+### Static Segments
+
+A static segment captures a snapshot of matching contacts at the time the segment is created or last updated. The membership does not change automatically -- you need to manually refresh the segment to pick up new or changed contacts.
+
+Static segments are useful when you need a fixed audience that does not change between campaign sends.
+
+## Segment Conditions
+
+Each segment is defined by one or more rules. Rules are organized into groups:
+
+- **Rules within a group** are joined by **AND** -- a contact must match all rules in the group.
+- **Rule groups** are joined by **OR** -- a contact must match at least one group.
+
+This AND/OR structure gives you flexible control over which contacts are included.
+
+### Available Condition Fields
+
+| Field | Operators | Example |
+|---|---|---|
+| **email** | contains, equals, starts_with, ends_with | Email contains "gmail.com" |
+| **first_name** | contains, equals | First name equals "Alex" |
+| **last_name** | contains, equals | Last name contains "Smith" |
+| **tag** | has_tag, has_no_tag | Contact has tag "VIP" |
+| **subscription_date** | before, after, between | Subscribed after 2025-01-01 |
+| **activity** | has_opened, has_clicked, has_not_opened | Has opened an email in the last 30 days |
+
+### Example: Engaged Subscribers
+
+To create a segment of subscribers who are actively reading your emails:
+
+**Group 1 (AND):**
+- Activity: has_opened in the last 30 days
+- Tag: has_tag "newsletter"
+
+This segment matches contacts who have the "newsletter" tag AND have opened at least one email in the past 30 days.
+
+### Example: Re-engagement Audience
+
+To target subscribers who may need a nudge:
+
+**Group 1 (AND):**
+- Activity: has_not_opened in the last 60 days
+- Subscription date: before 2025-01-01
+
+This segment finds long-time subscribers who have not opened any emails recently, making them good candidates for a re-engagement campaign.
+
+## Using Segments in Campaigns
+
+When creating an email campaign, you can select one or more segments as your target audience in addition to (or instead of) email lists and tags. GritCMS will resolve the segment conditions, find all matching contacts, and deduplicate them against other selected audiences.
+
+This means you can combine lists, segments, and tags in a single campaign to reach exactly the right people.
+
+## Match Count
+
+Each segment displays a **Match Count** showing how many contacts currently match the segment conditions. For dynamic segments, this count is calculated on demand. For static segments, it reflects the last time the segment was evaluated.
+
+Use the match count to verify that your segment rules are working as expected before targeting the segment in a campaign.
+
+## Tips
+
+- **Start with simple rules** and refine as needed. A single condition is often enough for effective targeting.
+- **Use dynamic segments** unless you specifically need a fixed audience snapshot.
+- **Combine segments with lists.** You do not have to choose one or the other -- use both to create precise audiences.
+- **Review match counts** before sending. If a segment returns zero or unexpectedly few contacts, double-check your conditions.
+- **Name segments descriptively.** "Opened email last 30 days" is more useful than "Segment 5" when you are selecting audiences for a campaign.

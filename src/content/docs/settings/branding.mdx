@@ -1,0 +1,84 @@
+---
+title: "Branding"
+description: "Customize your site's fonts and colors from the Branding tab in Settings."
+---
+
+The Branding tab in Settings lets you define the visual identity of your public site. You can select a brand font, choose a brand color, and see a live preview of your changes before saving.
+
+## Brand Font
+
+GritCMS ships with **23 popular Google Fonts** built in, with **Onest** as the default. You can select any of these fonts from a dropdown, and the public site will load it automatically.
+
+### Built-in Fonts
+
+The built-in font list includes a range of styles suitable for different brand personalities:
+
+- **Sans-serif:** Onest (default), Inter, Roboto, Open Sans, Lato, Poppins, Nunito, Raleway, Montserrat, Work Sans, DM Sans, Plus Jakarta Sans, Space Grotesk, Outfit, Sora, Manrope
+- **Serif:** Playfair Display, Lora, Merriweather, Source Serif 4, Crimson Text
+- **Monospace:** JetBrains Mono, Fira Code
+
+Select a font from the dropdown to preview it instantly in the Branding tab.
+
+### Custom Font Name
+
+If your brand uses a font not included in the built-in list, you can type a **custom Google Font name** directly into the font field. GritCMS will attempt to load it from Google Fonts on the public site. Make sure the font name matches exactly as it appears on [Google Fonts](https://fonts.google.com) (e.g., "Josefin Sans", not "josefin-sans").
+
+### How Fonts Load on the Public Site
+
+When a visitor loads your public site, GritCMS dynamically injects a Google Fonts CSS link into the HTML `<head>`:
+
+```html
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+```
+
+The font is then applied to the body and all text elements via CSS. This approach means no font files are bundled with your site -- they are loaded from Google's CDN for optimal performance.
+
+## Brand Color
+
+The brand color is the primary accent color used throughout your public site for buttons, links, highlights, and interactive elements.
+
+### Preset Colors
+
+GritCMS offers **12 preset colors** to choose from, covering a range of common brand palettes:
+
+- Red, Orange, Amber, Yellow, Lime, Green
+- Emerald, Cyan, Blue, Violet, Purple, Pink
+
+Click any preset to select it. The hex value is displayed and the preview updates instantly.
+
+### Custom Hex Color
+
+If none of the presets match your brand, click the **color picker** to select any color using the full hex spectrum. You can also type a hex value directly (e.g., `#4F46E5`).
+
+### Live Preview
+
+Below the color selection area, a **live preview** shows how your brand color looks on a sample button. This lets you evaluate the color in context before saving. The preview updates in real time as you change the selection.
+
+### How Brand Color Applies
+
+The brand color is stored as a CSS custom property on the public site:
+
+```css
+:root {
+  --accent: #4F46E5;
+}
+```
+
+All themed elements -- buttons, links, focus rings, active states, and accent backgrounds -- reference `var(--accent)` in their styles. This means changing the brand color in Settings instantly recolors every accent element across your entire public site with a single value.
+
+## Saving and Applying Changes
+
+After selecting your desired font and color:
+
+1. Click **Save** at the bottom of the Branding tab.
+2. The settings are persisted to the database immediately.
+3. Open your public site (or refresh it) to see the changes.
+
+There is no build step or redeployment required. The public site reads branding settings from the API on every page load, so updates are reflected instantly.
+
+## Tips
+
+- **Contrast matters.** When picking a brand color, make sure it has sufficient contrast against white backgrounds for readability. Dark or medium-saturated colors tend to work best for buttons and links.
+- **Font consistency.** Stick to one brand font for a clean, professional look. The font applies to headings and body text alike.
+- **Test on mobile.** After changing your font or color, check the public site on a mobile device to make sure everything looks good at smaller screen sizes.
+- **Reset to defaults.** To go back to the default look, select "Onest" as the font and choose the blue preset color, then save.

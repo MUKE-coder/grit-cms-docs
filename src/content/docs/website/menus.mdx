@@ -1,0 +1,122 @@
+---
+title: "Menus"
+description: "Create and manage navigation menus for your website header and footer."
+---
+
+## Overview
+
+Navigation menus help visitors find their way around your website. GritCMS lets you create menus for different areas of your site, such as the header (top navigation) and footer (bottom navigation). You manage menus from **Website > Menus** in the admin dashboard.
+
+## Menu Locations
+
+GritCMS supports two menu locations:
+
+| Location | Where It Appears | Typical Use |
+|---|---|---|
+| **Header** | Top of every page, usually in the main navigation bar. | Primary navigation: links to your most important pages like Home, Blog, About, Contact, Courses. |
+| **Footer** | Bottom of every page. | Secondary navigation: links to legal pages, social media, support, and less prominent pages. |
+
+Each location can have one menu assigned to it. When you create a menu, you select which location it belongs to.
+
+## Creating a Menu
+
+1. Navigate to **Website > Menus** in the admin sidebar.
+2. Click **New Menu**.
+3. Enter a **name** for the menu (e.g., "Main Navigation" or "Footer Links").
+4. Select the **location** (Header or Footer).
+5. Click **Save** to create the menu.
+
+After creating the menu, you can start adding items to it.
+
+## Adding Menu Items
+
+Menu items are the individual links that appear in your navigation. Each item has the following fields:
+
+| Field | Description | Required |
+|---|---|---|
+| Label | The text displayed to visitors (e.g., "About", "Blog", "Contact"). | Yes |
+| URL | The destination when clicked. Can be a relative path (e.g., `/about`) or a full URL (e.g., `https://example.com`). | Yes |
+| Sort Order | A number that determines the position of this item in the menu. Lower numbers appear first. | Yes |
+
+### Steps to Add an Item
+
+1. Open the menu you want to edit.
+2. Click **Add Item**.
+3. Enter the **Label**, **URL**, and **Sort Order**.
+4. Click **Save**.
+
+Repeat this process for each link you want in the menu.
+
+### Choosing URLs for Menu Items
+
+Here are common patterns for menu item URLs:
+
+| Destination | URL Format | Example |
+|---|---|---|
+| Static page | `/page-slug` | `/about` |
+| Blog | `/blog` | `/blog` |
+| Blog category | `/blog/category/slug` | `/blog/category/tutorials` |
+| Course catalog | `/courses` | `/courses` |
+| External site | Full URL | `https://twitter.com/yourhandle` |
+| Community | `/community` | `/community` |
+
+Use relative paths (starting with `/`) for internal pages. Use full URLs (starting with `https://`) for external sites.
+
+## Nested Menu Items
+
+GritCMS supports nested menu items, which let you create dropdown submenus. This is useful when you have related pages that should be grouped together under a parent item.
+
+For example, a "Resources" parent item might contain:
+
+- Blog
+- Tutorials
+- FAQ
+
+### How Nesting Works
+
+Nested items are configured through the menu item's parent assignment. When adding or editing a menu item, you can set it as a child of an existing item. Child items appear in a dropdown when a visitor hovers over or clicks the parent item.
+
+### Tips for Nested Menus
+
+- Keep dropdown menus short. Two to five child items works well. Long dropdowns are hard to navigate.
+- Only go one level deep. Deeply nested menus (dropdowns within dropdowns) are difficult for visitors to use, especially on mobile devices.
+- Make the parent item clickable too, so visitors who click it (instead of hovering) still reach a useful page.
+
+## Managing Menus
+
+### Editing a Menu
+
+1. Go to **Website > Menus** and click on the menu you want to edit.
+2. Modify the menu name, location, or items as needed.
+3. Click **Save** to apply your changes.
+
+### Reordering Items
+
+To change the order of menu items, update the **Sort Order** number on each item. Items with lower numbers appear first (left-most in the header, top-most in the footer).
+
+For example:
+
+| Item | Sort Order | Position |
+|---|---|---|
+| Home | 1 | First |
+| Blog | 2 | Second |
+| Courses | 3 | Third |
+| About | 4 | Fourth |
+| Contact | 5 | Fifth |
+
+### Deleting Menu Items
+
+To remove an item from a menu, open the menu for editing, find the item you want to remove, and click the delete button next to it. The item will be removed immediately. This does not delete the page the item linked to -- only the menu link is removed.
+
+### Deleting a Menu
+
+If you need to remove an entire menu, open it and click the **Delete** button. The navigation area (header or footer) will be empty until you create and assign a new menu.
+
+## Best Practices
+
+- **Keep header menus concise.** Five to seven items is ideal for top navigation. Too many links overwhelm visitors.
+- **Put important pages first.** Visitors pay most attention to the first and last items in a navigation bar.
+- **Use clear labels.** "Blog" is better than "Our Thoughts and Ideas". Keep labels to one or two words.
+- **Test on mobile.** Check that your menu looks good and works well on smaller screens.
+- **Use the footer for secondary links.** Legal pages (Terms, Privacy Policy), social links, and support pages work well in the footer.
+- **Update menus when you add new pages.** A new page is only discoverable if visitors can reach it through navigation or links in your content.

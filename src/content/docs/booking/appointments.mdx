@@ -1,0 +1,118 @@
+---
+title: "Appointments"
+description: "Manage booked appointments, handle cancellations and rescheduling, and understand the appointment lifecycle."
+---
+
+## Overview
+
+Appointments are the core records of the booking system. When a visitor selects a time slot on a public booking page and submits their details, GritCMS creates an appointment. You manage all appointments from the **Booking > Appointments** section in the admin dashboard, where you can view upcoming sessions, cancel or reschedule bookings, and mark appointments as completed.
+
+## How Clients Book Appointments
+
+The booking flow from the visitor's perspective works as follows:
+
+1. The visitor opens the public booking page for an event type at `/api/book/{event-type-slug}`.
+2. They select a date and the system returns available time slots based on the calendar's availability, existing bookings, and buffer times.
+3. The visitor picks a slot and submits their name, email, and optional notes.
+4. GritCMS creates the appointment with a **confirmed** status and returns the booking details.
+
+If the visitor's email address is not already in your contacts, GritCMS automatically creates a new contact record with the source set to `booking`. If the email already exists, the appointment is linked to the existing contact.
+
+## Appointment Statuses
+
+Every appointment has a status that reflects where it is in its lifecycle:
+
+| Status | Description |
+|---|---|
+| **Confirmed** | The default status when an appointment is booked. The session is scheduled and expected to happen. |
+| **Rescheduled** | The appointment was moved to a different time. The new start and end times are updated on the record. |
+| **Cancelled** | The appointment was cancelled by the admin. The time slot becomes available for other bookings. |
+| **Completed** | The session has taken place. Mark appointments as completed after they occur to keep your records accurate. |
+
+Appointments start as **confirmed** and move through the lifecycle based on admin actions.
+
+## Managing Appointments in Admin
+
+The **Booking > Appointments** list shows all appointments with their event type, contact, scheduled time, and status. You can filter the list by:
+
+- **Status** -- Show only confirmed, cancelled, or completed appointments.
+- **Event Type** -- Filter by a specific event type to see only those bookings.
+- **Upcoming** -- Show only appointments scheduled in the future.
+
+### Viewing Appointment Details
+
+Click on an appointment to see the full details including:
+
+- The event type name, duration, and calendar.
+- The contact's name and email.
+- The scheduled start and end times.
+- Any notes the visitor provided during booking.
+- The meeting URL, if one has been set.
+
+### Cancelling an Appointment
+
+To cancel an appointment:
+
+1. Open the appointment from the list.
+2. Click **Cancel Appointment**.
+3. The status changes to **cancelled**.
+
+When an appointment is cancelled, GritCMS emits a `booking.cancelled` event. You can use this event in workflow automations to send a cancellation notification email to the client.
+
+The cancelled appointment's time slot becomes available again for new bookings.
+
+### Rescheduling an Appointment
+
+To reschedule an appointment to a different time:
+
+1. Open the appointment from the list.
+2. Click **Reschedule**.
+3. Provide the new start time in ISO 8601 / RFC 3339 format (e.g., `2025-03-15T14:00:00Z`).
+4. GritCMS automatically calculates the new end time based on the event type's duration and sets the status back to **confirmed**.
+
+A `booking.rescheduled` event is emitted, which you can use to notify the client about the time change.
+
+### Completing an Appointment
+
+After a session has taken place:
+
+1. Open the appointment from the list.
+2. Click **Complete**.
+3. The status changes to **completed**.
+
+Marking appointments as completed helps you track which sessions have occurred and keeps your appointment list clean.
+
+## Booking Confirmation Emails
+
+When a visitor books an appointment, GritCMS emits a `booking.confirmed` event containing the appointment ID, contact ID, and event type name. You can set up a workflow automation to listen for this event and send a confirmation email to the client.
+
+A typical confirmation email includes:
+
+- The session name and description.
+- The date and time of the appointment.
+- A meeting URL or location details.
+- Instructions for how to cancel or reschedule.
+
+See the [Workflow Automation](/automation/workflows) documentation for how to create email automations triggered by booking events.
+
+## Appointment Reminders
+
+GritCMS does not send appointment reminders by default, but you can set them up using workflow automations. Create a workflow that triggers on the `booking.confirmed` event and schedules a delayed email to be sent a set amount of time before the appointment (for example, 24 hours or 1 hour before the session). This gives clients a timely reminder without requiring manual follow-up.
+
+## Appointment Data
+
+Each appointment record contains the following fields:
+
+| Field | Description |
+|---|---|
+| **Event Type ID** | The event type this appointment belongs to. |
+| **Contact ID** | The contact who booked the appointment. |
+| **Start At** | The scheduled start time. |
+| **End At** | The scheduled end time. |
+| **Status** | One of `confirmed`, `rescheduled`, `cancelled`, or `completed`. |
+| **Notes** | Free-text notes provided by the visitor during booking. |
+| **Meeting URL** | An optional URL for a video call or meeting room. |
+
+## Next Steps
+
+With calendars, event types, and appointments configured, your booking system is fully operational. Visitors can self-serve their bookings, and you can manage everything from the admin dashboard. Combine booking events with [Workflow Automation](/automation/workflows) to create a hands-off scheduling experience with automatic confirmations and reminders.

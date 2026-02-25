@@ -1,0 +1,91 @@
+---
+title: "Email Campaigns"
+description: "Create and send email campaigns to your subscribers with built-in analytics tracking."
+---
+
+## Overview
+
+An email campaign is a one-time email sent to a selected audience. Use campaigns for announcements, newsletters, promotions, or any message you want to deliver to a group of subscribers. You can compose your email, choose who receives it, send it immediately, or schedule it for later. Manage campaigns from **Email > Campaigns** in the admin dashboard.
+
+## Creating a Campaign
+
+1. Navigate to **Email > Campaigns** in the admin sidebar.
+2. Click **New Campaign**.
+3. Fill in the campaign details and compose your email.
+4. Select your audience and send or schedule.
+
+### Campaign Settings
+
+| Setting | Description |
+|---|---|
+| **Name** | An internal name for the campaign (not shown to recipients). |
+| **Subject** | The email subject line your subscribers will see in their inbox. |
+| **From Name** | The sender name displayed to recipients. |
+| **From Email** | The sender email address. |
+| **Reply-To** | The email address that receives replies. |
+
+### Composing Your Email
+
+You have two options for creating campaign content:
+
+- **Use a template.** Select an existing email template from your template library. The template's HTML and text content will be loaded into the editor, and you can customize it for this campaign.
+- **Write inline content.** Compose your email directly in the campaign editor using the HTML and plain text fields.
+
+Both the HTML version and a plain text fallback are supported. The plain text version is shown to recipients whose email clients do not render HTML.
+
+## Selecting Your Audience
+
+Campaigns can be targeted to one or more of the following:
+
+- **Lists** -- Send to all active subscribers on the selected email lists.
+- **Segments** -- Send to contacts matching specific segment criteria.
+- **Tags** -- Send to contacts with specific tags applied.
+
+You can combine multiple lists, segments, and tags. GritCMS will deduplicate recipients so no one receives the same campaign twice.
+
+## Sending and Scheduling
+
+### Send Immediately
+
+Click **Send Now** to begin delivering the campaign right away. The campaign status changes from **Draft** to **Sending** and then to **Sent** once all emails are delivered.
+
+### Schedule for Later
+
+To send a campaign at a specific date and time, set the **Scheduled At** field and click **Schedule**. The campaign status changes to **Scheduled** and GritCMS will begin sending at the specified time.
+
+### Campaign Statuses
+
+| Status | Meaning |
+|---|---|
+| **Draft** | The campaign is being composed and has not been sent. |
+| **Scheduled** | The campaign is queued to send at a future time. |
+| **Sending** | The campaign is currently being delivered to recipients. |
+| **Sent** | All emails have been delivered. |
+| **Cancelled** | The campaign was cancelled before completion. |
+
+## Campaign Analytics
+
+After a campaign is sent, GritCMS tracks the following metrics:
+
+| Metric | Description |
+|---|---|
+| **Sent** | Total number of emails sent. |
+| **Delivered** | Emails successfully delivered to the recipient's server. |
+| **Opened** | Unique recipients who opened the email. |
+| **Clicked** | Unique recipients who clicked a link in the email. |
+| **Bounced** | Emails that could not be delivered. |
+| **Unsubscribed** | Recipients who unsubscribed after receiving the email. |
+
+Open and click tracking is handled automatically. You can view these stats on the campaign detail page after sending.
+
+### Individual Send Tracking
+
+Each individual email delivery is tracked as a send record with its own status (queued, sent, delivered, opened, clicked, bounced, or failed). This lets you drill down into delivery results for specific subscribers if needed.
+
+## Best Practices
+
+- **Write a clear, compelling subject line.** The subject line is the first thing recipients see and determines whether they open your email.
+- **Preview before sending.** Review both the HTML and plain text versions to make sure your message looks correct.
+- **Segment your audience.** Sending relevant content to the right people improves open rates and reduces unsubscribes.
+- **Respect unsubscribes.** Every campaign email should include an unsubscribe link. GritCMS templates include the `{{unsubscribe_url}}` variable for this purpose.
+- **Test with a small list first.** Before sending to your entire audience, send a test to yourself or a small group to catch any issues.

@@ -1,0 +1,168 @@
+---
+title: "Docker Deployment"
+description: "Deploy GritCMS with Docker Compose using PostgreSQL, with all three services containerized."
+---
+
+Docker Compose is the recommended way to deploy GritCMS in a production or staging environment. It packages the API, admin dashboard, and public site into containers alongside a PostgreSQL database.
+
+## Prerequisites
+
+- **Docker** 20.10+ installed on your server or local machine
+- **Docker Compose** v2 (included with Docker Desktop, or install separately on Linux)
+- At least **1 GB RAM** available for the containers
+
+## Architecture
+
+The Docker Compose setup runs four containers:
+
+| Service | Image | Port | Description |
+|---|---|---|---|
+| `api` | Built from `apps/api` | 8080 | Go backend |
+| `admin` | Built from `apps/admin` | 3000 | Next.js admin dashboard |
+| `web` | Built from `apps/web` | 3001 | Next.js public site |
+| `db` | `postgres:16-alpine` | 5432 | PostgreSQL database |
+
+## Example docker-compose.yml
+
+```yaml
+version: "3.8"
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gritcms
+      POSTGRES_PASSWORD: your_secure_password
+      POSTGRES_DB: gritcms
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://gritcms:your_secure_password@db:5432/gritcms?sslmode=disable
+      JWT_SECRET: your_jwt_secret_here
+      PORT: "8080"
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8080
+    ports:
+      - "3000:3000"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8080
+    ports:
+      - "3001:3001"
+
+volumes:
+  pgdata:
+  uploads:
+```
+
+## Environment Variables
+
+Configure these environment variables in the `docker-compose.yml` file or via a `.env` file:
+
+### API Service
+
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `JWT_SECRET` | Yes | Secret key for JWT authentication |
+| `PORT` | No | API port (default: 8080) |
+| `UPLOAD_DIR` | No | Upload directory (default: /app/uploads) |
+
+### Frontend Services (Admin & Web)
+
+| Variable | Required | Description |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | Yes | URL of the API service |
+
+## Building and Running
+
+From the project root directory, build and start all services:
+
+```bash
+docker compose up -d --build
+```
+
+This builds the Docker images for all three application services, pulls the PostgreSQL image, and starts everything in detached mode.
+
+To check that all containers are running:
+
+```bash
+docker compose ps
+```
+
+To view logs:
+
+```bash
+docker compose logs -f
+```
+
+## Persistent Volumes
+
+The `docker-compose.yml` defines two named volumes:
+
+- **pgdata** -- stores PostgreSQL data. Your database persists across container restarts and rebuilds.
+- **uploads** -- stores user-uploaded files (images, media, etc.). This ensures uploads are not lost when the API container is recreated.
+
+Never delete these volumes unless you intentionally want to wipe data.
+
+## Seeding Default Data
+
+After the first deployment, seed the database with default settings:
+
+```bash
+curl -X POST http://localhost:8080/api/seed-defaults
+```
+
+Or from within the Docker network:
+
+```bash
+docker compose exec api curl -X POST http://localhost:8080/api/seed-defaults
+```
+
+## Updating the Deployment
+
+To deploy a new version of GritCMS:
+
+```bash
+git pull
+docker compose up -d --build
+```
+
+Docker Compose rebuilds only the images that have changed. The database volume is preserved, so your data remains intact.
+
+## Production Considerations
+
+- **Replace default secrets.** Always set a strong, unique `JWT_SECRET` and `POSTGRES_PASSWORD` in production.
+- **Use a reverse proxy.** Place Nginx, Caddy, or Traefik in front of the services to handle SSL termination and route traffic to the correct ports.
+- **Back up the database.** Schedule regular backups of the `pgdata` volume or use `pg_dump` inside the database container.
+- **Resource limits.** Consider setting memory and CPU limits on each service in the Compose file for predictable resource usage.

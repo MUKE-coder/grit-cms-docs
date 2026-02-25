@@ -1,0 +1,125 @@
+---
+title: "Students"
+description: "Manage student enrollments, track progress, and issue course completion certificates."
+---
+
+## Overview
+
+When someone enrolls in one of your courses, they become a student. GritCMS tracks each student's enrollment, progress through individual lessons, and course completion. You can manage enrolled students, monitor how they are progressing, and issue certificates when they finish a course. View student data from the course detail page in the **Courses** section of the admin dashboard.
+
+## Enrollment
+
+### How Students Enroll
+
+Students can be enrolled in a course through several methods:
+
+| Source | Description |
+|---|---|
+| **Free enrollment** | For free courses, visitors click the **Enroll** button on the course page and gain immediate access. |
+| **Purchase** | For paid courses, enrollment happens automatically after a successful purchase through the Commerce module. |
+| **Coupon** | A coupon can grant free or discounted access to a paid course. Enrollment is created after the coupon is redeemed. |
+| **Manual** | An admin can manually enroll a student from the course detail page in the dashboard. |
+
+Each enrollment is linked to a **contact** in your CRM. If the person enrolling does not have an existing contact record, one is created automatically.
+
+### Enrollment Statuses
+
+| Status | Meaning |
+|---|---|
+| **Active** | The student has access to the course and can view lessons. |
+| **Completed** | The student has finished all lessons in the course. |
+| **Expired** | Access has expired (used for time-limited courses or subscriptions). |
+| **Suspended** | Access has been temporarily revoked by an admin. |
+
+### Managing Enrollments
+
+From the course detail page, you can:
+
+- View all enrolled students with their status and progress.
+- Manually enroll a new student by selecting a contact.
+- Change an enrollment's status (e.g., suspend a student or mark them as completed).
+- See when each student enrolled and their current progress percentage.
+
+## Tracking Student Progress
+
+GritCMS tracks progress at two levels: overall course completion and individual lesson progress.
+
+### Course Progress
+
+Each enrollment has a **progress percentage** that shows how far the student has advanced through the course. This percentage is calculated based on the number of lessons the student has completed relative to the total lessons in the course.
+
+For example, if a course has 10 lessons and a student has completed 4, their progress is 40%.
+
+### Lesson Progress
+
+Every lesson a student interacts with has its own progress record with one of three statuses:
+
+| Status | Meaning |
+|---|---|
+| **Not Started** | The student has not opened this lesson yet. |
+| **In Progress** | The student has started the lesson but has not completed it. |
+| **Completed** | The student has finished the lesson. |
+
+GritCMS also tracks the **time spent** on each lesson in seconds, along with when the student started and completed the lesson. This data helps you understand which lessons take the longest and where students may be getting stuck.
+
+### Viewing Progress in the Admin
+
+From the course detail page, the enrolled students list shows each student's overall progress percentage at a glance. Click into an individual enrollment to see the detailed lesson-by-lesson breakdown.
+
+## Free vs Paid Course Access
+
+### Free Courses
+
+Free courses have their access type set to **Free**. Anyone can enroll without payment. Free courses are commonly used for:
+
+- Lead generation -- offer a free course in exchange for an email address.
+- Community building -- provide value to your audience and build trust.
+- Introductory content -- give a taste of your teaching before offering a paid course.
+
+### Paid Courses
+
+Paid courses require a purchase before enrollment. Set the **Price** and **Currency** on the course, and optionally link it to a product in the Commerce module. When a customer completes a purchase, their enrollment is created automatically.
+
+You can also use coupons to offer discounts or free access to specific students without changing the course price for everyone.
+
+### Membership Access
+
+Courses with the **Membership** access type are available to subscribers of a membership or subscription plan. This is useful for creating a content library that members can access as long as their subscription is active.
+
+## Course Completion Certificates
+
+When a student completes all lessons in a course, GritCMS can issue a **completion certificate**. Certificates provide proof that the student finished the course and can be shared publicly.
+
+### Certificate Details
+
+Each certificate includes:
+
+| Field | Description |
+|---|---|
+| **Certificate Number** | A unique identifier for the certificate. |
+| **Course** | The name of the course that was completed. |
+| **Student** | The name of the student (from their contact record). |
+| **Issued At** | The date the certificate was issued. |
+| **Template** | The certificate design template used (defaults to "default"). |
+
+### Verifying Certificates
+
+Certificates can be verified publicly at:
+
+```
+/api/certificates/verify?number={certificate_number}
+```
+
+Anyone with the certificate number can visit this URL to confirm that the certificate is authentic and see the course name, student name, and issue date. This is useful for employers, clients, or anyone who needs to validate a student's completion.
+
+### How Certificates Are Issued
+
+Certificates are generated automatically when a student's enrollment status changes to **Completed**. The system assigns a unique certificate number and records the issue date. The certificate is then accessible from both the admin dashboard and the student's account.
+
+## Tips for Managing Students
+
+- **Monitor progress regularly.** If students are dropping off at a specific lesson, the content there may need improvement.
+- **Use manual enrollment sparingly.** Let the purchase and enrollment flow handle paid courses automatically to avoid access issues.
+- **Follow up with inactive students.** Use email sequences to re-engage students who started a course but have not completed it.
+- **Promote certificates.** Let students know they will receive a verifiable certificate on completion -- it increases motivation to finish the course.
+- **Review time-spent data.** Lessons where students spend significantly more or less time than expected may need content adjustments.

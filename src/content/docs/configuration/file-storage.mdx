@@ -1,0 +1,209 @@
+---
+title: "File Storage"
+description: "Configure S3-compatible file storage for uploads, media, and assets in GritCMS."
+---
+
+## Overview
+
+GritCMS uses **S3-compatible object storage** for all file uploads -- images, videos, documents, course materials, product files, and any other media. The storage system supports three providers out of the box, selected via the `STORAGE_DRIVER` environment variable:
+
+| Driver | Best For | Free Tier |
+|--------|----------|-----------|
+| `minio` | Local development | Self-hosted, unlimited |
+| `r2` | Production (Cloudflare) | 10 GB storage, 10M requests/month |
+| `b2` | Production (Backblaze) | 10 GB storage, 2,500 transactions/day |
+
+All three drivers use the same S3 API, so switching between them only requires changing environment variables -- no code changes needed.
+
+## MinIO (Local Development)
+
+[MinIO](https://min.io) is an S3-compatible object storage server you can run locally. It is included in the GritCMS Docker Compose setup and is the recommended storage driver for development.
+
+### Starting MinIO
+
+```bash
+docker compose up -d minio
+```
+
+MinIO starts with two ports:
+
+| Port | Purpose |
+|------|---------|
+| `9000` | S3-compatible API |
+| `9001` | Web console (browser UI) |
+
+### Configuration
+
+```env
+STORAGE_DRIVER=minio
+MINIO_ENDPOINT=http://localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=gritcms-uploads
+MINIO_REGION=us-east-1
+MINIO_USE_SSL=false
+```
+
+### Creating the Bucket
+
+On first startup, you need to create the upload bucket. Open the MinIO Console at `http://localhost:9001`, log in with `minioadmin` / `minioadmin`, and create a bucket named `gritcms-uploads`.
+
+Alternatively, use the MinIO Client CLI:
+
+```bash
+# Install mc (MinIO Client)
+brew install minio/stable/mc   # macOS
+# or download from https://min.io/docs/minio/linux/reference/minio-mc.html
+
+# Configure the alias
+mc alias set local http://localhost:9000 minioadmin minioadmin
+
+# Create the bucket
+mc mb local/gritcms-uploads
+
+# Set the bucket policy to allow public reads (for serving uploaded images)
+mc anonymous set download local/gritcms-uploads
+```
+
+## Cloudflare R2 (Production)
+
+[Cloudflare R2](https://developers.cloudflare.com/r2/) is an S3-compatible storage service with zero egress fees, making it ideal for serving media files to your website visitors.
+
+### Setup Steps
+
+1. Log in to the [Cloudflare Dashboard](https://dash.cloudflare.com).
+2. Navigate to **R2 Object Storage**.
+3. Create a new bucket (e.g., `gritcms-uploads`).
+4. Go to **Manage R2 API Tokens** and create a token with read/write access.
+5. Note your **Account ID** from the Cloudflare dashboard URL or overview page.
+
+### Configuration
+
+```env
+STORAGE_DRIVER=r2
+R2_ENDPOINT=https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com
+R2_ACCESS_KEY=your-r2-access-key
+R2_SECRET_KEY=your-r2-secret-key
+R2_BUCKET=gritcms-uploads
+R2_REGION=auto
+```
+
+The `R2_REGION` must always be `auto` for Cloudflare R2.
+
+### Public Access
+
+To serve uploaded files publicly (e.g., images on your website), connect a custom domain to your R2 bucket in the Cloudflare dashboard under **R2 > Your Bucket > Settings > Public Access**.
+
+## Backblaze B2 (Production)
+
+[Backblaze B2](https://www.backblaze.com/b2/cloud-storage.html) is an affordable S3-compatible storage option with straightforward pricing.
+
+### Setup Steps
+
+1. Sign up at [backblaze.com](https://www.backblaze.com).
+2. Navigate to **B2 Cloud Storage > Buckets**.
+3. Create a new bucket (e.g., `gritcms-uploads`). Set it to **Public** if you want to serve files directly.
+4. Go to **App Keys** and create a new application key with access to your bucket.
+5. Note the **keyID** (access key) and **applicationKey** (secret key).
+
+### Configuration
+
+```env
+STORAGE_DRIVER=b2
+B2_ENDPOINT=https://s3.us-west-004.backblazeb2.com
+B2_ACCESS_KEY=your-b2-key-id
+B2_SECRET_KEY=your-b2-application-key
+B2_BUCKET=gritcms-uploads
+B2_REGION=us-west-004
+```
+
+The `B2_REGION` must match the region where your bucket was created. Check the bucket details in the B2 dashboard.
+
+## Supported File Types
+
+GritCMS accepts uploads of common file types across all modules:
+
+| Category | Extensions |
+|----------|-----------|
+| **Images** | `.jpg`, `.jpeg`, `.png`, `.gif`, `.webp`, `.svg`, `.ico` |
+| **Videos** | `.mp4`, `.webm`, `.mov`, `.avi` |
+| **Audio** | `.mp3`, `.wav`, `.ogg`, `.m4a` |
+| **Documents** | `.pdf`, `.doc`, `.docx`, `.xls`, `.xlsx`, `.ppt`, `.pptx` |
+| **Archives** | `.zip`, `.rar`, `.tar`, `.gz` |
+| **Code** | `.html`, `.css`, `.js`, `.json`, `.csv` |
+
+File type validation is handled by the API on upload. Unsupported types are rejected with a clear error message.
+
+## Media Library
+
+The admin dashboard includes a built-in **Media Library** for managing all uploaded files. Access it from the admin sidebar or the file picker in any content editor.
+
+### Media Library Features
+
+- **Grid and list views** -- browse uploads as thumbnails or in a detailed list
+- **Search and filter** -- find files by name, type, or upload date
+- **Drag-and-drop upload** -- drop files anywhere in the media library to upload
+- **Inline preview** -- preview images, PDFs, and videos without downloading
+- **Copy URL** -- quickly copy the public URL of any file for use in content
+- **Delete files** -- remove files from storage (with confirmation)
+
+### Using Media in Content
+
+When editing pages, blog posts, courses, or products, the content editor provides a file picker that opens the Media Library. Select an existing file or upload a new one directly from the editor.
+
+Uploaded images are automatically served from your configured storage provider, ensuring fast delivery through CDN-backed services like Cloudflare R2.
+
+## Upload Limits
+
+The default maximum upload size is determined by the API server configuration. For large files (videos, course materials), you may want to increase this limit.
+
+The Go backend uses Gin's default request body limit. To adjust it, the upload handler in `apps/api/internal/handlers/` controls the maximum accepted file size.
+
+### Recommended Limits by Use Case
+
+| Use Case | Recommended Max Size |
+|----------|---------------------|
+| Profile photos and logos | 2 MB |
+| Blog and page images | 5 MB |
+| Course lesson videos | 500 MB |
+| Digital product downloads | 1 GB |
+| Documents and PDFs | 50 MB |
+
+## Storage Architecture
+
+GritCMS stores file metadata in the database (filename, size, MIME type, storage path, URL) while the actual file bytes live in your S3-compatible storage. This means:
+
+- **Database backups** do not include file contents -- back up your storage bucket separately.
+- **Switching storage providers** requires migrating existing files to the new bucket.
+- **Files are referenced by URL** in content, so changing the storage endpoint may require updating existing URLs.
+
+### File Upload Flow
+
+1. User selects a file in the admin dashboard.
+2. The frontend sends a multipart upload request to the API.
+3. The API validates the file type and size.
+4. The API uploads the file to the configured S3 bucket.
+5. The API stores the file metadata (name, URL, size, type) in the database.
+6. The public URL is returned and embedded in the content.
+
+## Troubleshooting
+
+### Uploads failing silently
+
+- Check the API server logs for storage-related errors.
+- Verify the storage credentials are correct in your `.env`.
+- Ensure the bucket exists and the access key has write permissions.
+
+### Images not displaying on the public site
+
+- Confirm the bucket has public read access (or a CDN domain configured).
+- Check that `CORS_ORIGINS` in your `.env` includes your web frontend domain.
+- For MinIO, ensure you have set the bucket policy to allow downloads.
+
+### Storage service not initializing
+
+If you see `Warning: Storage unavailable` in the server logs, verify:
+
+- `STORAGE_DRIVER` is set to a valid value (`minio`, `r2`, or `b2`).
+- The corresponding endpoint and access keys are configured.
+- The storage service is reachable from the API server.

@@ -1,0 +1,127 @@
+---
+title: "Categories & Tags"
+description: "Organize your blog posts with categories and tags to help visitors find related content."
+---
+
+## Overview
+
+Categories and tags are two ways to organize your blog posts. They help visitors browse your content by topic and improve your site's structure for search engines. You manage both from the **Website** section in the admin dashboard.
+
+- **Categories** are broad groupings for your content (e.g., "Tutorials", "News", "Case Studies").
+- **Tags** are specific descriptors or keywords (e.g., "beginner", "email-marketing", "api-reference").
+
+Think of categories as the table of contents of a book and tags as the index entries at the back.
+
+## Categories
+
+### Creating a Category
+
+1. Navigate to **Website > Categories** in the admin sidebar.
+2. Click **New Category**.
+3. Fill in the category fields and click **Save**.
+
+### Category Fields
+
+| Field | Description | Required |
+|---|---|---|
+| Name | The display name of the category (e.g., "Tutorials"). | Yes |
+| Slug | The URL-friendly version of the name (e.g., `tutorials`). Auto-generated from the name, but you can customize it. | Yes |
+| Description | A short description of what this category covers. Displayed on the category archive page. | No |
+
+### Editing and Deleting Categories
+
+From the **Website > Categories** list, you can:
+
+- **Edit** a category by clicking on its name. Update any of the fields and click Save.
+- **Delete** a category you no longer need. Posts that were assigned to the deleted category will not be deleted -- they will simply no longer be associated with that category.
+
+### Best Practices for Categories
+
+- Keep the number of categories manageable. Five to ten categories is a good range for most blogs.
+- Use broad, descriptive names that cover multiple posts.
+- Every post should have at least one category so visitors can always find it through browsing.
+- Avoid creating categories with only one or two posts. If a category is too specific, it may work better as a tag.
+
+## Tags
+
+### Creating a Tag
+
+1. Navigate to **Website > Tags** in the admin sidebar.
+2. Click **New Tag**.
+3. Fill in the tag fields and click **Save**.
+
+### Tag Fields
+
+| Field | Description | Required |
+|---|---|---|
+| Name | The display name of the tag (e.g., "Getting Started"). | Yes |
+| Slug | The URL-friendly version of the name (e.g., `getting-started`). Auto-generated from the name, but you can customize it. | Yes |
+
+Tags do not have a description field since they are meant to be lightweight, specific labels.
+
+### Editing and Deleting Tags
+
+From the **Website > Tags** list, you can:
+
+- **Edit** a tag by clicking on its name.
+- **Delete** a tag you no longer need. As with categories, deleting a tag does not delete any posts -- it only removes the association.
+
+### Best Practices for Tags
+
+- Use tags for specific topics that cut across categories (e.g., a "beginner" tag could appear in both "Tutorials" and "Product Updates" categories).
+- Keep tag names lowercase and consistent. Decide on a style (singular vs. plural, hyphenated vs. not) and stick with it.
+- Do not over-tag. Three to five tags per post is usually enough. Too many tags dilute their usefulness.
+- Reuse existing tags rather than creating near-duplicates (e.g., do not create both "email" and "emails").
+
+## Assigning Categories and Tags to Posts
+
+When editing a blog post, you will find dropdown selectors for categories and tags in the post settings panel.
+
+1. Open a blog post for editing from **Website > Blog Posts**.
+2. In the settings panel, find the **Category** and **Tags** fields.
+3. Select one or more categories and tags from the dropdowns.
+4. Click **Save** to apply the changes.
+
+You can assign multiple categories and multiple tags to a single post.
+
+## Filtering Posts on the Public Site
+
+On the public-facing blog, visitors can browse posts by category or tag. Each category and tag has its own archive page that lists all associated posts.
+
+### Category Archive Pages
+
+Category archives are available at URLs like:
+
+```
+https://yoursite.com/blog/category/tutorials
+```
+
+This page displays all published posts in the "Tutorials" category, with the category name and description shown at the top.
+
+### Tag Archive Pages
+
+Tag archives work the same way:
+
+```
+https://yoursite.com/blog/tag/getting-started
+```
+
+This page lists all published posts tagged with "getting-started".
+
+### How Visitors Navigate
+
+Visitors can reach category and tag pages by:
+
+- Clicking category or tag labels displayed on individual blog posts.
+- Using navigation menus (if you add category links to your menu).
+- Following direct links from other parts of your site.
+
+## Categories vs. Tags at a Glance
+
+| Aspect | Categories | Tags |
+|---|---|---|
+| Purpose | Broad topic grouping | Specific keyword labels |
+| Typical count | 5-10 total | Unlimited, but use sparingly |
+| Description field | Yes | No |
+| Required per post | Recommended | Optional |
+| Archive pages | Yes | Yes |

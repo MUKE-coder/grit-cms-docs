@@ -1,0 +1,123 @@
+---
+title: "Threads & Discussions"
+description: "Create discussion threads, post replies with nested conversations, react to content, and moderate your community discussions."
+---
+
+## Overview
+
+Threads are the individual discussions that happen inside a space. Members create threads to ask questions, share ideas, make announcements, or start conversations. Other members can reply to threads, and replies can be nested to create focused sub-conversations. Reactions let members express quick feedback without writing a full reply.
+
+## Creating a Thread
+
+1. Navigate to a space within **Community > Spaces** in the admin dashboard, or from the public community page.
+2. Click **New Thread**.
+3. Enter a title and write your content using the rich text editor.
+4. Select the thread type and save.
+
+### Thread Fields
+
+| Field | Description |
+|---|---|
+| **Title** | A clear, descriptive title for the discussion. |
+| **Content** | The body of the thread, written with the rich text editor. Supports formatting, links, and images. |
+| **Type** | The kind of thread: `discussion`, `question`, or `announcement`. |
+| **Author** | The contact who created the thread. Set automatically based on the logged-in user. |
+
+### Thread Types
+
+- **Discussion** -- A general conversation thread. This is the default type and is suitable for most topics.
+- **Question** -- Marks the thread as a question, signaling that the author is looking for an answer. Useful for Q&A-style communities.
+- **Announcement** -- A one-way communication from admins or moderators. Use announcements for important updates, news, or rule changes.
+
+## Thread Statuses
+
+Threads have a status that controls their behavior in the space:
+
+| Status | Description |
+|---|---|
+| **Open** | The default status. The thread is active and accepting new replies. |
+| **Pinned** | The thread is locked to the top of the thread list, regardless of sort order. Pinned threads are always shown first. |
+| **Closed** | The thread is no longer accepting new replies. Existing content remains visible, but members cannot add to the discussion. |
+
+## Browsing Threads
+
+The thread list within a space shows all threads sorted with pinned threads at the top. You can sort the remaining threads by:
+
+- **Recent** -- Threads with the most recent activity (new replies) appear first. This is the default sort order.
+- **Popular** -- Threads with the most likes appear first.
+- **Newest** -- Threads sorted by creation date, newest first.
+
+You can also filter threads by type to see only discussions, questions, or announcements.
+
+## Replies
+
+Replies are how members respond to a thread. Each reply is tied to a specific thread and has its own author, content, and like count.
+
+### Posting a Reply
+
+1. Open a thread.
+2. Write your reply in the reply editor at the bottom of the thread.
+3. Click **Reply** to post.
+
+The thread's reply count and last activity timestamp are updated automatically whenever a new reply is posted.
+
+### Nested Replies
+
+Replies support nesting, allowing members to respond directly to another reply rather than to the thread as a whole. This creates focused sub-conversations within a thread.
+
+To reply to a specific reply, click the **Reply** button on that reply rather than using the main reply editor. Nested replies are displayed as children of the parent reply they were responding to.
+
+## Reactions
+
+Reactions let members express feedback on threads and replies with a single click, without writing a full response. GritCMS supports the following reaction types:
+
+- **Like** -- A general positive reaction (the default).
+- **Heart** -- Express love or strong appreciation.
+- **Celebrate** -- Congratulate or cheer.
+
+### Toggling a Reaction
+
+Reactions work as a toggle. Clicking a reaction type on a thread or reply adds it. Clicking the same reaction type again removes it. Each member can only have one reaction of each type per thread or reply.
+
+The like count displayed on threads and replies is updated in real time as reactions are added and removed.
+
+## Pinning and Moderating Threads
+
+Admins and moderators have additional controls to keep the community organized and on topic.
+
+### Pinning a Thread
+
+Pinning a thread locks it to the top of the space's thread list so all members see it first. This is useful for important announcements, rules, or frequently asked questions.
+
+1. Open the thread you want to pin.
+2. Click the **Pin** button.
+3. The thread status changes to **Pinned** and it moves to the top of the list.
+
+To unpin a thread, click the **Pin** button again. The status reverts to **Open** and the thread returns to its normal position in the sort order.
+
+### Closing a Thread
+
+Closing a thread prevents any new replies from being posted. The existing content remains visible for reading.
+
+1. Open the thread you want to close.
+2. Click the **Close** button.
+3. The thread status changes to **Closed**.
+
+To reopen a closed thread, click the **Close** button again to toggle it back to **Open**.
+
+### Deleting Content
+
+- **Delete a thread** -- Removes the thread and all its replies permanently.
+- **Delete a reply** -- Removes the individual reply. The thread's reply count is decremented automatically.
+
+## Editing Threads and Replies
+
+Both thread authors and moderators can edit thread content and replies after they have been posted. Edits update the content in place. The `updated_at` timestamp is refreshed to reflect when the most recent edit occurred.
+
+### Tips for Healthy Community Discussions
+
+- Encourage members to use descriptive thread titles so others can find relevant discussions easily.
+- Pin a "Welcome" or "Community Guidelines" thread in each space so new members know what is expected.
+- Use the **Question** thread type for support spaces to make it clear when someone needs help.
+- Close threads that have been resolved or are no longer relevant to keep the space tidy.
+- Respond to threads promptly to build engagement and show members that the community is active.

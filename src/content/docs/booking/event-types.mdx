@@ -1,0 +1,99 @@
+---
+title: "Event Types"
+description: "Define the types of meetings or sessions you offer, set their duration and availability, and share public booking pages."
+---
+
+## Overview
+
+An event type defines a specific kind of meeting or session that visitors can book. For example, "30-Minute Consultation," "1-Hour Coaching Session," or "15-Minute Discovery Call." Each event type belongs to a calendar and inherits that calendar's timezone. You configure the duration, availability windows, buffer times, and optional pricing for each event type.
+
+## Creating an Event Type
+
+1. Navigate to **Booking > Calendars** and open the calendar where you want to add the event type.
+2. Click **Add Event Type**.
+3. Fill in the event type details:
+
+| Field | Description |
+|---|---|
+| **Name** | The name shown to visitors on the booking page (e.g., "30-Min Consultation"). |
+| **Slug** | A URL-friendly identifier auto-generated from the name. Used in the public booking URL. |
+| **Description** | A brief description of the session shown on the public booking page. |
+| **Duration (minutes)** | How long the session lasts. Defaults to 30 minutes. |
+| **Buffer Before (minutes)** | Free time required before the session starts. Defaults to 0. |
+| **Buffer After (minutes)** | Free time required after the session ends. Defaults to 0. |
+| **Max Per Day** | The maximum number of this event type that can be booked in a single day. Defaults to 10. |
+| **Price** | Optional price in cents. Set to 0 for free sessions. When a price is set, the event type can be linked to a product for payment processing. |
+| **Color** | A hex color code used to visually distinguish this event type in the admin dashboard. Defaults to `#6366f1`. |
+
+4. Click **Create**.
+
+## Setting Availability Windows
+
+Availability windows define the days and time ranges when this event type can be booked. Availability is configured at the calendar level and applies to all event types under that calendar.
+
+To set availability:
+
+1. Open the calendar that contains the event type.
+2. Go to the **Availability** section.
+3. Define one or more time windows for each day of the week:
+
+| Field | Description |
+|---|---|
+| **Day of Week** | The day this window applies to (0 = Sunday through 6 = Saturday). |
+| **Start Time** | The earliest time a session can start, in 24-hour format (e.g., `09:00`). |
+| **End Time** | The latest time a session can end, in 24-hour format (e.g., `17:00`). |
+
+You can define multiple windows per day. For example, you might set availability from 09:00 to 12:00 and again from 14:00 to 17:00 to block out a lunch break.
+
+When you save availability, it replaces any existing availability windows for that calendar. This means you define the full weekly schedule each time you update.
+
+### How Slots Are Calculated
+
+GritCMS calculates available time slots by combining the availability windows with the event type's duration and buffer settings. For example, with a 30-minute duration, 10-minute buffer after, and availability from 09:00 to 12:00, the system generates slots at 09:00, 09:40, 10:20, and 11:00 (the last slot that ends by 12:00).
+
+Slots that overlap with existing appointments (including their buffer times) are automatically excluded. Slots in the past are also excluded.
+
+## Buffer Time Between Appointments
+
+Buffer times give you breathing room between sessions:
+
+- **Buffer Before** -- Free time before the session. A 15-minute buffer before a 10:00 AM session means no other session can end after 9:45 AM.
+- **Buffer After** -- Free time after the session. A 10-minute buffer after a session ending at 10:30 AM means the next session cannot start before 10:40 AM.
+
+Buffers prevent back-to-back bookings and give you time to prepare or take breaks. Both values default to 0 if you do not need them.
+
+## Public Booking Page
+
+Each event type has a public booking page where visitors can view available slots and book a session. The public URL is:
+
+```
+GET /api/book/{event-type-slug}
+```
+
+This returns the event type details including the name, description, duration, and price. Visitors use this information to decide whether to book.
+
+To check available time slots for a specific date:
+
+```
+GET /api/book/{event-type-slug}/slots?date=YYYY-MM-DD
+```
+
+This returns a list of available start times in RFC 3339 format. The system checks the calendar's availability windows, existing appointments, buffer times, max-per-day limits, and excludes past slots.
+
+To complete a booking, the visitor submits their information:
+
+```
+POST /api/book/{event-type-slug}
+```
+
+The request includes the chosen `start_at` time, the visitor's `name`, `email`, and optional `notes`. GritCMS creates a contact record if the email is not already in the system and creates a confirmed appointment.
+
+## Editing and Deleting Event Types
+
+To edit an event type, open the calendar, select the event type, and update any fields. Changes to the duration or buffer times will affect future slot calculations but will not modify existing appointments.
+
+To delete an event type, click the delete action. Existing appointments linked to the event type are preserved but will no longer reference an active event type.
+
+## Next Steps
+
+Once event types and availability are configured, visitors can start booking appointments. See the [Appointments](/booking/appointments) guide to learn how to manage bookings, handle cancellations, and track appointment statuses.

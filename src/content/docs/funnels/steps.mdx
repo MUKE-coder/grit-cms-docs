@@ -1,0 +1,92 @@
+---
+title: "Funnel Steps"
+description: "Add and configure the individual pages that make up your sales funnel, including step types, content editing, and reordering."
+---
+
+## Overview
+
+Every funnel is made up of one or more steps. Each step is a single page that your visitor sees as they move through the funnel. Steps are displayed in the order you define, and you can add, edit, remove, or rearrange them at any time from the funnel editor in the admin dashboard.
+
+## Adding Steps to a Funnel
+
+1. Open the funnel you want to edit from **Funnels** in the admin sidebar.
+2. Click **Add Step**.
+3. Fill in the step details and save.
+
+New steps are automatically placed at the end of the funnel. GritCMS assigns the next available `sort_order` value so the new step appears after all existing steps.
+
+## Step Types
+
+Each step has a type that describes its role in the funnel. The available step types are:
+
+| Type | Description |
+|---|---|
+| **Landing** | The entry point of the funnel. This is the first page visitors see. Use it for headlines, hero sections, and calls to action. |
+| **Sales** | A long-form sales page designed to persuade visitors to buy. Ideal for product descriptions, testimonials, and feature breakdowns. |
+| **Checkout** | The purchase page where visitors enter payment details and complete a transaction. |
+| **Upsell** | An optional page shown after checkout that offers a related or upgraded product. |
+| **Downsell** | A follow-up offer shown if the visitor declines the upsell, typically at a lower price point. |
+| **Thank You** | The final confirmation page. Use it to thank the visitor, provide download links, or suggest next steps. |
+
+You can use any combination of step types in a funnel. There is no requirement to include every type.
+
+## Step Settings
+
+When creating or editing a step, you configure the following fields:
+
+| Field | Description |
+|---|---|
+| **Name** | The display name for the step, shown in the admin funnel editor (e.g., "Main Sales Page"). |
+| **Slug** | A URL-friendly identifier for the step. The full public URL for the step is `/funnels/{funnel-slug}/{step-slug}`. Auto-generated from the name if left blank. |
+| **Type** | One of `landing`, `sales`, `checkout`, `upsell`, `downsell`, or `thankyou`. |
+| **Sort Order** | A numeric value that determines the step's position in the funnel. Lower numbers appear first. |
+| **Settings** | A JSON object for additional configuration such as button text, redirect URLs, or custom behavior. |
+
+## Step Content Editor
+
+Each step has a rich content editor where you build the page that visitors will see. The content is stored as structured JSON, which means you can create layouts with headings, text blocks, images, buttons, and embedded forms. The editor provides a visual interface for composing your page without writing code.
+
+For advanced use cases, you can edit the content JSON directly to add custom elements or integrate with external tools.
+
+## Reordering Steps
+
+To change the order of steps in your funnel:
+
+1. Open the funnel editor.
+2. Drag and drop the steps into the desired order, or use the **Reorder** action.
+3. Save the new order.
+
+Behind the scenes, reordering sends a list of step IDs in the new order to the API. The `sort_order` field on each step is updated accordingly. Visitors who access the funnel will see the steps in the updated sequence.
+
+## Example Funnel Flows
+
+Here are example step sequences for each funnel type to help you plan your funnel structure.
+
+### Opt-in Funnel
+
+1. **Landing** -- Headline, description of the free offer, and an email signup form.
+2. **Thank You** -- Confirmation message and a link to download the free resource.
+
+### Sales Funnel
+
+1. **Landing** -- Hook the visitor with a compelling headline and call to action.
+2. **Sales** -- Detailed product description, testimonials, and pricing.
+3. **Checkout** -- Payment form connected to your product.
+4. **Upsell** -- Offer a premium add-on or bundle.
+5. **Thank You** -- Order confirmation and next steps.
+
+### Webinar Funnel
+
+1. **Landing** -- Webinar title, date, and registration form.
+2. **Thank You** -- Confirmation with calendar invite link and reminder details.
+
+### Launch Funnel
+
+1. **Landing** -- Pre-launch teaser with countdown timer and email signup.
+2. **Sales** -- Full product reveal with pricing and testimonials.
+3. **Checkout** -- Payment page for the launched product.
+4. **Thank You** -- Purchase confirmation and access instructions.
+
+## Next Steps
+
+Once your funnel steps are in place and the funnel status is set to **active**, visitors can access the funnel and GritCMS will begin tracking their journey. See the [Tracking](/funnels/tracking) guide to learn how visits and conversions are measured.

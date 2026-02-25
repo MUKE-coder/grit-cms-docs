@@ -1,0 +1,127 @@
+---
+title: "Tags & Segments"
+description: "Organize your contacts with tags, create segments based on activity and attributes, and use them for targeted email campaigns and automations."
+---
+
+## Overview
+
+Tags and segments are how you organize and group your contacts in GritCMS. Tags are simple labels you attach to contacts for categorization. Segments are dynamic or manual groups of contacts based on one or more conditions -- such as which tags they have, what actions they have taken, or what data their profile contains. Together, tags and segments power targeted email campaigns, workflow automations, and personalized experiences.
+
+## Tags
+
+Tags are lightweight labels you can apply to any contact. Use them to categorize contacts by interest, behavior, purchase history, or any other criteria that matters to your business.
+
+### Creating a Tag
+
+1. Navigate to **Contacts > Tags** in the admin sidebar.
+2. Click **New Tag**.
+3. Enter a name for the tag (e.g., "VIP", "Newsletter", "Beta Tester").
+4. Optionally choose a color. The default color is `#6366f1` (indigo).
+5. Save the tag.
+
+Tag names must be unique within your account. If you try to create a tag with a name that already exists, you will receive an error.
+
+### Tag Properties
+
+| Field | Description |
+|---|---|
+| **Name** | The label displayed on contacts and in filters. Keep it short and descriptive. |
+| **Color** | A hex color code used to visually distinguish this tag in the interface. |
+
+### Applying Tags to Contacts
+
+There are several ways to tag a contact:
+
+#### Manual Tagging
+
+1. Open a contact's profile from the Contacts list.
+2. In the Tags section, add one or more tags by typing the tag name.
+3. Save the contact. If the tag does not exist yet, it is created automatically.
+
+You can also apply tags when creating a new contact by including tag names in the creation form.
+
+#### Tagging via Automation
+
+Tags can be applied automatically through workflow automations. For example, you can set up a workflow that applies a "Customer" tag whenever a contact completes a purchase, or a "Engaged" tag when they open a certain number of emails. See the [Workflow Automation](/automation/workflows) documentation for details on setting up automated tagging.
+
+#### Tagging via API
+
+When creating or updating contacts through the API, include a `tags` array with the tag names you want to apply. The system will create any tags that do not already exist and associate them with the contact.
+
+### Removing Tags
+
+To remove a tag from a contact, open the contact's profile and remove the tag from the Tags section. This only removes the association -- the tag itself is not deleted.
+
+### Deleting a Tag
+
+To delete a tag entirely:
+
+1. Navigate to **Contacts > Tags**.
+2. Find the tag and click **Delete**.
+3. Confirm the deletion.
+
+Deleting a tag removes it from all contacts that had it applied. The contacts themselves are not affected.
+
+## Segments
+
+Segments are groups of contacts defined by one or more filtering conditions. They allow you to target specific subsets of your audience for email campaigns, automations, or analysis.
+
+### Creating a Segment
+
+Segments in GritCMS are built using the contact list filters. You can combine multiple conditions to define your segment:
+
+- **Tag-based** -- Include contacts who have (or do not have) specific tags. For example, all contacts tagged "Customer" but not tagged "Churned".
+- **Source-based** -- Include contacts from a specific acquisition source, such as only contacts who came through a funnel or were referred.
+- **Activity-based** -- Use the activity timeline data to segment contacts based on what they have done. For example, contacts who enrolled in a course, attended a community event, or made a purchase.
+- **Field-based** -- Filter on any contact field, including custom fields. For example, contacts from a specific country or with a particular company name.
+
+### Using Segments for Email Campaigns
+
+When sending an email campaign in the Email module, you can target a segment by applying tag filters. This ensures your message reaches only the contacts who meet your criteria.
+
+For example:
+
+- Send a product launch email to all contacts tagged "Newsletter".
+- Send a course reminder to contacts tagged "Enrolled" but not tagged "Completed".
+- Send a re-engagement campaign to contacts whose last activity is more than 30 days ago.
+
+### Dynamic Segments
+
+Dynamic segments are tag-based filters that update automatically as contacts are added or removed from tags. Because tags can be applied and removed through automations, your segments stay current without manual intervention.
+
+For example, if you have a workflow that applies a "Hot Lead" tag when a contact visits your pricing page three times, a segment filtering on the "Hot Lead" tag will automatically include any new contacts who trigger that workflow.
+
+### Combining Tags for Advanced Segments
+
+You can create sophisticated audience segments by combining multiple tags:
+
+| Segment Goal | Tags to Include | Tags to Exclude |
+|---|---|---|
+| Active customers | Customer | Churned |
+| Free trial users | Trial | Customer |
+| Engaged non-buyers | Engaged, Newsletter | Customer |
+| VIP customers | Customer, VIP | -- |
+
+## Best Practices
+
+### Tag Naming Conventions
+
+- Use consistent naming: decide on a format like `lowercase`, `Title Case`, or `UPPERCASE` and stick with it.
+- Be specific: "Purchased-Course-SEO" is more useful than "Customer".
+- Use prefixes for categories: "Interest: Marketing", "Source: Webinar", "Status: Active".
+
+### Segment Maintenance
+
+- Review your segments periodically to ensure they still align with your marketing goals.
+- Remove outdated tags that are no longer used to keep your system clean.
+- Use automations to keep tags up to date rather than relying on manual tagging, especially for large contact lists.
+
+### Integration with Other Modules
+
+Tags and segments connect your Contacts CRM with the rest of GritCMS:
+
+- **Email Marketing** -- Target campaigns to contacts with specific tags.
+- **Workflow Automation** -- Use tag changes as triggers or actions in workflows.
+- **Commerce** -- Automatically tag customers based on purchase behavior.
+- **Community** -- Tag members who join specific spaces or attend events.
+- **Courses** -- Tag contacts based on enrollment and completion status.

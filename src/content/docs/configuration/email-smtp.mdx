@@ -1,0 +1,165 @@
+---
+title: "Email Configuration"
+description: "Set up email delivery for transactional and marketing emails in GritCMS."
+---
+
+## Overview
+
+GritCMS uses [Resend](https://resend.com) as its email delivery service. Resend provides a modern API for sending transactional and marketing emails with excellent deliverability. The email system powers several GritCMS features:
+
+- **Email Marketing** -- campaign broadcasts and automations
+- **Transactional Emails** -- welcome emails, password resets, order confirmations
+- **Notifications** -- enrollment confirmations, appointment reminders, community digests
+
+## Configuration
+
+Email is configured with two environment variables in your `.env` file:
+
+```env
+RESEND_API_KEY=re_your_actual_api_key
+MAIL_FROM=hello@yourdomain.com
+```
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `RESEND_API_KEY` | Yes | Your Resend API key (starts with `re_`) |
+| `MAIL_FROM` | Yes | Default sender email address |
+
+If the API key is not set or is left as the placeholder value, the API server will log a warning and disable email functionality:
+
+```
+Warning: Resend API key not set (emails disabled)
+```
+
+All other features continue to work normally without email configured.
+
+## Setting Up Resend
+
+### Step 1: Create a Resend Account
+
+Sign up at [resend.com](https://resend.com). Resend offers a free tier that includes 3,000 emails per month -- sufficient for development and small sites.
+
+### Step 2: Add and Verify Your Domain
+
+In the Resend dashboard, navigate to **Domains** and add your custom domain. Resend will provide DNS records (SPF, DKIM, and optionally DMARC) that you need to add to your domain's DNS settings.
+
+| Record Type | Purpose |
+|-------------|---------|
+| **SPF** | Authorizes Resend to send email on behalf of your domain |
+| **DKIM** | Cryptographically signs emails to prevent spoofing |
+| **DMARC** | Tells receiving servers how to handle unauthenticated email |
+
+Domain verification usually completes within a few minutes, though DNS propagation can take up to 48 hours.
+
+### Step 3: Generate an API Key
+
+In the Resend dashboard, go to **API Keys** and create a new key. Copy the key (it starts with `re_`) and add it to your `.env`:
+
+```env
+RESEND_API_KEY=re_BysY7p5F_A1sMPrvb5XyapM4bt3B8s93J
+```
+
+### Step 4: Set the Sender Address
+
+The `MAIL_FROM` variable must use a domain you have verified in Resend:
+
+```env
+MAIL_FROM=hello@yourdomain.com
+```
+
+If you have not verified a domain yet, Resend allows sending from `onboarding@resend.dev` for testing.
+
+## Alternative Email Providers
+
+While GritCMS is built around the Resend API, you can adapt it to other providers if needed. The email service is abstracted in the `internal/mail` package.
+
+| Provider | Type | Notes |
+|----------|------|-------|
+| **Resend** | API | Built-in support, recommended |
+| **SendGrid** | API/SMTP | Requires custom integration |
+| **Mailgun** | API/SMTP | Requires custom integration |
+| **Amazon SES** | API/SMTP | Requires custom integration |
+| **Postmark** | API | Requires custom integration |
+
+For providers other than Resend, you would need to implement the mailer interface in `apps/api/internal/mail/`.
+
+## Testing Email Locally
+
+### Using MailHog
+
+The Docker Compose setup includes [MailHog](https://github.com/mailhog/MailHog), a local email testing tool that catches all outgoing emails.
+
+```bash
+docker compose up -d mailhog
+```
+
+MailHog runs on two ports:
+
+| Port | Purpose |
+|------|---------|
+| `1025` | SMTP server (receives emails) |
+| `8025` | Web UI (view caught emails) |
+
+Open `http://localhost:8025` in your browser to see all emails sent by GritCMS during development.
+
+### Using Resend Test Mode
+
+Resend provides a test mode that does not actually deliver emails but lets you verify your API integration is working. Use the test API key from your Resend dashboard during development.
+
+## Email Features in GritCMS
+
+### Campaign Broadcasts
+
+Send one-time emails to your entire subscriber list or a filtered segment. Create campaigns from **Email > Campaigns** in the admin dashboard.
+
+### Subscriber Management
+
+Manage email lists and subscribers from **Email > Lists**. Each list tracks:
+
+- Active subscribers
+- Unsubscribes
+- Bounce rates
+- Subscription date
+
+### Email Templates
+
+GritCMS includes a built-in email template system. Templates are stored in the database and support:
+
+- **Dynamic variables** -- personalize emails with subscriber name, site name, and custom fields
+- **HTML content** -- rich email content with styling
+- **Preview** -- preview emails before sending from the admin dashboard
+
+### Transactional Emails
+
+System emails (password resets, welcome messages, order confirmations) are sent automatically when triggered by user actions. These use predefined templates that can be customized from the admin settings.
+
+## Deliverability Best Practices
+
+To ensure your emails reach the inbox and not the spam folder:
+
+1. **Verify your domain** -- always send from a verified domain with proper SPF, DKIM, and DMARC records.
+2. **Use a consistent sender address** -- do not change your `MAIL_FROM` frequently.
+3. **Include an unsubscribe link** -- GritCMS automatically adds this to marketing emails.
+4. **Monitor bounce rates** -- high bounce rates damage your sender reputation. Clean your lists regularly.
+5. **Warm up your domain** -- if you are sending to a large list for the first time, start with small batches and gradually increase volume.
+6. **Avoid spam trigger words** -- words like "free", "urgent", and excessive punctuation can trigger spam filters.
+
+## Troubleshooting
+
+### Emails not sending
+
+- Check that `RESEND_API_KEY` is set and valid (starts with `re_`).
+- Look at the API server logs for error messages.
+- Verify your domain is confirmed in the Resend dashboard.
+- Ensure `MAIL_FROM` uses a verified domain.
+
+### Emails going to spam
+
+- Verify SPF, DKIM, and DMARC DNS records are correctly configured.
+- Check your domain reputation at [mail-tester.com](https://www.mail-tester.com).
+- Make sure you are not on any email blacklists.
+
+### MailHog not catching emails
+
+- Confirm MailHog is running: `docker compose ps`.
+- Note that MailHog only catches emails sent via SMTP on port 1025. If you are using the Resend API directly, emails go through Resend's servers and are not caught by MailHog.

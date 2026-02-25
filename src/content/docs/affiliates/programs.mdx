@@ -1,0 +1,99 @@
+---
+title: "Affiliate Programs"
+description: "Create and configure affiliate programs, set commission structures, and manage affiliate accounts."
+---
+
+## Overview
+
+The affiliate system in GritCMS lets you create referral programs where partners (affiliates) promote your products and earn commissions on sales they generate. You define the program rules -- commission rate, cookie duration, payout thresholds -- and GritCMS handles tracking referrals, calculating commissions, and managing payouts.
+
+Affiliate programs are managed from the **Affiliates > Programs** section in the admin dashboard.
+
+## Creating an Affiliate Program
+
+1. Navigate to **Affiliates > Programs** in the admin sidebar.
+2. Click **New Program**.
+3. Fill in the program details:
+
+| Field | Description |
+|---|---|
+| **Name** | A descriptive name for the program (e.g., "Course Affiliate Program" or "Product Referral Partners"). |
+| **Description** | An optional explanation of the program terms, visible to affiliates. |
+| **Commission Type** | Choose `percentage` or `fixed`. Percentage commissions are calculated as a share of the sale amount. Fixed commissions pay a flat amount per sale. |
+| **Commission Amount** | The commission value. For percentage, enter the percentage as a whole number (e.g., `30` for 30%). For fixed, enter the amount in cents (e.g., `1000` for $10.00). |
+| **Cookie Duration (days)** | How many days after a visitor clicks an affiliate link the referral is still attributed to the affiliate. Defaults to 30 days. |
+| **Minimum Payout Amount** | The minimum balance an affiliate must accumulate before a payout can be issued, in cents. Defaults to $50.00 (5000 cents). |
+| **Auto Approve** | When enabled, new affiliate accounts are automatically set to **active** status. When disabled, new accounts start as **pending** and require manual approval. |
+
+4. Click **Create**. The program is created with an **active** status.
+
+## Commission Types Explained
+
+### Percentage Commission
+
+The affiliate earns a percentage of the sale amount. For example, if the commission amount is `30` and a customer purchases a $100 product through an affiliate link, the affiliate earns $30.
+
+### Fixed Commission
+
+The affiliate earns a flat dollar amount per sale, regardless of the sale price. For example, if the commission amount is `1500` (cents), the affiliate earns $15.00 for every sale.
+
+Choose percentage commissions when you want affiliate earnings to scale with product prices. Choose fixed commissions when you want predictable costs per referral.
+
+## Activating and Deactivating Programs
+
+Programs have an **active** status by default. To pause a program, update its status to inactive. When a program is inactive:
+
+- Existing affiliate accounts remain in the system but new referrals are not tracked.
+- Pending commissions and balances are preserved.
+- You can reactivate the program at any time.
+
+To delete a program, click the delete action in the program list. This removes the program and its associated accounts, links, and commission records. Use deletion only for programs you no longer need at all -- deactivation is preferred for temporary pauses.
+
+## Managing Affiliate Accounts
+
+Affiliate accounts represent the individuals who participate in your program. Each account is linked to a contact in your CRM and assigned to a specific program.
+
+### Creating an Account
+
+1. Navigate to **Affiliates > Accounts**.
+2. Click **New Account**.
+3. Select the **Contact** (the person who will be the affiliate) and the **Program** they are joining.
+4. Click **Create**.
+
+If the program has **Auto Approve** enabled, the account is immediately set to **active** and the affiliate can start generating referral links. If auto approve is disabled, the account starts as **pending** and you must manually approve it.
+
+A unique referral code is automatically generated for each account (a random 12-character hex string, e.g., `a1b2c3d4e5f6`).
+
+### Account Statuses
+
+| Status | Description |
+|---|---|
+| **Pending** | The account has been created but not yet approved. The affiliate cannot generate referral links or earn commissions. |
+| **Active** | The account is approved and operational. The affiliate can create referral links and earn commissions on sales. |
+| **Suspended** | The account has been temporarily disabled. Referral tracking is paused and no new commissions are generated. |
+
+### Approving and Suspending Accounts
+
+To change an account's status:
+
+1. Open the account from the **Affiliates > Accounts** list.
+2. Update the status to `active`, `pending`, or `suspended`.
+3. Save the change.
+
+Use the **suspended** status to temporarily disable an affiliate who may be violating program terms, without deleting their account or commission history.
+
+## Account Dashboard
+
+Each affiliate account tracks three financial metrics:
+
+| Metric | Description |
+|---|---|
+| **Balance** | The current available balance from approved commissions that have not yet been paid out. |
+| **Total Earned** | The lifetime total of all approved commissions. |
+| **Total Paid** | The lifetime total of all completed payouts. |
+
+These metrics are updated automatically as commissions are approved and payouts are processed.
+
+## Next Steps
+
+Once your program is set up and affiliates are approved, they need referral links to start promoting your products. See the [Affiliate Links](/affiliates/links) guide to learn how referral links work and how clicks are tracked.

@@ -1,0 +1,132 @@
+---
+title: "Theme & Branding"
+description: "Customize your website's visual identity with brand fonts, colors, logo, and favicon."
+---
+
+## Overview
+
+Your website's theme controls its visual identity -- the fonts, colors, logo, and favicon that make your site recognizable. GritCMS provides a set of branding options that you can configure from the admin dashboard under **Settings > Branding**. Changes apply to your public-facing website immediately after saving.
+
+## Accessing Theme Settings
+
+1. Click **Settings** in the admin sidebar.
+2. Select the **Branding** tab.
+3. Make your changes and click **Save**.
+
+## Brand Font
+
+The brand font is used for headings and primary text across your public website. GritCMS offers a curated selection of fonts to choose from.
+
+### Available Fonts
+
+GritCMS includes 23 Google Fonts plus the option to use a custom font:
+
+| Category | Example Fonts |
+|---|---|
+| Sans-Serif | Inter, Open Sans, Lato, Poppins, Nunito, Montserrat, Raleway, Work Sans, DM Sans, Plus Jakarta Sans, Source Sans 3 |
+| Serif | Merriweather, Playfair Display, Lora, Crimson Text, Libre Baskerville, PT Serif |
+| Monospace | JetBrains Mono, Fira Code, Source Code Pro |
+| Display | Oswald, Bebas Neue, Space Grotesk |
+| Custom | Enter any Google Font name manually |
+
+### Selecting a Font
+
+1. In the Branding settings, find the **Brand Font** dropdown.
+2. Browse the available fonts. Each option shows a preview of the font style.
+3. Select the font you want to use.
+4. Click **Save**.
+
+### Using a Custom Font
+
+If the font you want is not in the preset list, you can enter a custom Google Font name:
+
+1. Select the **Custom** option from the font dropdown.
+2. Enter the exact Google Font name (e.g., `Roboto Slab`).
+3. Click **Save**.
+
+The font name must match a valid Google Font. You can browse available fonts at [fonts.google.com](https://fonts.google.com).
+
+### How Fonts Load on the Public Site
+
+When a visitor loads your website, GritCMS dynamically loads the selected font from Google Fonts. The font is fetched and applied automatically -- you do not need to add any code or link tags manually. If the font fails to load (for example, due to a network issue), the browser will fall back to a standard system font.
+
+## Brand Color
+
+The brand color is your primary accent color. It is used for buttons, links, highlights, and other interactive elements on your public website.
+
+### Color Presets
+
+GritCMS includes 12 color presets to get you started quickly:
+
+| Preset | Color |
+|---|---|
+| Red | `#ef4444` |
+| Orange | `#f97316` |
+| Amber | `#f59e0b` |
+| Yellow | `#eab308` |
+| Lime | `#84cc16` |
+| Green | `#22c55e` |
+| Emerald | `#10b981` |
+| Cyan | `#06b6d4` |
+| Blue | `#3b82f6` |
+| Violet | `#8b5cf6` |
+| Pink | `#ec4899` |
+| Rose | `#f43f5e` |
+
+### Choosing a Color
+
+1. In the Branding settings, find the **Brand Color** section.
+2. Click one of the preset color swatches to select it, or use the **color picker** to choose any custom color.
+3. The preview will update to show how the color looks.
+4. Click **Save**.
+
+### Tips for Choosing a Brand Color
+
+- Pick a color that matches your existing brand identity (social media profiles, logo, etc.).
+- Ensure sufficient contrast against dark backgrounds, since the public site uses a dark theme.
+- Avoid very light colors (pale yellows, light grays) as they may be hard to see on dark backgrounds.
+
+## Logo
+
+Your logo appears in the website header and helps visitors identify your brand immediately.
+
+### Uploading a Logo
+
+1. In the Branding settings, find the **Logo** section.
+2. Click the upload area or drag and drop your logo image.
+3. Click **Save**.
+
+### Logo Recommendations
+
+- Use a PNG or SVG file with a transparent background for the best appearance on your dark-themed site.
+- Keep the file size under 200 KB for fast loading.
+- A horizontal (landscape) orientation works best for header placement.
+- Recommended height: 40-60 pixels at display size.
+
+## Favicon
+
+The favicon is the small icon that appears in browser tabs, bookmarks, and mobile home screens. It helps visitors identify your site when they have multiple tabs open.
+
+### Uploading a Favicon
+
+1. In the Branding settings, find the **Favicon** section.
+2. Upload a square image (recommended size: 512x512 pixels).
+3. Click **Save**.
+
+The image will be automatically resized for different contexts (browser tabs, mobile bookmarks, etc.). Use a simple, recognizable design that is legible at very small sizes.
+
+## Theme Modes
+
+### Public Site
+
+The public-facing website uses a **dark theme** by default. All branding choices (font, color, logo) are optimized for display on dark backgrounds. When choosing your brand color, preview it against a dark background to make sure it looks good.
+
+### Admin Dashboard
+
+The admin dashboard uses a **light theme** for the editing interface. This is separate from the public site theme and cannot be changed. The light admin theme ensures readability when you are working with content and settings for extended periods.
+
+## After Making Changes
+
+All branding changes take effect immediately after you click **Save**. Visitors to your site will see the updated font, color, logo, or favicon on their next page load. There is no need to rebuild or redeploy anything -- GritCMS applies branding settings dynamically.
+
+If you do not see your changes right away, try a hard refresh in your browser (`Ctrl + Shift + R`) to clear any cached styles.

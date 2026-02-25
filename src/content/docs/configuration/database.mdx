@@ -1,0 +1,187 @@
+---
+title: "Database"
+description: "Configure PostgreSQL for GritCMS with auto-migration and built-in database tools."
+---
+
+## Overview
+
+GritCMS uses **PostgreSQL** as its database, accessed through [GORM](https://gorm.io) -- the most popular Go ORM. The database connection is configured via a single `DATABASE_URL` environment variable, and all tables are automatically created and migrated on startup.
+
+## PostgreSQL Setup
+
+PostgreSQL is the recommended (and only supported) database for GritCMS. You have several options for running it.
+
+### Local with Docker Compose (Recommended for Development)
+
+The included `docker-compose.yml` starts a PostgreSQL 16 instance with sensible defaults:
+
+```bash
+docker compose up -d postgres
+```
+
+This creates a database with the following credentials:
+
+| Setting | Value |
+|---------|-------|
+| Host | `localhost` |
+| Port | `5432` |
+| User | `grit` |
+| Password | `grit` |
+| Database | `gritcms` |
+
+The corresponding connection string in your `.env`:
+
+```env
+DATABASE_URL=postgres://grit:grit@localhost:5432/gritcms?sslmode=disable
+```
+
+### Self-Hosted PostgreSQL
+
+If you already have PostgreSQL installed on your machine or server:
+
+```bash
+# Create the database and user
+psql -U postgres -c "CREATE USER grit WITH PASSWORD 'your-secure-password';"
+psql -U postgres -c "CREATE DATABASE gritcms OWNER grit;"
+```
+
+Then set the connection string:
+
+```env
+DATABASE_URL=postgres://grit:your-secure-password@localhost:5432/gritcms?sslmode=disable
+```
+
+### Cloud PostgreSQL (Production)
+
+For production, use a managed PostgreSQL service. GritCMS works with any PostgreSQL-compatible provider:
+
+| Provider | Notes |
+|----------|-------|
+| **Neon** | Serverless Postgres with generous free tier, auto-scaling |
+| **Supabase** | Postgres with built-in auth and real-time (use just the DB) |
+| **Railway** | Simple deployment with automatic backups |
+| **AWS RDS** | Managed PostgreSQL on AWS |
+| **DigitalOcean** | Managed databases with daily backups |
+
+Example connection string for a cloud provider:
+
+```env
+DATABASE_URL=postgres://user:password@host.provider.com:5432/gritcms?sslmode=require
+```
+
+Always use `sslmode=require` for cloud databases to encrypt the connection.
+
+## Auto-Migration
+
+GritCMS uses GORM's `AutoMigrate` feature to automatically create and update database tables on every server startup. This means:
+
+- **No manual migration commands** -- tables are created the first time you start the server.
+- **Schema updates are applied automatically** -- new columns, indexes, and tables are added when you update GritCMS.
+- **Existing data is preserved** -- AutoMigrate only adds new structures; it never drops columns or tables.
+
+When the API server boots, you will see log output confirming the migration:
+
+```
+Database connected and migrated successfully
+```
+
+### What Gets Created
+
+GritCMS auto-migrates all model tables across every module:
+
+| Module | Tables |
+|--------|--------|
+| **Core** | users, tenants, settings, uploads, media_assets |
+| **Website** | pages, posts, categories, tags, menus, menu_items |
+| **Email** | email_lists, subscribers, campaigns, email_templates |
+| **Courses** | courses, course_modules, lessons, enrollments |
+| **Commerce** | products, prices, product_variants, orders, order_items, coupons, subscriptions |
+| **Contacts** | contacts, contact_tags, segments, activities |
+| **Community** | spaces, community_members, threads, replies, reactions, community_events, event_attendees |
+| **Funnels** | funnels, funnel_steps, funnel_visits, funnel_conversions |
+| **Booking** | calendars, booking_event_types, availabilities, appointments |
+| **Affiliates** | affiliate_programs, affiliate_accounts, affiliate_links, commissions, payouts |
+| **Workflows** | workflows, workflow_actions, workflow_executions |
+
+## GORM Studio
+
+GritCMS ships with **GORM Studio**, a built-in visual database browser available at `/studio` on your API server.
+
+### Accessing Studio
+
+Navigate to `http://localhost:8080/studio` in your browser. You will be prompted to log in with the credentials from your `.env`:
+
+```env
+GORM_STUDIO_ENABLED=true
+GORM_STUDIO_USERNAME=admin
+GORM_STUDIO_PASSWORD=studio
+```
+
+### Studio Features
+
+- **Browse tables** -- view all tables and their schemas
+- **Query data** -- browse rows with filtering, sorting, and pagination
+- **Edit records** -- create, update, and delete records directly
+- **View relationships** -- see foreign key relationships between tables
+- **Export data** -- export query results for analysis
+
+### Disabling Studio
+
+In production, you may want to disable Studio for security:
+
+```env
+GORM_STUDIO_ENABLED=false
+```
+
+Or change the default credentials to something secure:
+
+```env
+GORM_STUDIO_USERNAME=your-secure-username
+GORM_STUDIO_PASSWORD=your-secure-password
+```
+
+## API Documentation
+
+GritCMS also ships with built-in **API documentation** available at `/docs` on the API server.
+
+### Accessing API Docs
+
+Navigate to `http://localhost:8080/docs` in your browser. This page provides:
+
+- **Endpoint listing** -- every REST API endpoint grouped by module
+- **Request/response schemas** -- expected payloads and return types
+- **Authentication info** -- which endpoints require JWT tokens
+- **Try it out** -- test endpoints directly from the browser
+
+The API docs are auto-generated from the route definitions and handler metadata, so they always stay in sync with the actual API.
+
+## Database Backup and Restore
+
+### Backup
+
+Use `pg_dump` to create a backup of your database:
+
+```bash
+pg_dump -U grit -h localhost -d gritcms > backup.sql
+```
+
+For Docker Compose:
+
+```bash
+docker compose exec postgres pg_dump -U grit gritcms > backup.sql
+```
+
+### Restore
+
+Restore from a backup file:
+
+```bash
+psql -U grit -h localhost -d gritcms < backup.sql
+```
+
+## Performance Tips
+
+- **Enable connection pooling** in production using PgBouncer or your cloud provider's built-in pooler.
+- **Add `sslmode=require`** for all remote database connections.
+- **Monitor slow queries** using the Pulse dashboard at `/pulse/ui/`.
+- **Index frequently queried columns** -- GORM auto-creates indexes for foreign keys, but you may want additional indexes for custom queries.

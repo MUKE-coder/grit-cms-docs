@@ -1,0 +1,93 @@
+---
+title: "Workflows"
+description: "Automate repetitive tasks with event-driven workflows in GritCMS."
+---
+
+Workflows are GritCMS's built-in automation engine. They let you define event-driven sequences that run automatically when something happens in your system -- a new contact signs up, an order is completed, a course enrollment occurs, and more. Instead of manually sending emails or tagging contacts, workflows handle it for you.
+
+## How Workflows Work
+
+A workflow consists of three parts:
+
+1. **Trigger** -- the event that starts the workflow (e.g., `contact.created`)
+2. **Actions** -- the steps that execute in order (e.g., send an email, add a tag)
+3. **Status** -- whether the workflow is actively listening for its trigger
+
+When the trigger event fires, GritCMS creates a **workflow execution** that processes each action sequentially. Every execution is logged so you can review what happened and troubleshoot if needed.
+
+## Creating a Workflow
+
+Navigate to **Automation > Workflows** in the admin panel and click **New Workflow**. You will be asked to fill in:
+
+- **Name** -- a descriptive label for the workflow (e.g., "Welcome New Subscribers")
+- **Description** -- an optional summary of what the workflow does
+- **Trigger Event** -- the event that activates the workflow (selected from a dropdown of available events)
+- **Status** -- the initial state of the workflow
+
+Once created, you can add actions to the workflow from the workflow detail page. Actions execute in the order they are listed and can be reordered by dragging.
+
+## Workflow Status
+
+Every workflow has one of three statuses:
+
+### Draft
+
+The workflow is being built and will **not** execute, even if the trigger event fires. Use this while you are still adding or testing actions.
+
+### Active
+
+The workflow is live. When its trigger event fires, a new execution is created and all actions run in sequence. Only activate a workflow when you are confident it is configured correctly.
+
+### Paused
+
+The workflow was previously active but has been temporarily stopped. No new executions are created while paused. Existing in-progress executions will finish, but no new ones will start. Use this to temporarily disable a workflow without deleting it.
+
+You can change the status at any time from the workflow list or detail page.
+
+## Execution History and Logs
+
+Every time a workflow runs, GritCMS creates an **execution record** with the following details:
+
+- **Execution ID** -- a unique identifier
+- **Status** -- `running`, `completed`, or `failed`
+- **Started At / Completed At** -- timestamps for the execution
+- **Trigger Data** -- the event payload that started the execution
+- **Action Results** -- the outcome of each action in the sequence
+
+Navigate to a workflow's detail page and click the **Executions** tab to see its full history. If an action fails, the execution is marked as `failed` and the error message is recorded in the logs. This makes it straightforward to identify and fix problems.
+
+## Example Workflows
+
+Here are common workflows to get you started:
+
+### Welcome Email on Signup
+
+- **Trigger:** `contact.created`
+- **Actions:** Send a welcome email using your "Welcome" email template
+
+This sends every new contact an introductory email as soon as they are added to your system.
+
+### Tag Contact on Purchase
+
+- **Trigger:** `order.completed`
+- **Actions:** Add the tag "customer" to the contact associated with the order
+
+This automatically labels anyone who completes a purchase, making it easy to segment customers from leads in your contact list.
+
+### Notify on New Order
+
+- **Trigger:** `order.completed`
+- **Actions:** Send a webhook notification to your Slack or Discord channel with the order details
+
+This keeps your team informed in real time whenever a sale comes through, without needing to check the admin panel.
+
+### Enroll in Follow-Up Sequence
+
+- **Trigger:** `course.enrolled`
+- **Actions:** Add the contact to your "Course Students" list, then send a "Getting Started" email after a 1-hour delay
+
+This ensures new students receive onboarding materials automatically after enrolling in a course.
+
+## Next Steps
+
+To learn about all available trigger events and action types, see [Triggers & Actions](/automation/triggers-actions).

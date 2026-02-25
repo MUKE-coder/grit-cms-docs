@@ -1,0 +1,128 @@
+---
+title: "Managing Contacts"
+description: "Use the centralized contact database to track every person who interacts with your platform, view their activity, and manage their information."
+---
+
+## Overview
+
+Contacts are the central entity in GritCMS. Every person who interacts with your platform -- whether they subscribe to your email list, enroll in a course, join your community, or purchase a product -- is stored as a contact. The Contacts CRM gives you a single, unified view of each person and their activity across all modules. Manage your contacts from the **Contacts** section in the admin sidebar.
+
+## Contact Fields
+
+Each contact record stores the following information:
+
+| Field | Description |
+|---|---|
+| **Email** | The contact's email address. This is the primary identifier and must be unique per tenant. |
+| **First Name** | The contact's first name. |
+| **Last Name** | The contact's last name. |
+| **Phone** | An optional phone number. |
+| **Avatar URL** | A link to the contact's profile picture. |
+| **Source** | How the contact was acquired: `organic`, `funnel`, `referral`, `import`, `manual`, or `api`. |
+| **Country** | The contact's country, detected automatically or entered manually. |
+| **City** | The contact's city. |
+| **IP Address** | The IP address captured when the contact was first created. |
+| **Custom Fields** | Additional fields you define, stored as flexible key-value data. See the Custom Fields section below. |
+| **Tags** | Labels applied to the contact for organization and segmentation. |
+| **Last Activity** | A timestamp showing when the contact last interacted with your platform. |
+
+## Viewing Contacts
+
+The contacts list shows all contacts in your database, sorted by creation date with the newest first. Each row displays the contact's name, email, source, tags, and last activity.
+
+### Searching and Filtering
+
+Use the search bar to find contacts by email, first name, or last name. The search matches partial text, so typing "john" will find "John Smith" as well as "johnson@example.com".
+
+You can also filter the contacts list by:
+
+- **Source** -- Show only contacts from a specific acquisition channel (e.g., organic, import, funnel).
+- **Tag** -- Show only contacts who have a particular tag applied.
+- **Sort By** -- Sort the list by any of the following fields: created date, updated date, email, first name, last name, last activity, or source.
+- **Sort Order** -- Choose ascending or descending sort direction.
+
+## Creating a Contact
+
+1. Navigate to **Contacts** in the admin sidebar.
+2. Click **New Contact**.
+3. Enter at least an email address and any additional fields.
+4. Optionally assign tags by providing tag names.
+5. Save the contact.
+
+If a contact with the same email already exists, GritCMS will update the existing record instead of creating a duplicate. This upsert behavior ensures your contact database stays clean.
+
+### Contact Sources
+
+The source field tracks how a contact entered your system:
+
+- **Organic** -- The contact signed up through your website naturally.
+- **Funnel** -- The contact came through a sales funnel.
+- **Referral** -- The contact was referred by another person or affiliate.
+- **Import** -- The contact was imported from a CSV or external system.
+- **Manual** -- The contact was created manually by an admin.
+- **API** -- The contact was created programmatically through the API.
+
+## Contact Detail View
+
+Click on any contact to open their full profile. The detail view includes:
+
+### Profile Information
+
+All the contact's fields are displayed and can be edited directly. Update any field and save to persist changes.
+
+### Activity Timeline
+
+The activity timeline is a chronological log of everything the contact has done across your platform. Activities are recorded automatically by each module and include:
+
+- **Email** -- Subscribed to a list, opened an email, clicked a link.
+- **Courses** -- Enrolled in a course, completed a lesson.
+- **Community** -- Joined a space, posted a thread, replied.
+- **Commerce** -- Purchased a product, subscription started, order refunded.
+- **Booking** -- Booked an appointment, cancelled a booking.
+
+Each activity entry shows the module it came from, the action that occurred, a description, and the timestamp. You can filter the timeline by module to focus on a specific type of activity.
+
+## Custom Fields
+
+GritCMS allows you to define custom fields to capture data beyond the built-in contact fields. Custom fields are stored as flexible JSON data on each contact record.
+
+### Custom Field Types
+
+| Type | Description |
+|---|---|
+| **Text** | A single-line text input. |
+| **Number** | A numeric value. |
+| **Date** | A date picker. |
+| **Select** | A dropdown with predefined options. |
+| **Boolean** | A true/false toggle. |
+
+Custom fields are defined globally and apply to all contacts. When you create a custom field, you specify a name, a field key (used internally), the type, and whether it is required.
+
+## Importing and Exporting Contacts
+
+### Importing Contacts
+
+To bring contacts into GritCMS from an external source, you can use the API to create contacts in bulk. Each contact is upserted by email, meaning existing contacts are updated and new ones are created. Tags can be applied during import by including tag names in the request.
+
+Contacts imported through the API are given the `import` source so you can easily identify and filter them later.
+
+### Exporting Contacts
+
+You can export your contact data for backup purposes, migration, or use in external tools. The contacts API supports paginated listing with all fields and tags, which you can use to extract your full contact database.
+
+## Deleting Contacts
+
+To delete a contact:
+
+1. Open the contact's profile.
+2. Click **Delete**.
+3. Confirm the deletion.
+
+Deleted contacts are soft-deleted, meaning they are hidden from the contacts list but not permanently removed from the database immediately. This allows for recovery if needed.
+
+### Tips for Managing Your Contact Database
+
+- Keep email addresses up to date -- email is the primary identifier for each contact.
+- Use tags to organize contacts into meaningful groups. See the [Tags & Segments](/contacts/tags-segments) page for more details.
+- Review the activity timeline regularly to understand how individual contacts are engaging with your platform.
+- Use custom fields to capture business-specific data like company name, job title, or referral source details.

@@ -1,0 +1,109 @@
+---
+title: "Email Templates"
+description: "Use and customize reusable email templates for campaigns, sequences, and transactional emails."
+---
+
+## Overview
+
+Email templates are reusable email designs that you can use across campaigns, sequences, and transactional emails. Instead of writing the same email layout from scratch every time, create a template once and reuse it wherever you need it. Manage templates from **Email > Templates** in the admin dashboard.
+
+## Built-In Templates
+
+GritCMS seeds a set of default templates on first run so you can start sending emails right away. These templates cover common use cases across the platform:
+
+### Onboarding Templates
+
+| Template | Subject | Purpose |
+|---|---|---|
+| Welcome Email | Welcome to {{site_name}}! | Sent when a subscriber joins a list. |
+| Email Confirmation | Confirm your email | Double opt-in confirmation email. |
+| Affiliate Welcome | Welcome to our affiliate program! | Sent when someone joins your affiliate program. |
+
+### Transactional Templates
+
+| Template | Subject | Purpose |
+|---|---|---|
+| Password Reset | Reset your password | Sent when a user requests a password reset. |
+| Order Confirmation | Order #{{order_id}} confirmed | Sent after a purchase is completed. |
+| Course Enrollment | You're enrolled in {{course_name}} | Sent when a student is enrolled in a course. |
+| Booking Confirmation | Booking confirmed: {{event_name}} | Sent when a booking is made. |
+| Booking Reminder | Reminder: {{event_name}} tomorrow | Sent before an upcoming booking. |
+| Commission Earned | You earned a commission! | Notifies affiliates of earned commissions. |
+
+### Campaign Templates
+
+| Template | Subject | Purpose |
+|---|---|---|
+| Newsletter | {{subject}} | General newsletter layout with unsubscribe link. |
+| Broadcast | {{subject}} | Simple broadcast layout with unsubscribe link. |
+| Abandoned Cart | You left something behind | Re-engages visitors who did not complete a purchase. |
+
+## Template Variables
+
+Templates use double-brace syntax for dynamic content. When an email is sent, GritCMS replaces these variables with actual values.
+
+### Common Variables
+
+| Variable | Description |
+|---|---|
+| `{{first_name}}` | The recipient's first name. |
+| `{{site_name}}` | Your site or business name. |
+| `{{subject}}` | The email subject line (useful in campaign templates). |
+| `{{content}}` | The main email body content. |
+| `{{unsubscribe_url}}` | A link for the recipient to unsubscribe. |
+
+### Transactional Variables
+
+| Variable | Description |
+|---|---|
+| `{{confirmation_url}}` | Double opt-in confirmation link. |
+| `{{reset_url}}` | Password reset link. |
+| `{{order_id}}` | The order number. |
+| `{{order_total}}` | The order total amount. |
+| `{{course_name}}` | The name of the course. |
+| `{{course_url}}` | Link to start the course. |
+| `{{event_name}}` | The booking event name. |
+| `{{booking_date}}` | The date of the booking. |
+| `{{booking_time}}` | The time of the booking. |
+| `{{cart_url}}` | Link to the abandoned cart. |
+| `{{referral_code}}` | The affiliate's referral code. |
+| `{{commission_amount}}` | The commission amount earned. |
+| `{{dashboard_url}}` | Link to the affiliate dashboard. |
+
+## HTML and Plain Text Versions
+
+Every template supports two content versions:
+
+- **HTML Content** -- The rich, formatted version of the email that most recipients will see. You can include headings, images, links, and styled text.
+- **Text Content** -- A plain text fallback for email clients that do not render HTML. Keep this version simple and readable without any markup.
+
+Both versions should contain the same core message. If you use template variables in the HTML version, include them in the plain text version as well.
+
+## Template Types
+
+Each template is categorized by type, which helps you organize templates and find the right one when creating campaigns or sequences:
+
+| Type | Used For |
+|---|---|
+| **onboarding** | Welcome and confirmation emails for new subscribers or users. |
+| **transactional** | System-triggered emails such as order confirmations, password resets, and booking notifications. |
+| **campaign** | Manually sent campaigns and newsletters. |
+
+## Creating Custom Templates
+
+1. Navigate to **Email > Templates** and click **New Template**.
+2. Enter a **Name** to identify the template internally.
+3. Set the **Subject** line. You can use template variables here.
+4. Write the **HTML Content** in the HTML editor.
+5. Write the **Text Content** as a plain text fallback.
+6. Select the **Type** (onboarding, transactional, or campaign).
+7. Save the template.
+
+Your custom template will now be available when creating campaigns and sequences.
+
+## Tips
+
+- **Always include an unsubscribe link** in campaign and newsletter templates using `{{unsubscribe_url}}`. This is a legal requirement in most jurisdictions.
+- **Keep the plain text version up to date.** Some subscribers prefer plain text emails and some email clients fall back to it.
+- **Personalize with variables.** Using `{{first_name}}` in the greeting makes emails feel more personal and improves engagement.
+- **Test before sending.** Send a test email to yourself to verify that variables render correctly and the layout looks right across email clients.

@@ -1,0 +1,105 @@
+---
+title: "Email Sequences"
+description: "Set up automated email sequences to nurture subscribers with timed drip campaigns."
+---
+
+## Overview
+
+An email sequence (also known as a drip campaign) is a series of emails sent automatically over time. When a contact is enrolled in a sequence, they receive each email at predefined intervals -- for example, a welcome email immediately, a follow-up after 1 day, and another after 3 days. Manage sequences from **Email > Sequences** in the admin dashboard.
+
+Sequences are ideal for onboarding new subscribers, nurturing leads, delivering a multi-part course by email, or following up after a purchase.
+
+## Creating a Sequence
+
+1. Navigate to **Email > Sequences** in the admin sidebar.
+2. Click **New Sequence**.
+3. Enter the sequence name and optional description.
+4. Configure the trigger settings.
+5. Add your email steps with delays.
+
+### Sequence Settings
+
+| Setting | Description |
+|---|---|
+| **Name** | A descriptive name for the sequence (e.g., "Onboarding Series"). |
+| **Description** | An optional note about what the sequence does. |
+| **Trigger** | How contacts enter the sequence (manual or event-based). |
+| **Trigger Event** | When the trigger is event-based, the event that starts the sequence (e.g., `email.subscribed`). |
+| **Status** | The current state of the sequence: draft, active, or paused. |
+
+## Sequence Triggers
+
+There are two ways contacts can be enrolled in a sequence:
+
+### Manual Enrollment
+
+With the trigger set to **Manual**, contacts are enrolled by an admin from the dashboard or through the API. This gives you full control over who enters the sequence and when.
+
+### Event-Based Enrollment
+
+With the trigger set to **Event**, contacts are enrolled automatically when a specific event occurs. The most common trigger event is `email.subscribed`, which starts the sequence when someone joins an email list. This is the recommended approach for automated onboarding and nurture flows.
+
+## Sequence Steps
+
+Each step in a sequence represents one email that will be sent to the enrolled contact after a specified delay.
+
+### Adding a Step
+
+1. Open the sequence and click **Add Step**.
+2. Set the **Subject** line for the email.
+3. Write the **HTML Content** and **Text Content**, or select an existing template.
+4. Set the **Delay** in days and hours relative to the previous step (or enrollment, for the first step).
+5. Set the **Sort Order** to control the position of the step in the sequence.
+
+### Step Timing
+
+Delays are configured using two fields:
+
+- **Delay Days** -- The number of days to wait before sending this step.
+- **Delay Hours** -- Additional hours to add on top of the day delay.
+
+For example, a step with a delay of 1 day and 6 hours will be sent 30 hours after the previous step. The first step's delay is measured from the time the contact is enrolled.
+
+### Example Sequence
+
+Here is a typical 5-step onboarding sequence:
+
+| Step | Delay | Subject |
+|---|---|---|
+| 1 | 0 days | Welcome to the community! |
+| 2 | 1 day | Here's how to get started |
+| 3 | 3 days | Tips to get the most out of your account |
+| 4 | 7 days | Have questions? We're here to help |
+| 5 | 14 days | Check out what's new |
+
+## Sequence Status
+
+| Status | Behavior |
+|---|---|
+| **Draft** | The sequence is being built. No emails are sent and no new enrollments are processed. |
+| **Active** | The sequence is live. Enrolled contacts receive emails on schedule, and new contacts can be enrolled. |
+| **Paused** | The sequence is temporarily stopped. No emails are sent, but existing enrollments are preserved and will resume when the sequence is reactivated. |
+
+Set a sequence to **Active** only after you have added all of your steps and tested the content.
+
+## Enrollment Tracking
+
+GritCMS tracks each contact's progress through a sequence with an enrollment record:
+
+| Field | Description |
+|---|---|
+| **Status** | Active, completed, or cancelled. |
+| **Current Step** | The step the contact is currently on. |
+| **Next Send At** | The date and time the next email will be sent. |
+| **Enrolled At** | When the contact entered the sequence. |
+| **Completed At** | When the contact finished all steps (if applicable). |
+
+You can cancel an individual enrollment from the sequence detail page if you need to stop a specific contact from receiving further emails.
+
+## Best Practices
+
+- **Start simple.** A 3 to 5 step sequence is enough for most onboarding flows. You can always add more steps later.
+- **Space out your emails.** Sending too frequently can lead to unsubscribes. Give subscribers time to read each email before sending the next.
+- **Write for the reader.** Each step should provide standalone value. Do not assume the reader remembers every previous email.
+- **Test the full sequence.** Enroll yourself as a test contact and verify that each step arrives with the correct content and timing.
+- **Monitor enrollment status.** Check for cancelled or stalled enrollments to identify issues with your sequence configuration.

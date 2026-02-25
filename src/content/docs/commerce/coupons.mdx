@@ -1,0 +1,90 @@
+---
+title: "Coupons"
+description: "Create discount coupons with percentage or fixed-amount discounts, set usage limits and expiration dates, and validate coupons at checkout."
+---
+
+## Overview
+
+Coupons let you offer discounts to your customers during checkout. You can create percentage-based or fixed-amount discounts, restrict them to specific products, set usage limits, and define validity windows. Manage all your coupons from **Commerce > Coupons** in the admin sidebar.
+
+## Creating a Coupon
+
+1. Navigate to **Commerce > Coupons** in the admin sidebar.
+2. Click **New Coupon**.
+3. Fill in the coupon settings and save.
+
+### Coupon Settings
+
+| Field | Description |
+|---|---|
+| **Code** | The coupon code customers will enter at checkout (e.g., `SUMMER20`). Codes are automatically converted to uppercase. |
+| **Type** | The discount type: `percentage` or `fixed`. |
+| **Amount** | The discount value. For percentage coupons, this is the percent off (e.g., `20` for 20% off). For fixed coupons, this is the dollar amount deducted. |
+| **Min Order Amount** | The minimum order subtotal required for the coupon to apply. Set to `0` for no minimum. |
+| **Max Uses** | The maximum number of times this coupon can be redeemed across all customers. Set to `0` for unlimited use. |
+| **Valid From** | The date and time when the coupon becomes active. Leave empty if the coupon should be valid immediately. |
+| **Valid Until** | The expiration date and time. After this date, the coupon can no longer be used. Leave empty for no expiration. |
+| **Product IDs** | Restrict the coupon to specific products. If set, the coupon only applies to orders containing those products. Leave empty to apply to any product. |
+| **Status** | The coupon status: `active`, `expired`, or `disabled`. Only active coupons can be redeemed. |
+
+## Coupon Types
+
+### Percentage Discount
+
+A percentage coupon reduces the order subtotal by a given percentage. For example, a coupon with an amount of `25` takes 25% off the order subtotal.
+
+If the calculated discount exceeds the order subtotal (which can happen with stacking or rounding), the discount is capped at the subtotal so the total never goes below zero.
+
+### Fixed Amount Discount
+
+A fixed coupon deducts a specific dollar amount from the order subtotal. For example, a coupon with an amount of `10` takes $10.00 off the order. Like percentage coupons, the discount is capped at the subtotal to prevent negative totals.
+
+## Coupon Validation
+
+When a customer enters a coupon code at checkout, GritCMS runs the following validation checks in order:
+
+1. **Code exists** -- The code must match an existing coupon in the system.
+2. **Status is active** -- Only coupons with an `active` status are accepted.
+3. **Within validity window** -- If `valid_from` is set, the current time must be after that date. If `valid_until` is set, the current time must be before that date.
+4. **Usage limit not reached** -- If `max_uses` is greater than zero, the coupon's `used_count` must be less than `max_uses`.
+5. **Minimum order met** -- The order subtotal must be at least the `min_order_amount`.
+
+If any check fails, the coupon is rejected with a descriptive error message.
+
+### Public Validation Endpoint
+
+GritCMS provides a public API endpoint for validating coupons before the customer completes checkout. This allows your frontend to give the customer immediate feedback when they enter a coupon code.
+
+Send a `GET` request to the coupon validation endpoint with the `code` query parameter. If the coupon is valid, the endpoint returns the coupon details (type, amount, restrictions). If invalid, it returns an error message explaining why.
+
+This endpoint checks the code, status, validity dates, and usage limits, but does not check the order subtotal since the order has not been placed yet.
+
+## Applying Coupons at Checkout
+
+When an order is created with a coupon code, the following happens:
+
+1. The coupon is looked up and validated against all checks.
+2. The discount is calculated based on the coupon type and amount.
+3. The discount amount is subtracted from the order subtotal to produce the final total.
+4. The coupon's **Used Count** is incremented by one.
+5. The coupon is linked to the order so you can see which coupon was applied when viewing order details.
+
+## Managing Coupons
+
+The coupon list shows all your coupons with their code, type, discount amount, usage count, and status. From this list you can:
+
+- **Edit** a coupon to change its settings, validity dates, or usage limits.
+- **Disable** a coupon by setting its status to `disabled`. Disabled coupons cannot be redeemed but are kept for your records.
+- **Delete** a coupon you no longer need.
+
+### Tracking Coupon Usage
+
+Each coupon tracks how many times it has been used. The **Used Count** increments automatically every time the coupon is applied to an order. Compare this against the **Max Uses** limit to see how many redemptions remain.
+
+### Tips for Effective Coupon Campaigns
+
+- Use memorable, descriptive codes like `WELCOME10` or `BLACKFRIDAY` so customers can easily remember and share them.
+- Set a **Valid Until** date to create urgency and encourage customers to use the discount before it expires.
+- Use **Min Order Amount** to ensure coupons are only applied to orders above a certain value, protecting your margins.
+- Restrict coupons to specific products when running promotions on individual items rather than your entire catalog.
+- Monitor the **Used Count** regularly to understand how well your promotions are performing.

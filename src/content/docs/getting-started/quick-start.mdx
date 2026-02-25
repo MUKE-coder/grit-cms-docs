@@ -1,0 +1,126 @@
+---
+title: "Quick Start"
+description: "Go from zero to a working GritCMS site in 5 minutes."
+---
+
+## First-Time Setup
+
+When you visit the admin dashboard at `http://localhost:3000` for the first time, GritCMS walks you through an initial setup wizard. This only runs once and configures the essentials for your site.
+
+### Create Your Admin Account
+
+The first screen asks you to create the administrator account. Enter your name, email, and a strong password. This account has full access to every module and setting in the system.
+
+### Configure Site Settings
+
+Next, configure the basic identity of your site:
+
+- **Site Name** -- the name displayed in the header, browser tab, and emails (e.g., "My Creator Hub")
+- **Tagline** -- a short description shown on your homepage and in meta tags
+- **Logo** -- upload your brand logo (displayed in the admin sidebar and public site header)
+
+These settings can be changed later from **Settings > General** in the admin dashboard.
+
+## Dashboard Overview
+
+After setup, you land on the **admin dashboard**. This is your command center with quick access to every module.
+
+### Key Sections in the Sidebar
+
+| Section | What it does |
+|---------|-------------|
+| **Dashboard** | Overview metrics, recent activity, quick actions |
+| **Pages** | Create and manage website pages |
+| **Blog** | Write and publish blog posts |
+| **Email** | Manage lists, subscribers, and campaigns |
+| **Courses** | Build and sell online courses |
+| **Products** | Manage digital/physical products and orders |
+| **Contacts** | CRM with tags, segments, and activity tracking |
+| **Community** | Spaces, threads, and community events |
+| **Funnels** | Sales funnels with conversion tracking |
+| **Booking** | Calendars, event types, and appointments |
+| **Affiliates** | Affiliate programs, links, and commissions |
+| **Workflows** | Event-driven automation rules |
+| **Settings** | Site configuration, integrations, and appearance |
+
+### Command Search
+
+Press `Ctrl+K` (or `Cmd+K` on macOS) anywhere in the admin to open the **command search**. This lets you quickly jump to any page, create new content, or search across your entire dashboard without navigating through menus.
+
+## Quick Action: Create a Page
+
+1. Navigate to **Pages** in the sidebar.
+2. Click **New Page**.
+3. Enter a title (the slug is auto-generated from the title).
+4. Use the block editor to add content -- text, images, buttons, and embeds.
+5. Click **Publish** to make the page live on your public website.
+
+Your page is immediately visible at `http://localhost:3001/pages/your-page-slug`.
+
+## Quick Action: Write a Blog Post
+
+1. Navigate to **Blog** in the sidebar.
+2. Click **New Post**.
+3. Fill in the title, excerpt, and featured image.
+4. Write your content using the rich text editor.
+5. Assign categories and tags for organization.
+6. Click **Publish** to make it live.
+
+Published posts appear on your public blog at `http://localhost:3001/blog`.
+
+## Quick Action: Create a Course
+
+1. Navigate to **Courses** in the sidebar.
+2. Click **New Course**.
+3. Enter the course title, description, thumbnail, and pricing.
+4. Add **modules** to organize your content into sections.
+5. Inside each module, add **lessons** with text, video, or downloadable content.
+6. Toggle the course to **Published** when ready.
+
+Students can browse and enroll in courses on your public site. Track enrollment and progress from the admin.
+
+## Quick Action: Set Up Email Marketing
+
+1. Navigate to **Email** in the sidebar.
+2. Create a new **List** (e.g., "Newsletter Subscribers").
+3. Add subscribers manually or let them sign up through your public website.
+4. Create a **Campaign** to send a broadcast email to your list.
+5. Track opens, clicks, and unsubscribes from the campaign analytics view.
+
+Make sure your [email/SMTP settings](/configuration/email-smtp) are configured before sending.
+
+## Quick Action: Add a Product
+
+1. Navigate to **Products** in the sidebar.
+2. Click **New Product**.
+3. Set the product name, description, images, and price.
+4. Choose the product type: digital download, physical product, or subscription.
+5. Optionally create **coupons** for discounts.
+6. Publish the product to your storefront.
+
+## Built-In Developer Tools
+
+GritCMS ships with several built-in tools accessible from the API server:
+
+| Tool | URL | Purpose |
+|------|-----|---------|
+| **API Docs** | `http://localhost:8080/docs` | Interactive REST API documentation |
+| **GORM Studio** | `http://localhost:8080/studio` | Visual database browser and editor |
+| **Pulse** | `http://localhost:8080/pulse/ui/` | Performance monitoring dashboard |
+| **Sentinel** | `http://localhost:8080/sentinel/ui` | Security WAF and threat detection |
+
+## Next Steps
+
+Now that you have GritCMS running, dive deeper into the modules that matter most to you:
+
+- [Website Builder](/website) -- pages, blog, and navigation
+- [Email Marketing](/email) -- lists, campaigns, and automations
+- [Course Platform](/courses) -- building and selling courses
+- [Products & Commerce](/commerce) -- storefront and orders
+- [Contacts CRM](/contacts) -- managing your audience
+- [Community](/community) -- building engaged communities
+- [Sales Funnels](/funnels) -- conversion-optimized funnels
+- [Booking & Scheduling](/booking) -- calendars and appointments
+- [Affiliate Management](/affiliates) -- referral programs
+- [Workflow Automation](/automation) -- event-driven automations
+- [Configuration](/configuration/environment) -- environment variables and setup

@@ -1,0 +1,224 @@
+---
+title: "Environment Variables"
+description: "Complete reference for all GritCMS environment variables."
+---
+
+## Overview
+
+GritCMS is configured through a single `.env` file in the monorepo root. Copy the example file to get started:
+
+```bash
+cp .env.example .env
+```
+
+All variables are loaded at startup by the Go backend. The frontend apps read their configuration from `next.config` files that reference the API URL.
+
+## Application Settings
+
+Core settings that control the API server behavior.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `APP_NAME` | `myapp` | Application name used in logs and email headers |
+| `APP_ENV` | `development` | Environment mode: `development`, `staging`, or `production` |
+| `APP_PORT` | `8080` | Port the API server listens on |
+| `APP_URL` | `http://localhost:8080` | Full base URL of the API (used for OAuth callbacks and links) |
+
+```env
+APP_NAME=gritcms
+APP_ENV=development
+APP_PORT=8080
+APP_URL=http://localhost:8080
+```
+
+## Database
+
+GritCMS uses PostgreSQL as its primary database, connected via a standard connection string.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `DATABASE_URL` | -- | PostgreSQL connection string |
+
+```env
+# Local development (via Docker Compose)
+DATABASE_URL=postgres://grit:grit@localhost:5432/gritcms?sslmode=disable
+
+# Production (e.g., Neon, Supabase, or self-hosted)
+DATABASE_URL=postgres://user:password@host:5432/dbname?sslmode=require
+```
+
+See the [Database Configuration](/configuration/database) guide for detailed setup instructions.
+
+## Authentication (JWT)
+
+JSON Web Tokens are used for API authentication. Access tokens are short-lived; refresh tokens provide seamless re-authentication.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `JWT_SECRET` | `change-me-in-production` | Secret key for signing JWT tokens. **Must be changed in production.** |
+| `JWT_ACCESS_EXPIRY` | `15m` | Access token lifetime (e.g., `15m`, `1h`) |
+| `JWT_REFRESH_EXPIRY` | `168h` | Refresh token lifetime (default: 7 days) |
+
+```env
+JWT_SECRET=a-long-random-string-at-least-32-characters
+JWT_ACCESS_EXPIRY=15m
+JWT_REFRESH_EXPIRY=168h
+```
+
+## OAuth2 Social Login
+
+Optional social login via Google and GitHub. Leave blank to disable.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GOOGLE_CLIENT_ID` | -- | Google OAuth 2.0 Client ID |
+| `GOOGLE_CLIENT_SECRET` | -- | Google OAuth 2.0 Client Secret |
+| `GITHUB_CLIENT_ID` | -- | GitHub OAuth App Client ID |
+| `GITHUB_CLIENT_SECRET` | -- | GitHub OAuth App Client Secret |
+| `OAUTH_FRONTEND_URL` | `http://localhost:3001` | URL to redirect to after successful OAuth login |
+
+Get Google credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials). Get GitHub credentials at [GitHub Developer Settings](https://github.com/settings/developers).
+
+```env
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+OAUTH_FRONTEND_URL=http://localhost:3001
+```
+
+## Redis
+
+Redis powers caching, background job processing (Asynq), and cron scheduling. It is optional for development -- if not configured, caching and background jobs are disabled.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `REDIS_URL` | `redis://localhost:6379` | Redis connection URL |
+
+```env
+REDIS_URL=redis://localhost:6379
+```
+
+## File Storage
+
+GritCMS supports three S3-compatible storage backends. Set `STORAGE_DRIVER` to choose which one to use.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `STORAGE_DRIVER` | `minio` | Active storage driver: `minio`, `r2`, or `b2` |
+
+### MinIO (Local Development)
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `MINIO_ENDPOINT` | `http://localhost:9000` | MinIO server URL |
+| `MINIO_ACCESS_KEY` | `minioadmin` | Access key |
+| `MINIO_SECRET_KEY` | `minioadmin` | Secret key |
+| `MINIO_BUCKET` | `myapp-uploads` | Bucket name for uploads |
+| `MINIO_REGION` | `us-east-1` | Region |
+| `MINIO_USE_SSL` | `false` | Enable SSL for MinIO connection |
+
+### Cloudflare R2
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `R2_ENDPOINT` | -- | R2 S3-compatible endpoint URL |
+| `R2_ACCESS_KEY` | -- | R2 Access Key ID |
+| `R2_SECRET_KEY` | -- | R2 Secret Access Key |
+| `R2_BUCKET` | `myapp-uploads` | Bucket name |
+| `R2_REGION` | `auto` | Always `auto` for R2 |
+
+### Backblaze B2
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `B2_ENDPOINT` | -- | B2 S3-compatible endpoint URL |
+| `B2_ACCESS_KEY` | -- | B2 keyID |
+| `B2_SECRET_KEY` | -- | B2 applicationKey |
+| `B2_BUCKET` | `myapp-uploads` | Bucket name |
+| `B2_REGION` | `us-west-004` | Must match your bucket region |
+
+See the [File Storage](/configuration/file-storage) guide for detailed provider setup.
+
+## Email
+
+GritCMS uses the [Resend](https://resend.com) API for sending transactional and marketing emails.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RESEND_API_KEY` | `re_your_api_key` | Resend API key (starts with `re_`) |
+| `MAIL_FROM` | `noreply@myapp.dev` | Default sender email address |
+
+```env
+RESEND_API_KEY=re_your_actual_api_key
+MAIL_FROM=hello@yourdomain.com
+```
+
+See the [Email Configuration](/configuration/email-smtp) guide for provider setup details.
+
+## CORS
+
+Controls which frontend origins can access the API. Required for the admin and web apps to communicate with the backend.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `CORS_ORIGINS` | `http://localhost:3000,http://localhost:3001` | Comma-separated list of allowed origins |
+
+```env
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+```
+
+In production, set this to your actual domain(s): `https://admin.yourdomain.com,https://yourdomain.com`.
+
+## GORM Studio
+
+A built-in visual database browser available at `/studio` on the API server.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GORM_STUDIO_ENABLED` | `true` | Enable or disable GORM Studio |
+| `GORM_STUDIO_USERNAME` | `admin` | Login username |
+| `GORM_STUDIO_PASSWORD` | `studio` | Login password |
+
+## AI Integration
+
+Optional AI-powered text generation using Claude, OpenAI, or Gemini.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AI_PROVIDER` | `claude` | AI provider: `claude`, `openai`, or `gemini` |
+| `AI_API_KEY` | -- | API key for the chosen provider |
+| `AI_MODEL` | `claude-sonnet-4-5-20250929` | Model identifier |
+
+## Observability -- Pulse
+
+Performance monitoring, request tracing, and error tracking dashboard at `/pulse/ui/`.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PULSE_ENABLED` | `true` | Enable or disable the Pulse dashboard |
+| `PULSE_USERNAME` | `admin` | Dashboard login username |
+| `PULSE_PASSWORD` | `pulse` | Dashboard login password |
+
+## Security -- Sentinel
+
+Web Application Firewall (WAF), rate limiting, and threat detection dashboard at `/sentinel/ui`.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `SENTINEL_ENABLED` | `true` | Enable or disable Sentinel |
+| `SENTINEL_USERNAME` | `admin` | Dashboard login username |
+| `SENTINEL_PASSWORD` | `sentinel` | Dashboard login password |
+| `SENTINEL_SECRET_KEY` | `change-me` | Secret key for Sentinel JWT sessions |
+
+## Production Checklist
+
+Before deploying to production, ensure you have:
+
+- Changed `JWT_SECRET` to a strong random string (32+ characters)
+- Set `APP_ENV=production`
+- Configured a production `DATABASE_URL` with SSL enabled
+- Set `CORS_ORIGINS` to your actual domains
+- Changed all default passwords (`GORM_STUDIO_PASSWORD`, `PULSE_PASSWORD`, `SENTINEL_PASSWORD`, `SENTINEL_SECRET_KEY`)
+- Configured a real `RESEND_API_KEY` for email delivery
+- Set up a production storage driver (`r2` or `b2`) instead of local MinIO

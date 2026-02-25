@@ -1,0 +1,91 @@
+---
+title: "Introduction"
+description: "What is GritCMS and why it exists -- a self-hostable Creator Operating System."
+---
+
+## What is GritCMS?
+
+GritCMS is a **self-hostable Creator Operating System** that gives creators, educators, and small businesses everything they need to run their online presence from a single platform. Instead of stitching together a dozen SaaS subscriptions -- one for your website, another for email, another for courses, yet another for payments -- GritCMS bundles all of those capabilities into one open-source project you can deploy on your own infrastructure.
+
+Think of it as an all-in-one alternative to Kajabi, Teachable, ConvertKit, and WordPress combined, except you own your data and pay nothing in recurring platform fees.
+
+## Tech Stack
+
+GritCMS is built on a modern, performance-oriented stack:
+
+| Layer | Technology | Notes |
+|-------|-----------|-------|
+| **Backend API** | Go (Gin + GORM) | Fast, compiled binary with auto-migration |
+| **Admin Dashboard** | Next.js 15 (App Router) | React-based back-office UI |
+| **Public Website** | Next.js 15 (App Router) | Visitor-facing pages, blog, courses |
+| **Monorepo** | pnpm workspaces + Turborepo | Three apps, one shared package |
+| **Database** | PostgreSQL (recommended) | SQLite also supported for development |
+| **Cache / Queue** | Redis + Asynq | Background jobs, caching, cron |
+| **File Storage** | S3-compatible (MinIO, R2, B2) | Pluggable storage drivers |
+| **Email** | Resend API | Transactional and marketing emails |
+
+## Modules
+
+GritCMS ships with 11 integrated modules that cover the full creator workflow:
+
+| Module | Description |
+|--------|-------------|
+| **Website Builder** | Pages, blog posts, menus, and navigation management |
+| **Email Marketing** | Lists, subscribers, campaigns, automations, and analytics |
+| **Course Platform** | Courses, modules, lessons, enrollments, and progress tracking |
+| **Products & Commerce** | Digital/physical products, orders, coupons, and subscriptions |
+| **Contacts CRM** | Unified contact database with tags, segments, and activity history |
+| **Community** | Spaces, threads, replies, reactions, and community events |
+| **Sales Funnels** | Multi-step funnels with conversion tracking and analytics |
+| **Booking & Scheduling** | Calendars, event types, availability rules, and appointments |
+| **Affiliate Management** | Programs, affiliate accounts, referral links, commissions, and payouts |
+| **Workflow Automation** | Event-driven workflows with conditional actions and execution logs |
+| **Analytics** | Dashboard metrics, page views, conversion data, and growth trends |
+
+Every module is built into the same codebase -- no plugins to install, no version conflicts, no integration headaches.
+
+## Who is GritCMS For?
+
+- **Content creators** who want a website, blog, email list, and course platform without paying for four separate tools.
+- **Educators and coaches** who need to sell courses, manage students, and communicate with their audience.
+- **Indie hackers** who want to launch a product with a built-in storefront, affiliate program, and email marketing.
+- **Small businesses** looking for a CRM, booking system, and website they fully control.
+- **Developers** who want an extensible, open-source platform built on Go and Next.js.
+
+## Architecture Overview
+
+The project is organized as a **pnpm monorepo** with three applications and one shared package:
+
+```
+gritcms/
+  apps/
+    api/          # Go backend -- REST API, database, auth, all business logic
+    admin/        # Next.js -- Admin dashboard (port 3000)
+    web/          # Next.js -- Public-facing website (port 3001)
+  packages/
+    shared/       # Shared TypeScript types used by admin and web
+  docker-compose.yml
+  pnpm-workspace.yaml
+  turbo.json
+```
+
+### API (Go Backend)
+
+The API is the brain of GritCMS. It handles authentication (JWT + OAuth2), database operations via GORM, file uploads, email sending, background jobs, cron scheduling, and exposes a REST API consumed by both the admin and web frontends. It also ships with built-in tools:
+
+- **GORM Studio** at `/studio` -- a visual database browser
+- **API Documentation** at `/docs` -- auto-generated endpoint reference
+- **Pulse** at `/pulse/ui/` -- performance monitoring and request tracing
+- **Sentinel** at `/sentinel/ui` -- WAF, rate limiting, and threat detection
+
+### Admin Dashboard (Next.js)
+
+The admin dashboard is where creators manage their content, products, contacts, and settings. It communicates with the API via REST calls and uses React Query for data fetching with optimistic updates.
+
+### Web (Next.js)
+
+The public-facing website renders pages, blog posts, course content, and storefronts for visitors. It fetches data from the same API and supports server-side rendering for SEO.
+
+## Next Steps
+
+Ready to get started? Head to the [Installation](/getting-started/installation) guide to set up your development environment, or jump straight to the [Quick Start](/getting-started/quick-start) to see GritCMS in action.

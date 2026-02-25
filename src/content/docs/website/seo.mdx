@@ -1,0 +1,162 @@
+---
+title: "SEO"
+description: "Configure search engine optimization settings to help your website rank higher in search results."
+---
+
+## Overview
+
+Search Engine Optimization (SEO) is how you help search engines like Google understand your content and show it to people searching for related topics. GritCMS includes built-in SEO features that make it easy to optimize your site without needing technical expertise. You configure site-wide SEO settings from **Settings > SEO** in the admin dashboard.
+
+## Accessing SEO Settings
+
+1. Click **Settings** in the admin sidebar.
+2. Select the **SEO** tab.
+3. Configure your settings and click **Save**.
+
+## Meta Title
+
+The meta title is the text that appears in browser tabs and as the clickable headline in search engine results. It is one of the most important SEO signals.
+
+### Setting the Meta Title
+
+1. In the SEO settings, enter your desired title in the **Meta Title** field.
+2. Click **Save**.
+
+### Tips for Meta Titles
+
+- Keep it under 60 characters so it displays fully in search results.
+- Include your brand name (e.g., "Your Brand -- Online Courses & Resources").
+- Put the most important keywords near the beginning.
+- Make it descriptive and compelling -- this is what people see before deciding to click.
+
+**Example:**
+```
+GritCMS -- Build and Grow Your Creator Business
+```
+
+## Meta Description
+
+The meta description is the short paragraph that appears below the title in search engine results. While it does not directly affect rankings, a well-written description increases the chance that people will click on your link.
+
+### Setting the Meta Description
+
+1. In the SEO settings, enter your description in the **Meta Description** field.
+2. Click **Save**.
+
+### Tips for Meta Descriptions
+
+- Keep it between 120 and 160 characters.
+- Summarize what visitors will find on your site.
+- Include a call to action when appropriate (e.g., "Start your free trial today.").
+- Avoid duplicating the meta title -- expand on it instead.
+
+**Example:**
+```
+Create courses, sell digital products, and build your audience
+with GritCMS. A self-hostable platform for creators.
+```
+
+## Open Graph Image
+
+The Open Graph (OG) image is the preview image that appears when someone shares a link to your site on social media platforms like Twitter, Facebook, or LinkedIn. A good OG image makes your shared links more eye-catching and professional.
+
+### Setting the OG Image
+
+1. In the SEO settings, find the **Open Graph Image** section.
+2. Upload an image or enter an image URL.
+3. Click **Save**.
+
+### OG Image Recommendations
+
+| Aspect | Recommendation |
+|---|---|
+| Dimensions | 1200 x 630 pixels |
+| File format | PNG or JPG |
+| File size | Under 1 MB |
+| Content | Your brand name, tagline, and/or logo on a clean background |
+
+This image is used as the default for all pages that do not have their own featured image. Blog posts with a featured image will use that image instead for social shares.
+
+## Google Analytics
+
+GritCMS supports Google Analytics integration so you can track visitor behavior, traffic sources, and page performance.
+
+### Setting Up Google Analytics
+
+1. Create a Google Analytics property at [analytics.google.com](https://analytics.google.com) if you do not already have one.
+2. Copy your **Measurement ID** (it looks like `G-XXXXXXXXXX`).
+3. In the GritCMS SEO settings, paste the Measurement ID into the **Google Analytics ID** field.
+4. Click **Save**.
+
+Once configured, GritCMS will automatically include the Google Analytics tracking script on every page of your public site. Data will start appearing in your Google Analytics dashboard within 24-48 hours.
+
+### What You Can Track
+
+- **Page views** -- which pages are most popular.
+- **Traffic sources** -- where your visitors come from (search, social, direct, referral).
+- **User behavior** -- how long visitors stay and what they click.
+- **Geographic data** -- where in the world your visitors are located.
+- **Device information** -- whether visitors use desktop, tablet, or mobile.
+
+## JSON-LD Structured Data
+
+GritCMS automatically generates JSON-LD structured data for your blog posts. Structured data is a standardized format that tells search engines exactly what your content is about, which can lead to enhanced search results (called "rich results").
+
+### What Is Included
+
+Each blog post automatically gets the following structured data:
+
+- **Article type** (BlogPosting)
+- **Headline** (post title)
+- **Description** (post excerpt)
+- **Author** information
+- **Date published** and **date modified**
+- **Featured image**
+
+You do not need to configure anything -- structured data is generated automatically for every published blog post. You can verify your structured data using [Google's Rich Results Test](https://search.google.com/test/rich-results).
+
+## RSS Feed
+
+GritCMS automatically generates an RSS feed at:
+
+```
+https://yoursite.com/api/rss.xml
+```
+
+The RSS feed serves dual purposes:
+
+1. **For readers** -- People can subscribe to your content using RSS reader apps and get notified of new posts.
+2. **For search engines** -- Search engines can use the RSS feed to discover and index new content faster.
+
+The feed includes all published blog posts and updates automatically when you publish new content. No configuration is needed.
+
+## Sitemap Considerations
+
+A sitemap is an XML file that lists all the pages on your site, helping search engines discover and index your content efficiently. Here are some considerations for your GritCMS site:
+
+- Your public pages, blog posts, and category/tag archive pages all have clean, crawlable URLs by default.
+- The RSS feed at `/api/rss.xml` helps search engines discover new blog content.
+- Ensure your most important pages are linked from your navigation menus, as search engines prioritize pages that are easy to reach through site navigation.
+- Submit your site URL to [Google Search Console](https://search.google.com/search-console) to monitor how Google indexes your content and to identify any crawling issues.
+
+### Improving Discoverability
+
+To help search engines find all your content:
+
+1. **Use internal links.** Link between related blog posts and pages within your content.
+2. **Maintain clean navigation.** Keep your header and footer menus updated with links to important pages.
+3. **Publish consistently.** Regular new content signals to search engines that your site is active.
+4. **Share on social media.** External links from social platforms help search engines discover your content.
+
+## SEO Checklist
+
+Use this checklist to make sure you have covered the basics:
+
+- [ ] Set a descriptive meta title (under 60 characters)
+- [ ] Write a compelling meta description (120-160 characters)
+- [ ] Upload an Open Graph image (1200 x 630 pixels)
+- [ ] Add your Google Analytics Measurement ID
+- [ ] Verify your site in Google Search Console
+- [ ] Add blog posts with filled-in titles, excerpts, and featured images
+- [ ] Link important pages from your navigation menus
+- [ ] Use categories and tags to organize blog content
