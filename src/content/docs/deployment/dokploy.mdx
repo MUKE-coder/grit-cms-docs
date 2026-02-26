@@ -1,133 +1,273 @@
 ---
 title: "Dokploy Deployment"
-description: "Deploy GritCMS to a VPS using Dokploy, a self-hosted PaaS with automatic SSL and GitHub integration."
+description: "Deploy GritCMS to a VPS using Dokploy, a self-hosted PaaS with automatic SSL, GitHub integration, and Docker Compose support."
 ---
 
 Dokploy is a self-hosted Platform-as-a-Service (PaaS) that simplifies deploying applications on your own VPS. It provides a web-based dashboard for managing deployments, databases, domains, and SSL certificates -- similar to platforms like Heroku or Railway, but running on infrastructure you control.
 
-This guide walks you through deploying GritCMS on a VPS using Dokploy.
+This guide walks you through deploying GritCMS on a VPS using Dokploy with Docker Compose.
 
 ## Prerequisites
 
-- A **VPS** running Ubuntu 22.04 or later (e.g., from Hetzner, DigitalOcean, or Vultr)
-- Minimum **2 GB RAM** (4 GB recommended for comfortable performance)
-- A **domain name** pointed to your VPS IP address (e.g., `cms.yourdomain.com`)
-- Your GritCMS code in a **GitHub repository** (public or private)
+- A **VPS** running Ubuntu 20.04+ (or Debian 10+, Fedora 40, CentOS 8-9)
+- Minimum **2 GB RAM** (4 GB recommended)
+- At least **30 GB disk** space
+- A **domain name** pointed to your VPS IP address (e.g., `yourdomain.com`)
+- Your GritCMS code in a **GitHub, GitLab, or Gitea** repository
+
+## Architecture
+
+```
+                    ┌──────────────────────────────────────────────┐
+                    │                   Dokploy                     │
+                    │              (Traefik reverse proxy)          │
+                    │                                               │
+  yourdomain.com ──►│  web    (Next.js)       :3000                │
+admin.yourdomain ──►│  admin  (Next.js)       :3000                │
+  api.yourdomain ──►│  api    (Go/Gin)        :8080                │
+                    │                                               │
+                    │  postgres (PostgreSQL 16)  :5432              │
+                    │  redis    (Redis 7)        :6379              │
+                    │  minio    (MinIO S3)       :9000              │
+                    └──────────────────────────────────────────────┘
+```
+
+Dokploy's built-in Traefik reverse proxy routes traffic by domain name, terminates SSL via Let's Encrypt, and forwards requests to containers on the internal Docker network.
 
 ## Step 1: Install Dokploy on Your VPS
 
 SSH into your VPS and run the Dokploy installation script:
 
 ```bash
-ssh root@your-server-ip
+ssh root@your-vps-ip
 curl -sSL https://dokploy.com/install.sh | sh
 ```
 
-Once the installation completes, Dokploy's dashboard is available at `http://your-server-ip:3000`. Open it in your browser and create your admin account.
-
-## Step 2: Create a New Project
-
-In the Dokploy dashboard:
-
-1. Click **Projects** in the sidebar.
-2. Click **Create Project**.
-3. Name it "GritCMS" and save.
-
-A project in Dokploy is a logical grouping for related services. You will add three services (API, Admin, Web) and one database under this project.
-
-## Step 3: Connect Your GitHub Repository
-
-1. Go to **Settings > Git Providers** in Dokploy.
-2. Click **Add GitHub** and follow the OAuth flow to authorize Dokploy to access your repositories.
-3. Select the GritCMS repository.
-
-Once connected, Dokploy can pull your code and build Docker images directly from your repository.
-
-## Step 4: Configure Environment Variables
-
-For each service you create (API, Admin, Web), you need to set environment variables. In Dokploy, navigate to a service and click the **Environment** tab.
-
-### API Service Variables
+After installation (~5 minutes), access Dokploy at:
 
 ```
-DATABASE_URL=postgres://gritcms:your_secure_password@your-db-host:5432/gritcms?sslmode=disable
-JWT_SECRET=your_jwt_secret_here
-PORT=8080
+http://your-vps-ip:3000
 ```
 
-### Admin Service Variables
+Create your Dokploy admin account on the setup page.
 
-```
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-```
+## Step 2: Point DNS to Your VPS
 
-### Web Service Variables
+Add these A records in your DNS provider:
 
-```
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-```
-
-Replace the placeholder values with your actual credentials and domain.
-
-## Step 5: Set Up PostgreSQL Database
-
-1. In your GritCMS project, click **Add Service > Database**.
-2. Select **PostgreSQL** and choose version 16.
-3. Set the database name to `gritcms`, username to `gritcms`, and a strong password.
-4. Click **Deploy**.
-
-Dokploy provisions the PostgreSQL container and provides an internal connection string. Use this connection string as the `DATABASE_URL` for your API service.
-
-## Step 6: Configure Domains and SSL
-
-For each service, configure a custom domain and enable SSL:
-
-1. Navigate to the service (e.g., API).
-2. Click the **Domains** tab.
-3. Add your domain (e.g., `api.yourdomain.com` for the API, `admin.yourdomain.com` for the admin panel, `yourdomain.com` for the public site).
-4. Enable **HTTPS** -- Dokploy uses Let's Encrypt to automatically provision and renew SSL certificates.
-
-Make sure your DNS records point each subdomain to your VPS IP address:
-
-| Subdomain | Type | Value |
+| Record | Type | Value |
 |---|---|---|
-| `api.yourdomain.com` | A | Your VPS IP |
-| `admin.yourdomain.com` | A | Your VPS IP |
-| `yourdomain.com` | A | Your VPS IP |
+| `@` (or `yourdomain.com`) | A | Your VPS IP |
+| `admin` | A | Your VPS IP |
+| `api` | A | Your VPS IP |
 
-SSL certificates are issued automatically once DNS propagation is complete (usually within a few minutes).
+Wait for DNS propagation (usually 5-15 minutes).
 
-## Step 7: Deploy and Verify
+## Step 3: Create a Project in Dokploy
 
-1. For each service (API, Admin, Web), go to the **Deployments** tab and click **Deploy**.
-2. Dokploy clones your repository, builds the Docker image using the appropriate Dockerfile, and starts the container.
-3. Monitor the build logs in real time from the Dokploy dashboard.
+1. Log into the Dokploy dashboard
+2. Click **Projects** in the sidebar
+3. Click **Create Project** and name it `GritCMS`
 
-Once all three services are deployed and running, verify:
+## Step 4: Add Docker Compose Service
 
-- **API:** Visit `https://api.yourdomain.com/api/health` -- you should see a health check response.
-- **Admin:** Visit `https://admin.yourdomain.com` -- the admin login page should load.
-- **Web:** Visit `https://yourdomain.com` -- the public site should render.
+GritCMS uses a single Docker Compose file that defines all services. This is the simplest way to deploy.
 
-After verifying, seed the database with defaults:
+1. Inside the GritCMS project, click **Add Service** then **Docker Compose**
+2. **Source**: Connect your Git repository (GitHub / GitLab / Gitea)
+3. **Compose Path**: `docker-compose.prod.yml`
+4. **Build Context**: `.` (repository root)
+
+The `docker-compose.prod.yml` file in the repository defines all six services (API, Web, Admin, PostgreSQL, Redis, MinIO) with health checks and proper dependencies.
+
+## Step 5: Configure Environment Variables
+
+In Dokploy, navigate to your Docker Compose service and click the **Environment** tab. Add these variables:
+
+```env
+# ─── REQUIRED ────────────────────────────────────────────────
+JWT_SECRET=generate-a-64-char-random-string
+POSTGRES_USER=grit
+POSTGRES_PASSWORD=use-a-strong-password-here
+POSTGRES_DB=gritcms
+
+# ─── DOMAINS (update to your actual domains) ────────────────
+API_URL=https://api.yourdomain.com
+WEB_URL=https://yourdomain.com
+ADMIN_URL=https://admin.yourdomain.com
+
+# ─── STORAGE ─────────────────────────────────────────────────
+STORAGE_DRIVER=minio
+MINIO_ACCESS_KEY=generate-a-key
+MINIO_SECRET_KEY=generate-a-secret
+MINIO_BUCKET=uploads
+
+# ─── EMAIL (Resend — resend.com) ────────────────────────────
+RESEND_API_KEY=re_your_api_key
+MAIL_FROM=hello@yourdomain.com
+
+# ─── SECURITY (change defaults!) ────────────────────────────
+SENTINEL_ENABLED=true
+SENTINEL_USERNAME=admin
+SENTINEL_PASSWORD=your-sentinel-password
+PULSE_ENABLED=true
+PULSE_USERNAME=admin
+PULSE_PASSWORD=your-pulse-password
+```
+
+Generate secure secrets with:
 
 ```bash
-curl -X POST https://api.yourdomain.com/api/seed-defaults
+openssl rand -hex 32
 ```
 
-## Updating the Deployment
+### Optional Variables
 
-When you push changes to your GitHub repository, you can redeploy from the Dokploy dashboard:
+```env
+# AI (for AI-powered page builder features)
+AI_PROVIDER=claude
+AI_API_KEY=sk-ant-your-key
+AI_MODEL=claude-sonnet-4-5-20250929
 
-1. Navigate to the service you want to update.
-2. Click **Deploy** on the Deployments tab.
-3. Dokploy pulls the latest code, rebuilds the image, and restarts the container with zero downtime.
+# OAuth (for social login)
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+OAUTH_FRONTEND_URL=https://admin.yourdomain.com
 
-You can also enable **auto-deploy** in the service settings to trigger a deployment automatically on every push to your main branch.
+# Cloudflare R2 (alternative to MinIO)
+# STORAGE_DRIVER=r2
+# R2_ENDPOINT=https://YOUR_ACCOUNT_ID.r2.cloudflarestorage.com
+# R2_ACCESS_KEY=your-r2-key
+# R2_SECRET_KEY=your-r2-secret
+# R2_BUCKET=uploads
+```
 
-## Tips
+## Step 6: Configure Domains & SSL
 
-- **Monitor resources.** Use Dokploy's built-in monitoring to track CPU and memory usage. If services are slow, consider upgrading your VPS.
-- **Database backups.** Set up scheduled backups for your PostgreSQL database through Dokploy's database management panel.
-- **Logs.** Access real-time logs for each service from the Dokploy dashboard to troubleshoot issues.
-- **Scaling.** If traffic grows, you can add more VPS instances and use Dokploy's multi-server support to distribute services.
+In Dokploy, navigate to your Docker Compose service and click the **Domains** tab. Add domain mappings for each service:
+
+| Service | Domain | Container Port | HTTPS |
+|---|---|---|---|
+| `web` | `yourdomain.com` | 3000 | Yes |
+| `admin` | `admin.yourdomain.com` | 3000 | Yes |
+| `api` | `api.yourdomain.com` | 8080 | Yes |
+
+Dokploy uses Traefik to automatically provision and renew **Let's Encrypt** SSL certificates. Certificates are issued automatically once DNS propagation is complete.
+
+## Step 7: Deploy
+
+Click **Deploy** in Dokploy. The build process will:
+
+1. Pull your code from Git
+2. Build Docker images for API (Go 1.24), Web (Next.js), and Admin (Next.js)
+3. Start PostgreSQL, Redis, and MinIO
+4. Start the API server (auto-migrates the database on first run)
+5. Start the Web and Admin frontends
+
+The first build takes approximately 5-10 minutes. Subsequent deploys are faster due to Docker layer caching.
+
+## Step 8: Initial Setup
+
+1. Visit `https://admin.yourdomain.com`
+2. Register your admin account (the first user becomes admin)
+3. The **Setup Wizard** appears automatically:
+   - Enter your site name and tagline
+   - Create your first email list
+   - Click "Go to Dashboard" -- this saves your settings and creates your Home page with the Creator Home template
+4. Visit `https://yourdomain.com` to see your live site
+
+## Updating / Redeploying
+
+### Manual Deploy
+
+Dokploy dashboard > your service > **Deploy**
+
+### Auto-deploy via Webhook
+
+1. In Dokploy, go to your service > **Deployments** > copy the webhook URL
+2. Add it as a webhook in your GitHub/GitLab repo settings
+3. Every push to `main` triggers an automatic redeploy
+
+### Command-line Deploy
+
+```bash
+git add . && git commit -m "your changes" && git push
+```
+
+If auto-deploy is enabled, pushing to `main` triggers the build automatically.
+
+## Backups
+
+### PostgreSQL
+
+```bash
+# SSH into your VPS, then:
+docker exec gritcms-postgres pg_dump -U grit gritcms > backup_$(date +%Y%m%d).sql
+```
+
+### Restore from Backup
+
+```bash
+docker exec -i gritcms-postgres psql -U grit gritcms < backup_20260226.sql
+```
+
+### Dokploy Built-in Backups
+
+Dokploy dashboard > **Settings** > **Backups** > configure an S3-compatible destination for automatic scheduled backups.
+
+### Volumes
+
+All persistent data is stored in Docker named volumes:
+
+- `postgres-data` -- database files
+- `redis-data` -- cache and session data
+- `minio-data` -- uploaded files and media
+
+## Monitoring & Logs
+
+- **Dokploy Dashboard**: Built-in container logs and resource monitoring for all services
+- **Pulse**: Visit `https://api.yourdomain.com/pulse` (login with `PULSE_USERNAME`/`PULSE_PASSWORD`) for real-time request monitoring
+- **Sentinel**: Visit `https://api.yourdomain.com/sentinel` (login with `SENTINEL_USERNAME`/`SENTINEL_PASSWORD`) for error tracking
+- **Container Logs**: In Dokploy, click any service to view real-time logs
+
+## Scaling
+
+| VPS Size | Suitable For |
+|---|---|
+| 2 GB RAM | Development / testing |
+| 4 GB RAM | Small creator site (< 10k monthly visitors) |
+| 8 GB RAM | Medium site (10k-100k monthly visitors) |
+| 16 GB RAM | Large site (100k+ monthly visitors) |
+
+For high traffic, consider:
+
+- Moving PostgreSQL to a managed database (Supabase, Neon, or AWS RDS)
+- Moving Redis to managed Redis (Upstash or ElastiCache)
+- Using Cloudflare R2 or Backblaze B2 instead of self-hosted MinIO
+- Dokploy supports multi-server clusters for horizontal scaling
+
+## Troubleshooting
+
+**Build fails with Go version error**:
+The API Dockerfile uses `golang:1.24-alpine`. Ensure your `go.mod` specifies a compatible Go version.
+
+**Build fails with "public directory not found"**:
+The web and admin Dockerfiles copy from `public/` directories. Make sure `apps/web/public/` and `apps/admin/public/` directories exist (even if empty, they need a `.gitkeep` file).
+
+**Port already allocated**:
+The `docker-compose.prod.yml` uses `expose` (internal only) instead of `ports` (host-bound). If you see port conflicts, ensure no other services are using the same ports. Behind Dokploy's Traefik proxy, `expose` is correct.
+
+**API won't start**:
+- Check logs: `docker logs gritcms-api`
+- `JWT_SECRET is required` -- ensure the environment variable is set
+- `connection refused to postgres` -- the API waits for PostgreSQL's health check, but verify the `DATABASE_URL` is correct
+
+**CORS errors**:
+The `CORS_ORIGINS` variable is built automatically from `WEB_URL` and `ADMIN_URL` in the Compose file. Make sure these match your actual domain URLs.
+
+**SSL not working**:
+- Verify DNS A records point to your VPS IP
+- Ensure ports 80 and 443 are open on your VPS firewall
+- Check Traefik logs in Dokploy for Let's Encrypt errors

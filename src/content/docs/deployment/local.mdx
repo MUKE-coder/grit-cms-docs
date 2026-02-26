@@ -9,10 +9,11 @@ This guide covers running GritCMS on your local machine for development. The loc
 
 Before starting, make sure you have the following installed:
 
-- **Go 1.21+** -- for the API backend
-- **Node.js 18+** -- for the frontend apps
+- **Go 1.24+** -- for the API backend
+- **Node.js 20+** -- for the frontend apps
 - **pnpm** -- the package manager used by the monorepo (`npm install -g pnpm`)
 - **Git** -- for cloning the repository
+- **Docker** (optional) -- for running PostgreSQL, Redis, and MinIO via `docker-compose.yml`
 
 ## Project Structure
 
@@ -23,63 +24,88 @@ GritCMS is a pnpm monorepo with three main services:
 | API | `apps/api` | 8080 | Go backend (Gin + GORM) |
 | Admin | `apps/admin` | 3000 | Next.js admin dashboard |
 | Web | `apps/web` | 3001 | Next.js public-facing site |
-
-There is also a shared types package at `packages/shared` used by both frontend apps.
+| Shared | `packages/shared` | -- | Shared types, sections, and templates |
 
 ## Installation
 
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/your-org/grit-cms.git
-cd grit-cms
+git clone https://github.com/your-org/gritcms.git
+cd gritcms
 pnpm install
 ```
 
 This installs dependencies for all packages and apps in the monorepo.
 
-## Running the Services
+## Option A: SQLite (Simplest)
 
-You need to run all three services for a fully functional local environment. Open three terminal windows (or use a process manager).
+The API uses SQLite by default when no `DATABASE_URL` is set. This is the fastest way to get started -- no database server needed.
 
-### API (Go Backend)
+### Running the Services
+
+Open three terminal windows (or use a process manager):
+
+**Terminal 1 -- API:**
 
 ```bash
 cd apps/api
 go run cmd/server/main.go
 ```
 
-The API starts on `http://localhost:8080`. It uses SQLite by default when no `DATABASE_URL` environment variable is set, storing data in a local `grit.db` file.
+The API starts on `http://localhost:8080` and stores data in a local `grit.db` file.
 
-### Admin (Next.js Dashboard)
-
-```bash
-cd apps/admin
-pnpm dev
-```
-
-The admin dashboard starts on `http://localhost:3000`. It proxies API requests to `http://localhost:8080`.
-
-### Web (Next.js Public Site)
+**Terminal 2 -- Admin:**
 
 ```bash
-cd apps/web
-pnpm dev
+pnpm --filter admin dev
 ```
 
-The public site starts on `http://localhost:3001`. It also connects to the API at `http://localhost:8080`.
+The admin dashboard starts on `http://localhost:3000`.
+
+**Terminal 3 -- Web:**
+
+```bash
+pnpm --filter web dev
+```
+
+The public site starts on `http://localhost:3001`.
+
+## Option B: Docker Compose (Full Stack)
+
+For a setup closer to production with PostgreSQL, Redis, and MinIO:
+
+```bash
+docker compose up -d
+```
+
+This starts PostgreSQL (port 5432), Redis (port 6379), MinIO (port 9000/9001), and MailHog (port 8025) using the `docker-compose.yml` in the project root.
+
+Then create a `.env` file in `apps/api/`:
+
+```env
+DATABASE_URL=postgres://grit:grit@localhost:5432/gritcms?sslmode=disable
+REDIS_URL=redis://localhost:6379
+MINIO_ENDPOINT=http://localhost:9000
+MINIO_ACCESS_KEY=minioadmin
+MINIO_SECRET_KEY=minioadmin
+MINIO_BUCKET=uploads
+STORAGE_DRIVER=minio
+```
+
+Start the services the same way as Option A (three terminals).
 
 ## Hot Reload
 
 ### Frontend Hot Reload
 
-Both Next.js apps (`admin` and `web`) run in development mode with **Fast Refresh** enabled. When you edit a React component, the change appears in the browser instantly without a full page reload. CSS and style changes are also hot-reloaded.
+Both Next.js apps (`admin` and `web`) run in development mode with **Fast Refresh** enabled. When you edit a React component, the change appears in the browser instantly without a full page reload.
 
 ### Backend Restart
 
-The Go backend does **not** hot-reload by default. After making changes to Go files, you need to stop the server (Ctrl+C) and run `go run cmd/server/main.go` again.
+The Go backend does **not** hot-reload by default. After making changes to Go files, stop the server (Ctrl+C) and run `go run cmd/server/main.go` again.
 
-For automatic restarts, you can use a tool like [air](https://github.com/cosmtrek/air):
+For automatic restarts, use [air](https://github.com/cosmtrek/air):
 
 ```bash
 go install github.com/cosmtrek/air@latest
@@ -89,38 +115,39 @@ air
 
 Air watches for file changes and automatically rebuilds and restarts the Go server.
 
-## SQLite for Local Development
+## Initial Setup
 
-By default, the API uses **SQLite** as its database. This means:
+After starting all services for the first time:
 
-- No database server to install or configure
-- Data is stored in a single `grit.db` file in the `apps/api` directory
-- GORM auto-migrates all models on startup, so the schema is always up to date
-- You can delete `grit.db` at any time to start with a fresh database
+1. Visit `http://localhost:3000` (admin dashboard)
+2. Register your admin account (first user becomes admin)
+3. Complete the **Setup Wizard** -- it saves your site settings and creates a default Home page
+4. Visit `http://localhost:3001` to see the public site
 
-SQLite is ideal for local development but not recommended for production. For production deployments, use PostgreSQL (see [Docker](/deployment/docker) or [Dokploy](/deployment/dokploy) guides).
-
-## Seeding Default Data
-
-After starting the API for the first time, seed the database with default settings and sample data:
+Alternatively, seed defaults manually:
 
 ```bash
 curl -X POST http://localhost:8080/api/seed-defaults
 ```
 
-This creates default site settings (site name, branding, etc.) so the admin panel and public site render correctly out of the box. You only need to run this once per fresh database.
-
 ## Environment Variables
 
-For local development, the defaults work without any configuration. If you need to customize behavior, you can set these optional environment variables:
+For local development, the defaults work without configuration. Optional variables:
 
 | Variable | Default | Description |
 |---|---|---|
 | `PORT` | `8080` | API server port |
 | `DATABASE_URL` | (SQLite) | PostgreSQL connection string |
+| `REDIS_URL` | (none) | Redis connection string |
 | `JWT_SECRET` | (generated) | Secret for JWT token signing |
-| `UPLOAD_DIR` | `./uploads` | Directory for file uploads |
+| `CORS_ORIGINS` | `*` | Allowed origins for CORS |
+| `STORAGE_DRIVER` | `local` | File storage: `local`, `minio`, or `r2` |
+| `MINIO_ENDPOINT` | -- | MinIO server URL |
+| `MINIO_ACCESS_KEY` | -- | MinIO access key |
+| `MINIO_SECRET_KEY` | -- | MinIO secret key |
+| `RESEND_API_KEY` | -- | Resend email API key |
+| `MAIL_FROM` | -- | Sender email address |
 
 ## Next Steps
 
-Once you are comfortable with local development, see the [Docker](/deployment/docker) guide for containerized deployments or the [Dokploy](/deployment/dokploy) guide for deploying to a VPS.
+Once you are comfortable with local development, see the [Docker](/docs/deployment/docker) guide for containerized deployments or the [Dokploy](/docs/deployment/dokploy) guide for deploying to a VPS.

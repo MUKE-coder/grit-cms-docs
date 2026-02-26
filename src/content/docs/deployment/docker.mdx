@@ -1,168 +1,261 @@
 ---
 title: "Docker Deployment"
-description: "Deploy GritCMS with Docker Compose using PostgreSQL, with all three services containerized."
+description: "Deploy GritCMS with Docker Compose using PostgreSQL, Redis, and MinIO, with all services containerized."
 ---
 
-Docker Compose is the recommended way to deploy GritCMS in a production or staging environment. It packages the API, admin dashboard, and public site into containers alongside a PostgreSQL database.
+Docker Compose is the recommended way to deploy GritCMS in a production or staging environment. It packages the API, admin dashboard, public site, PostgreSQL, Redis, and MinIO into containers.
 
 ## Prerequisites
 
 - **Docker** 20.10+ installed on your server or local machine
 - **Docker Compose** v2 (included with Docker Desktop, or install separately on Linux)
-- At least **1 GB RAM** available for the containers
+- At least **2 GB RAM** available for the containers (4 GB recommended)
 
 ## Architecture
 
-The Docker Compose setup runs four containers:
+The Docker Compose setup runs six containers:
 
-| Service | Image | Port | Description |
+| Service | Image | Internal Port | Description |
 |---|---|---|---|
-| `api` | Built from `apps/api` | 8080 | Go backend |
+| `api` | Built from `apps/api` | 8080 | Go backend (Gin + GORM) |
 | `admin` | Built from `apps/admin` | 3000 | Next.js admin dashboard |
-| `web` | Built from `apps/web` | 3001 | Next.js public site |
-| `db` | `postgres:16-alpine` | 5432 | PostgreSQL database |
+| `web` | Built from `apps/web` | 3000 | Next.js public site |
+| `postgres` | `postgres:16-alpine` | 5432 | PostgreSQL database |
+| `redis` | `redis:7-alpine` | 6379 | Redis cache and sessions |
+| `minio` | `minio/minio` | 9000 | S3-compatible file storage |
 
-## Example docker-compose.yml
+## docker-compose.prod.yml
+
+The project includes a production-ready Compose file. Here is the full configuration:
 
 ```yaml
-version: "3.8"
-
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: gritcms
-      POSTGRES_PASSWORD: your_secure_password
-      POSTGRES_DB: gritcms
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
   api:
     build:
-      context: .
-      dockerfile: apps/api/Dockerfile
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: gritcms-api
     restart: unless-stopped
-    depends_on:
-      - db
+    expose:
+      - "8080"
+    env_file:
+      - .env
     environment:
-      DATABASE_URL: postgres://gritcms:your_secure_password@db:5432/gritcms?sslmode=disable
-      JWT_SECRET: your_jwt_secret_here
-      PORT: "8080"
-    ports:
-      - "8080:8080"
-    volumes:
-      - uploads:/app/uploads
-
-  admin:
-    build:
-      context: .
-      dockerfile: apps/admin/Dockerfile
-    restart: unless-stopped
+      APP_ENV: production
+      DATABASE_URL: postgres://${POSTGRES_USER:-grit}:${POSTGRES_PASSWORD:-grit}@postgres:5432/${POSTGRES_DB:-gritcms}?sslmode=disable
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET:?JWT_SECRET is required}
+      APP_URL: ${API_URL:-http://localhost:8080}
+      CORS_ORIGINS: ${WEB_URL:-http://localhost:3000},${ADMIN_URL:-http://localhost:3001}
+      STORAGE_DRIVER: ${STORAGE_DRIVER:-minio}
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+      MINIO_BUCKET: ${MINIO_BUCKET:-uploads}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-noreply@localhost}
     depends_on:
-      - api
-    environment:
-      NEXT_PUBLIC_API_URL: http://api:8080
-    ports:
-      - "3000:3000"
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   web:
     build:
       context: .
       dockerfile: apps/web/Dockerfile
+    container_name: gritcms-web
     restart: unless-stopped
-    depends_on:
-      - api
+    expose:
+      - "3000"
     environment:
-      NEXT_PUBLIC_API_URL: http://api:8080
-    ports:
-      - "3001:3001"
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://api:8080}
+
+  admin:
+    build:
+      context: .
+      dockerfile: apps/admin/Dockerfile
+    container_name: gritcms-admin
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${API_URL:-http://api:8080}
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: gritcms-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-grit}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-grit}
+      POSTGRES_DB: ${POSTGRES_DB:-gritcms}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-grit}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: gritcms-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio
+    container_name: gritcms-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:-minioadmin}
+    volumes:
+      - minio-data:/data
+    command: server /data --console-address ":9001"
 
 volumes:
-  pgdata:
-  uploads:
+  postgres-data:
+  redis-data:
+  minio-data:
+```
+
+### Why `expose` instead of `ports`?
+
+The Compose file uses `expose` rather than `ports` for the application services. This makes ports available only on the internal Docker network -- not bound to the host machine. This is the correct approach when running behind a reverse proxy (Traefik, Nginx, Caddy) which routes traffic to containers internally.
+
+If you need direct host access (e.g., no reverse proxy), change `expose` to `ports`:
+
+```yaml
+# Direct host access (no reverse proxy)
+ports:
+  - "8080:8080"  # api
+  - "3000:3000"  # web
+  - "3001:3000"  # admin (maps host 3001 to container 3000)
 ```
 
 ## Environment Variables
 
-Configure these environment variables in the `docker-compose.yml` file or via a `.env` file:
+Create a `.env` file in the project root alongside the Compose file:
 
-### API Service
+```env
+# Required
+JWT_SECRET=generate-a-64-char-random-string
+POSTGRES_USER=grit
+POSTGRES_PASSWORD=use-a-strong-password
+POSTGRES_DB=gritcms
 
-| Variable | Required | Description |
-|---|---|---|
-| `DATABASE_URL` | Yes | PostgreSQL connection string |
-| `JWT_SECRET` | Yes | Secret key for JWT authentication |
-| `PORT` | No | API port (default: 8080) |
-| `UPLOAD_DIR` | No | Upload directory (default: /app/uploads) |
+# Domains (update to your actual URLs)
+API_URL=https://api.yourdomain.com
+WEB_URL=https://yourdomain.com
+ADMIN_URL=https://admin.yourdomain.com
 
-### Frontend Services (Admin & Web)
+# Storage
+STORAGE_DRIVER=minio
+MINIO_ACCESS_KEY=your-minio-key
+MINIO_SECRET_KEY=your-minio-secret
+MINIO_BUCKET=uploads
 
-| Variable | Required | Description |
-|---|---|---|
-| `NEXT_PUBLIC_API_URL` | Yes | URL of the API service |
+# Email (Resend)
+RESEND_API_KEY=re_your_api_key
+MAIL_FROM=hello@yourdomain.com
+```
+
+Generate secure secrets with:
+
+```bash
+openssl rand -hex 32
+```
+
+### Full Variable Reference
+
+| Variable | Required | Default | Description |
+|---|---|---|---|
+| `JWT_SECRET` | Yes | -- | Secret key for JWT authentication |
+| `POSTGRES_USER` | No | `grit` | PostgreSQL username |
+| `POSTGRES_PASSWORD` | No | `grit` | PostgreSQL password |
+| `POSTGRES_DB` | No | `gritcms` | PostgreSQL database name |
+| `API_URL` | No | `http://localhost:8080` | Public API URL |
+| `WEB_URL` | No | `http://localhost:3000` | Public web URL |
+| `ADMIN_URL` | No | `http://localhost:3001` | Admin dashboard URL |
+| `STORAGE_DRIVER` | No | `minio` | `minio`, `r2`, or `local` |
+| `MINIO_ACCESS_KEY` | No | `minioadmin` | MinIO access key |
+| `MINIO_SECRET_KEY` | No | `minioadmin` | MinIO secret key |
+| `MINIO_BUCKET` | No | `uploads` | MinIO bucket name |
+| `RESEND_API_KEY` | No | -- | Resend email API key |
+| `MAIL_FROM` | No | `noreply@localhost` | Sender email address |
+| `SENTINEL_ENABLED` | No | `true` | Enable Sentinel error tracker |
+| `PULSE_ENABLED` | No | `true` | Enable Pulse request monitor |
 
 ## Building and Running
 
-From the project root directory, build and start all services:
+From the project root, build and start all services:
 
 ```bash
-docker compose up -d --build
+docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-This builds the Docker images for all three application services, pulls the PostgreSQL image, and starts everything in detached mode.
-
-To check that all containers are running:
+Check that all containers are running:
 
 ```bash
-docker compose ps
+docker compose -f docker-compose.prod.yml ps
 ```
 
-To view logs:
+View logs:
 
 ```bash
-docker compose logs -f
+docker compose -f docker-compose.prod.yml logs -f
 ```
+
+View logs for a specific service:
+
+```bash
+docker compose -f docker-compose.prod.yml logs -f api
+```
+
+## Initial Setup
+
+After the first deployment:
+
+1. Visit the admin dashboard and register your admin account (first user becomes admin)
+2. Complete the Setup Wizard -- it saves settings, creates your email list, and seeds your Home page
+3. Visit the public site to see your live site
 
 ## Persistent Volumes
 
-The `docker-compose.yml` defines two named volumes:
+The Compose file defines three named volumes:
 
-- **pgdata** -- stores PostgreSQL data. Your database persists across container restarts and rebuilds.
-- **uploads** -- stores user-uploaded files (images, media, etc.). This ensures uploads are not lost when the API container is recreated.
+- **postgres-data** -- PostgreSQL database files
+- **redis-data** -- Redis persistence data
+- **minio-data** -- Uploaded files and media
 
 Never delete these volumes unless you intentionally want to wipe data.
 
-## Seeding Default Data
-
-After the first deployment, seed the database with default settings:
-
-```bash
-curl -X POST http://localhost:8080/api/seed-defaults
-```
-
-Or from within the Docker network:
-
-```bash
-docker compose exec api curl -X POST http://localhost:8080/api/seed-defaults
-```
-
 ## Updating the Deployment
 
-To deploy a new version of GritCMS:
+To deploy a new version:
 
 ```bash
 git pull
-docker compose up -d --build
+docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Docker Compose rebuilds only the images that have changed. The database volume is preserved, so your data remains intact.
+Docker Compose rebuilds only the images that have changed. Database volumes are preserved.
 
-## Production Considerations
+## Production Checklist
 
-- **Replace default secrets.** Always set a strong, unique `JWT_SECRET` and `POSTGRES_PASSWORD` in production.
-- **Use a reverse proxy.** Place Nginx, Caddy, or Traefik in front of the services to handle SSL termination and route traffic to the correct ports.
-- **Back up the database.** Schedule regular backups of the `pgdata` volume or use `pg_dump` inside the database container.
-- **Resource limits.** Consider setting memory and CPU limits on each service in the Compose file for predictable resource usage.
+- **Replace default secrets.** Always set strong, unique `JWT_SECRET`, `POSTGRES_PASSWORD`, `MINIO_ACCESS_KEY`, and `MINIO_SECRET_KEY` values.
+- **Use a reverse proxy.** Place Nginx, Caddy, or Traefik in front of the services to handle SSL termination and domain routing.
+- **Back up the database.** Schedule regular backups using `pg_dump`:
+  ```bash
+  docker exec gritcms-postgres pg_dump -U grit gritcms > backup_$(date +%Y%m%d).sql
+  ```
+- **Resource limits.** Consider setting memory and CPU limits on each service for predictable resource usage.
+- **Configure CORS.** The `CORS_ORIGINS` variable is built automatically from `WEB_URL` and `ADMIN_URL`.
