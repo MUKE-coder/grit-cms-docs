@@ -65,6 +65,7 @@ export const navigation: NavGroup[] = [
       { title: "Products", slug: "commerce/products", href: "/docs/commerce/products" },
       { title: "Orders", slug: "commerce/orders", href: "/docs/commerce/orders" },
       { title: "Coupons", slug: "commerce/coupons", href: "/docs/commerce/coupons" },
+      { title: "Payments (Stripe)", slug: "commerce/payments", href: "/docs/commerce/payments" },
     ],
   },
   {
@@ -118,6 +119,8 @@ export const navigation: NavGroup[] = [
     items: [
       { title: "General", slug: "settings/general", href: "/docs/settings/general" },
       { title: "Branding", slug: "settings/branding", href: "/docs/settings/branding" },
+      { title: "Integrations", slug: "settings/integrations", href: "/docs/settings/integrations" },
+      { title: "System Info", slug: "settings/system-info", href: "/docs/settings/system-info" },
     ],
   },
   {

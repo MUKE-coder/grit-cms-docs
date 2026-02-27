@@ -1,0 +1,131 @@
+---
+title: "Payments (Stripe)"
+description: "Accept payments for products and courses using Stripe Elements with built-in checkout, webhooks, and automatic order fulfillment."
+---
+
+## Overview
+
+GritCMS integrates with [Stripe](https://stripe.com) to process payments for products and courses directly on your site. When a customer clicks "Buy Now" on a product or "Enroll Now" on a paid course, an inline Stripe Elements form appears on the page -- no redirect to an external checkout page. After payment succeeds, orders are fulfilled automatically (course enrollments are created, digital products are delivered, etc.).
+
+## How It Works
+
+The payment flow follows these steps:
+
+1. **Customer clicks Buy/Enroll** -- The frontend sends a checkout request to the API with the product or course ID.
+2. **API creates a PaymentIntent** -- The backend creates a Stripe PaymentIntent for the correct amount and currency, creates an order in `pending` status, and returns the client secret.
+3. **Customer enters payment details** -- Stripe Elements renders a secure payment form inline on the page. The customer enters their card details (or uses Apple Pay, Google Pay, etc.).
+4. **Payment is confirmed** -- The frontend confirms the payment with Stripe. On success, it calls the confirmation endpoint to verify and fulfill the order immediately.
+5. **Webhook backup** -- Stripe sends a `payment_intent.succeeded` webhook as a backup. If the frontend confirmation didn't complete (e.g., the user closed the browser), the webhook ensures the order is still marked as paid and fulfilled.
+
+## Setup
+
+### 1. Get Stripe API Keys
+
+1. Create a [Stripe account](https://dashboard.stripe.com/register) if you don't have one.
+2. Navigate to [Developers > API keys](https://dashboard.stripe.com/apikeys).
+3. Copy your **Publishable key** and **Secret key**.
+
+For testing, use the test mode keys (prefixed with `pk_test_` and `sk_test_`). Switch to live keys when you're ready to accept real payments.
+
+### 2. Configure Environment Variables
+
+Add the following to your `.env` file:
+
+```env
+STRIPE_SECRET_KEY=sk_test_your_secret_key
+STRIPE_PUBLISHABLE_KEY=pk_test_your_publishable_key
+STRIPE_WEBHOOK_SECRET=whsec_your_webhook_secret
+```
+
+See the [Environment Variables](/docs/configuration/environment) reference for the full list.
+
+### 3. Set Up Webhooks
+
+Webhooks ensure orders are fulfilled even if the customer's browser disconnects after payment:
+
+1. Go to [Developers > Webhooks](https://dashboard.stripe.com/webhooks) in Stripe.
+2. Click **Add endpoint**.
+3. Set the URL to `https://api.yourdomain.com/api/webhooks/stripe`.
+4. Subscribe to these events:
+   - `payment_intent.succeeded`
+   - `payment_intent.payment_failed`
+5. Copy the **Signing secret** and set it as `STRIPE_WEBHOOK_SECRET` in your `.env`.
+
+### 4. Restart the API
+
+After updating the environment variables, restart the API server. If the Stripe keys are valid, payment features are automatically enabled.
+
+## Product Checkout
+
+When a customer visits a product page at `yoursite.com/products/{slug}` and clicks the **Buy Now** button:
+
+1. If not logged in, they are redirected to the login page.
+2. After authentication, a checkout request is sent to the API.
+3. A Stripe PaymentIntent is created for the product's price.
+4. The Stripe Elements payment form appears inline on the product page.
+5. The customer enters their payment details and submits.
+6. On success, they are redirected to a confirmation page showing their order details.
+
+## Course Checkout
+
+For paid courses at `yoursite.com/courses/{slug}`:
+
+1. Free courses show an **Enroll Now** button that grants immediate access.
+2. Paid courses show an **Enroll Now** button with the price displayed.
+3. When clicked, the checkout flow is identical to product checkout.
+4. After payment succeeds, the customer is automatically enrolled in the course and redirected to the learning page at `yoursite.com/learn/{slug}`.
+
+If a paid course does not have a linked product in the Commerce module, GritCMS automatically creates one behind the scenes using the course's price and currency.
+
+## Coupon Support
+
+Customers can apply coupon codes during checkout. The API validates the coupon and applies the discount before creating the PaymentIntent. Coupons can be percentage-based or fixed-amount discounts. See the [Coupons](/docs/commerce/coupons) documentation for details on creating and managing coupons.
+
+## Order Fulfillment
+
+When a payment succeeds, the following happens automatically:
+
+1. The order status is updated from `pending` to `paid`.
+2. The `paid_at` timestamp is recorded.
+3. For **course products**, the customer is enrolled in the linked course.
+4. A `purchase_completed` event is emitted, which can trigger [workflow automations](/docs/automation/workflows).
+
+Fulfillment is triggered by two mechanisms for reliability:
+- **Direct confirmation** -- The frontend calls `POST /api/checkout/{orderId}/confirm` immediately after payment. This verifies the PaymentIntent status via the Stripe API and fulfills the order in real-time.
+- **Webhook** -- The `payment_intent.succeeded` webhook fires as a backup, ensuring orders are fulfilled even if the frontend confirmation was missed.
+
+## Refunds
+
+To refund a paid order:
+
+1. Open the order in **Commerce > Orders**.
+2. Click the **Refund** button.
+3. The order status changes to `Refunded` and a `purchase_refunded` event is emitted.
+
+For the actual money to be returned to the customer, process the refund through your [Stripe Dashboard](https://dashboard.stripe.com/payments) as well.
+
+## Testing
+
+Use Stripe's test card numbers to simulate payments in test mode:
+
+| Card Number | Scenario |
+|---|---|
+| `4242 4242 4242 4242` | Successful payment |
+| `4000 0000 0000 3220` | 3D Secure authentication required |
+| `4000 0000 0000 0002` | Card declined |
+
+Use any future expiration date and any 3-digit CVC. See the [Stripe testing docs](https://docs.stripe.com/testing) for more test scenarios.
+
+## Supported Payment Methods
+
+Stripe Elements automatically adapts to show the payment methods you have enabled in your Stripe Dashboard. By default, this includes:
+
+- Credit and debit cards (Visa, Mastercard, Amex, etc.)
+- Apple Pay and Google Pay (when available on the customer's device)
+- Link (Stripe's one-click checkout)
+
+You can enable additional payment methods (bank transfers, iDEAL, SEPA, etc.) from the [Stripe Dashboard payment methods settings](https://dashboard.stripe.com/settings/payment_methods).
+
+## Theming
+
+The Stripe Elements payment form automatically matches your site's light or dark mode. GritCMS detects the current theme and passes matching colors, fonts, and border styles to Stripe so the checkout form looks native to your site.

@@ -211,6 +211,26 @@ Web Application Firewall (WAF), rate limiting, and threat detection dashboard at
 | `SENTINEL_PASSWORD` | `sentinel` | Dashboard login password |
 | `SENTINEL_SECRET_KEY` | `change-me` | Secret key for Sentinel JWT sessions |
 
+## Payments -- Stripe
+
+GritCMS uses [Stripe](https://stripe.com) for payment processing. When configured, customers can pay for products and courses using Stripe Elements (credit cards, Apple Pay, Google Pay, etc.) directly on your site.
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `STRIPE_SECRET_KEY` | -- | Stripe secret key (starts with `sk_test_` or `sk_live_`) |
+| `STRIPE_PUBLISHABLE_KEY` | -- | Stripe publishable key (starts with `pk_test_` or `pk_live_`) |
+| `STRIPE_WEBHOOK_SECRET` | -- | Webhook signing secret (starts with `whsec_`) |
+
+```env
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLISHABLE_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+Get your keys from the [Stripe Dashboard](https://dashboard.stripe.com/apikeys). For webhooks, create a webhook endpoint pointing to `https://api.yourdomain.com/api/webhooks/stripe` and subscribe to `payment_intent.succeeded` and `payment_intent.payment_failed` events.
+
+If these variables are not set, payment features are disabled and only free courses/products are available.
+
 ## Production Checklist
 
 Before deploying to production, ensure you have:
@@ -222,3 +242,5 @@ Before deploying to production, ensure you have:
 - Changed all default passwords (`GORM_STUDIO_PASSWORD`, `PULSE_PASSWORD`, `SENTINEL_PASSWORD`, `SENTINEL_SECRET_KEY`)
 - Configured a real `RESEND_API_KEY` for email delivery
 - Set up a production storage driver (`r2` or `b2`) instead of local MinIO
+- Configured `STRIPE_SECRET_KEY` and `STRIPE_PUBLISHABLE_KEY` for payment processing
+- Set up a Stripe webhook with `STRIPE_WEBHOOK_SECRET` for reliable order fulfillment

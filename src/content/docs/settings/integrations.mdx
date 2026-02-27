@@ -1,0 +1,86 @@
+---
+title: "Integrations"
+description: "Connect Google Calendar, configure Zoom, and set up meeting providers for your booking system."
+---
+
+The Integrations tab in Settings lets you connect third-party services to enhance your GritCMS features. Currently, integrations focus on the **Booking** module -- connecting calendar and video meeting providers so appointments are synced and meeting links are generated automatically.
+
+## Google Calendar
+
+Connect your Google account to sync bookings to Google Calendar. When a visitor books an appointment, it automatically appears on your Google Calendar.
+
+### Connecting Google Calendar
+
+1. Navigate to **Settings > Integrations**.
+2. In the **Google Calendar** section, click **Connect**.
+3. A popup opens where you sign in to your Google account and grant GritCMS permission to manage calendar events.
+4. Once authorized, the status changes to **Connected** and your bookings will sync automatically.
+
+### Disconnecting
+
+Click **Disconnect** at any time to revoke the connection. Existing calendar events are not removed, but new bookings will no longer create Google Calendar events.
+
+### Requirements
+
+Google Calendar integration requires OAuth2 credentials configured in your environment:
+
+```env
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+```
+
+See the [Environment Variables](/docs/configuration/environment) reference for setup details.
+
+## Meeting Provider
+
+Choose how meeting links are generated when someone books an appointment. The meeting provider setting determines what happens when a new appointment is confirmed.
+
+### Options
+
+| Provider | Description |
+|---|---|
+| **None** | No meeting link is generated. Use this for in-person meetings or when you prefer to send links manually. |
+| **Google Meet** | A Google Meet link is automatically created and included in the appointment confirmation. Requires a connected Google Calendar. |
+| **Zoom** | A Zoom meeting is automatically created and the join link is included in the appointment confirmation. Requires Zoom Server-to-Server OAuth credentials. |
+
+Select your preferred provider from the radio options and click **Save Changes**.
+
+## Zoom
+
+Configure Zoom Server-to-Server OAuth credentials to auto-create Zoom meetings when appointments are booked.
+
+### Setup Steps
+
+1. Go to the [Zoom Marketplace](https://marketplace.zoom.us/develop/create) and create a **Server-to-Server OAuth** app.
+2. Copy the **Account ID**, **Client ID**, and **Client Secret** from your Zoom app.
+3. In GritCMS, navigate to **Settings > Integrations**.
+4. Enter the credentials in the **Zoom** section:
+   - **Account ID** -- your Zoom Account ID
+   - **Client ID** -- the S2S OAuth Client ID
+   - **Client Secret** -- the S2S OAuth Client Secret
+5. Click **Save Changes**.
+
+The connection status badge shows **Connected** or **Not Connected** based on whether valid credentials are configured.
+
+### Environment Variable Override
+
+Zoom credentials can also be set via environment variables. If set, they take precedence over the values entered in the Settings UI:
+
+```env
+ZOOM_ACCOUNT_ID=your-zoom-account-id
+ZOOM_CLIENT_ID=your-zoom-client-id
+ZOOM_CLIENT_SECRET=your-zoom-client-secret
+```
+
+This is useful for keeping credentials out of the database in security-sensitive deployments.
+
+## How Integrations Work with Booking
+
+When a visitor books an appointment on your public site:
+
+1. The appointment is created in the GritCMS database.
+2. If **Google Calendar** is connected, a calendar event is created with the appointment details (time, attendee name, email).
+3. If a **meeting provider** is configured:
+   - **Google Meet**: A Meet link is generated and attached to both the calendar event and the appointment record.
+   - **Zoom**: A Zoom meeting is created via the API and the join URL is saved to the appointment.
+4. The meeting link is included in the confirmation email sent to the attendee.

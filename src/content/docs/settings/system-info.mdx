@@ -1,0 +1,49 @@
+---
+title: "System Info"
+description: "View runtime details, enabled services, and version information for your GritCMS instance."
+---
+
+The System tab in Settings provides a read-only overview of your GritCMS installation. It displays runtime information, database details, and which optional services are currently active. This is useful for debugging, verifying your deployment, and confirming that all services are properly connected.
+
+## System Details
+
+The System tab displays the following information:
+
+| Field | Description |
+|---|---|
+| **Version** | The current GritCMS version (e.g., `GritCMS v1.0.0`). Also displayed in the admin sidebar. |
+| **Go Runtime** | The Go version the API server was compiled with (e.g., `go1.25.0`). |
+| **Environment** | The current environment mode: `development`, `staging`, or `production`. Set via the `APP_ENV` variable. |
+| **Operating System** | The server OS and architecture (e.g., `linux/amd64`). |
+| **Database** | The PostgreSQL version string reported by the database server. |
+| **Database Tables** | The total number of tables in the `public` schema. |
+| **Registered Models** | The number of GORM models registered in the application. Each model corresponds to a database table. |
+| **Active Goroutines** | The number of active Go goroutines at the time of the request. This gives a rough measure of server concurrency. |
+
+## Enabled Services
+
+Below the system details, the **Enabled Services** section shows which optional services are currently active. Each service appears as a green badge when connected:
+
+| Service | What It Means |
+|---|---|
+| **Redis Cache** | Redis is connected and caching is active. Response caching and rate limiting are functional. |
+| **S3 Storage** | An S3-compatible storage backend (MinIO, Cloudflare R2, or Backblaze B2) is connected. File uploads are enabled. |
+| **Email (Resend)** | The Resend API key is configured. Transactional and marketing emails can be sent. |
+| **AI** | An AI provider (Claude, OpenAI, or Gemini) is configured. AI text generation features are available. |
+| **Background Jobs** | Redis-powered background job processing (Asynq) is active. Email sending, file processing, and scheduled tasks run asynchronously. |
+
+If a service is not listed, it means the required configuration is missing. Check the [Environment Variables](/docs/configuration/environment) reference to configure the missing service.
+
+## Version Indicator
+
+The GritCMS version is also displayed in the bottom-left corner of the admin sidebar (visible when the sidebar is expanded). This provides a quick reference without navigating to the Settings page.
+
+## API Endpoint
+
+The system info is served by the admin-only API endpoint:
+
+```
+GET /api/admin/system/info
+```
+
+This endpoint requires admin authentication and returns all the fields shown in the System tab as JSON.
