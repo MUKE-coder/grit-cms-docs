@@ -55,11 +55,13 @@ The calendar list in the admin dashboard shows all your calendars along with the
 
 ## Calendar Public URL
 
-Each event type under a calendar has its own public booking URL based on the event type's slug:
+Each event type under a calendar has its own public-facing booking page at:
 
 ```
-/api/book/{event-type-slug}
+yoursite.com/book/{event-type-slug}
 ```
+
+This is the page visitors use to view event details, pick a date, select an available time slot, and submit their booking. Behind the scenes, the booking page calls the API endpoints (`/api/book/{event-type-slug}` and `/api/book/{event-type-slug}/slots`) to fetch availability and submit appointments.
 
 The calendar itself does not have a standalone public URL -- visitors book through specific event types. However, the calendar's timezone and availability rules apply to all event types within it. When a visitor requests available time slots, the system uses the calendar's availability windows and timezone to calculate which slots are open.
 

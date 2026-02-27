@@ -61,6 +61,8 @@ This endpoint checks the code, status, validity dates, and usage limits, but doe
 
 ## Applying Coupons at Checkout
 
+Coupons are applied during the checkout flow on your public site. When a customer is purchasing a product at `yoursite.com/products/{slug}`, they can enter a coupon code before completing payment. The code is validated via the API in real time, and the discount is reflected in the order total before the customer confirms. There is no dedicated public page for coupons -- they are validated entirely through the checkout process.
+
 When an order is created with a coupon code, the following happens:
 
 1. The coupon is looked up and validated against all checks.

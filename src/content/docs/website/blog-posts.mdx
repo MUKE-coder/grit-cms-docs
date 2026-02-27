@@ -7,6 +7,22 @@ description: "Write, schedule, and publish blog posts with rich text editing, ca
 
 The blog is where you publish articles, tutorials, updates, and other time-based content. Each post gets its own page on your site and appears in your blog feed. Blog posts also automatically generate RSS and structured data for search engines. You manage all posts from **Website > Blog Posts** in the admin dashboard.
 
+## Where Blog Posts Appear on Your Public Site
+
+When you publish a blog post in the admin, it becomes visible in several places on your public website:
+
+| Public URL | What it shows |
+|---|---|
+| `yoursite.com/blog` | **Blog listing page** -- all published posts displayed with title, excerpt, featured image, and publication date. |
+| `yoursite.com/blog/{slug}` | **Individual post** -- the full article with featured image, author name, publication date, categories, and tags. |
+| `yoursite.com/blog/category/{slug}` | **Category page** -- all published posts filtered by a specific category. |
+| `yoursite.com/blog/tag/{slug}` | **Tag page** -- all published posts filtered by a specific tag. |
+| `yoursite.com/api/rss.xml` | **RSS feed** -- a machine-readable feed of all published posts for RSS readers and podcast apps. |
+
+For example, a post with slug `getting-started-with-gritcms` is accessible at `yoursite.com/blog/getting-started-with-gritcms`.
+
+Only posts with the **Published** status appear on the public site and in the RSS feed. **Draft** posts are hidden from visitors and will not show up in any listing or at their URL.
+
 ## Creating a New Blog Post
 
 1. Navigate to **Website > Blog Posts** in the admin sidebar.

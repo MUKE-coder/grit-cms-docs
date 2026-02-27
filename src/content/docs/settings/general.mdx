@@ -78,11 +78,13 @@ This key-value design means new settings can be added without database migration
 
 ## Settings and the Public Site
 
-Settings are applied to your public website through the **theme API**. When the public site (the `web` app) renders a page, it fetches the current settings from the API and uses them to populate:
+Settings from all four tabs -- General, Branding, Social, and SEO -- are applied to your public website at `yoursite.com` through the **theme API**. When the public site (the `web` app) renders a page, it fetches the current settings from the API and uses them across every page:
 
-- The site header (logo, site name, navigation)
-- The site footer (footer text, social links)
-- HTML `<head>` tags (favicon, meta title, meta description, OG image)
-- Font and color theming (see [Branding](/settings/branding))
+| Tab | What It Controls on the Public Site |
+|---|---|
+| **General** | Site name and logo appear in the header of every page. Footer text appears at the bottom of every page. The favicon is shown in the browser tab. |
+| **Branding** | The brand font and primary color from the Branding tab affect typography and accent colors across the entire site. See [Branding](/settings/branding) for details. |
+| **Social** | Social links appear as icons in the site header and/or footer. Only platforms with a URL set are displayed. |
+| **SEO** | Default meta title, meta description, and OG image are applied to all pages that do not define their own SEO settings. |
 
-Changes to settings take effect on the next page load -- there is no build step or deployment needed. Update a setting in the admin panel, save it, and refresh your public site to see the change.
+Changes to settings take effect immediately on the next page load -- no build step or deployment is needed. Update a setting in the admin panel, save it, and refresh your public site to see the change.

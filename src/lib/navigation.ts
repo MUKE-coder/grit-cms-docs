@@ -31,6 +31,9 @@ export const navigation: NavGroup[] = [
     title: "Website Builder",
     items: [
       { title: "Pages", slug: "website/pages", href: "/docs/website/pages" },
+      { title: "Page Builder", slug: "website/page-builder", href: "/docs/website/page-builder" },
+      { title: "Section Library", slug: "website/sections", href: "/docs/website/sections" },
+      { title: "Templates", slug: "website/templates", href: "/docs/website/templates" },
       { title: "Blog Posts", slug: "website/blog-posts", href: "/docs/website/blog-posts" },
       { title: "Categories & Tags", slug: "website/categories-tags", href: "/docs/website/categories-tags" },
       { title: "Menus", slug: "website/menus", href: "/docs/website/menus" },

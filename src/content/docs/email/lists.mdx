@@ -76,6 +76,18 @@ You can embed subscription forms on your website to let visitors join your lists
 
 Subscription forms can be placed on any page, blog post, or funnel step using the website builder.
 
+## Public Email Pages
+
+GritCMS automatically provides several public-facing pages for your subscribers to manage their email preferences:
+
+| Page | URL | Purpose |
+|---|---|---|
+| **Email Confirmation** | `yoursite.com/email/confirm/{token}` | Double opt-in confirmation page. Subscribers land here after clicking the confirmation link in the opt-in email. |
+| **Unsubscribe** | `yoursite.com/email/unsubscribe` | Unsubscribe page linked from every email via the `{{unsubscribe_url}}` merge tag. |
+| **Email Preferences** | `yoursite.com/email/preferences` | Subscribers can view and manage which lists they are subscribed to. |
+
+These pages are part of the `web` app and are styled with your site's branding. No additional setup is needed -- they work automatically once email is configured.
+
 ## Tips for Organizing Your Lists
 
 - **Keep lists focused.** Create separate lists for different topics or audiences rather than putting everyone on one giant list.

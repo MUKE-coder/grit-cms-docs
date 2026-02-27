@@ -82,6 +82,18 @@ The activity timeline is a chronological log of everything the contact has done 
 
 Each activity entry shows the module it came from, the action that occurred, a description, and the timestamp. You can filter the timeline by module to focus on a specific type of activity.
 
+### Cross-Module Frontend Access
+
+A contact's activity in the admin CRM maps directly to what they can access on the public site. When a contact interacts with different modules, they gain access to the corresponding frontend pages:
+
+- **Courses** -- Enrolled contacts access their courses at `yoursite.com/courses/{slug}`.
+- **Community** -- Members who join a space can participate at `yoursite.com/community/{slug}`.
+- **Booking** -- Contacts who book an appointment see a confirmation page with their booking details.
+- **Commerce** -- Purchasers can view order confirmations and access digital products.
+- **Email** -- Subscribers can manage their preferences at `yoursite.com/email/preferences`.
+
+The activity timeline in the admin reflects all of these interactions in one place, giving you a complete picture of each contact's journey across your platform.
+
 ## Custom Fields
 
 GritCMS allows you to define custom fields to capture data beyond the built-in contact fields. Custom fields are stored as flexible JSON data on each contact record.

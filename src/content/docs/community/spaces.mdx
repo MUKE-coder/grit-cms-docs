@@ -7,6 +7,16 @@ description: "Create and manage community spaces where members can discuss topic
 
 Spaces are the foundation of your community. Think of them as forums, channels, or groups where members gather around a shared topic or interest. Each space has its own threads, members, and settings. You can create as many spaces as you need from the **Community > Spaces** section in your admin dashboard.
 
+## Where Spaces Appear on Your Public Site
+
+| Public URL | What Visitors See |
+|---|---|
+| `yoursite.com/community` | All public spaces listed with name, description, member count, and thread count. |
+| `yoursite.com/community/{slug}` | The individual space page showing threads, replies, and discussion activity. |
+
+- Only **public** spaces appear in the community listing. **Private** and **paid** spaces are hidden from the public page.
+- The `{slug}` is set when you create the space in admin (auto-generated from the name, or customized manually).
+
 ## Creating a Space
 
 1. Navigate to **Community > Spaces** in the admin sidebar.

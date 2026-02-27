@@ -9,6 +9,17 @@ The affiliate system in GritCMS lets you create referral programs where partners
 
 Affiliate programs are managed from the **Affiliates > Programs** section in the admin dashboard.
 
+## Where the Affiliate Program Appears on Your Public Site
+
+| Public URL | What Visitors See |
+|---|---|
+| `yoursite.com/affiliate` | Program details and an invitation to apply as an affiliate. |
+| `yoursite.com/affiliate/apply` | An application form where visitors submit their information to join the program. |
+| `yoursite.com/ref/{referral-code}` | A redirect link that tracks the click and sends the visitor to the affiliate's destination URL. |
+
+- The referral code is a unique 12-character hex string generated automatically for each affiliate account.
+- If **Auto Approve** is enabled, approved affiliates can start sharing their `/ref/` links immediately after signing up.
+
 ## Creating an Affiliate Program
 
 1. Navigate to **Affiliates > Programs** in the admin sidebar.

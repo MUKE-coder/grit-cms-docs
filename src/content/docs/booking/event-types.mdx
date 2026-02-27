@@ -7,6 +7,16 @@ description: "Define the types of meetings or sessions you offer, set their dura
 
 An event type defines a specific kind of meeting or session that visitors can book. For example, "30-Minute Consultation," "1-Hour Coaching Session," or "15-Minute Discovery Call." Each event type belongs to a calendar and inherits that calendar's timezone. You configure the duration, availability windows, buffer times, and optional pricing for each event type.
 
+## Where Booking Pages Appear on Your Public Site
+
+| Public URL | What Visitors See |
+|---|---|
+| `yoursite.com/book/{slug}` | The event type details and available time slots for booking. |
+
+- The `{slug}` is set when you create the event type in admin (auto-generated from the name).
+- Visitors see a date picker, available time slots, and a form to submit their name, email, and notes.
+- The calendar must be **active** for the booking page to accept new bookings.
+
 ## Creating an Event Type
 
 1. Navigate to **Booking > Calendars** and open the calendar where you want to add the event type.

@@ -9,6 +9,17 @@ A sales funnel is a series of pages that guide a visitor toward a specific goal 
 
 In GritCMS, funnels are managed from the **Funnels** section of the admin dashboard. Each funnel has its own set of steps, a unique public URL based on its slug, and built-in analytics so you can measure performance.
 
+## Where Funnels Appear on Your Public Site
+
+| Public URL | What Visitors See |
+|---|---|
+| `yoursite.com/f/{slug}` | The first step of the funnel (the entry point). |
+| `yoursite.com/f/{slug}/{step-slug}` | A specific step within the funnel. |
+
+- Only **Active** funnels are accessible to visitors. **Draft** funnels return a 404 page.
+- The URL prefix is `/f/`, not `/funnels/`.
+- The `{slug}` is set when you create the funnel and must be unique across all funnels.
+
 ## Funnel Types
 
 When you create a funnel, you choose one of four types. The type determines the default structure and the kind of conversion the funnel is optimized for.
@@ -31,7 +42,7 @@ You can always add, remove, or rearrange steps after creating the funnel, regard
 | Field | Description |
 |---|---|
 | **Name** | A descriptive name shown in the admin dashboard (e.g., "Summer Course Launch"). |
-| **Slug** | The URL-friendly identifier. Auto-generated from the name, but you can customize it. The public URL will be `/funnels/{slug}`. |
+| **Slug** | The URL-friendly identifier. Auto-generated from the name, but you can customize it. The public URL will be `/f/{slug}`. |
 | **Description** | An optional internal note about the funnel's purpose. |
 | **Type** | One of `optin`, `sales`, `webinar`, or `launch`. |
 
@@ -57,7 +68,7 @@ You can customize every aspect of a template after creating the funnel.
 Every funnel has a status that controls whether it is accessible to the public.
 
 - **Draft** -- The funnel is only visible in the admin dashboard. Visitors cannot access it through its public URL. Use this status while you are building and testing the funnel.
-- **Active** -- The funnel is live. Visitors can access it at `/funnels/{slug}` and navigate through its steps. Visits and conversions are tracked automatically.
+- **Active** -- The funnel is live. Visitors can access it at `/f/{slug}` and navigate through its steps. Visits and conversions are tracked automatically.
 - **Archived** -- The funnel is no longer active and is hidden from the main funnel list. Use this to retire old funnels without deleting them.
 
 To change a funnel's status, open the funnel in the admin dashboard and update the status field. You can switch between draft and active at any time. When you are ready to go live, set the status to **active** and share the funnel URL with your audience.

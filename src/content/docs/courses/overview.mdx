@@ -7,6 +7,23 @@ description: "Create and sell online courses with modules, lessons, and student 
 
 The GritCMS course platform lets you create, organize, and deliver online courses to your audience. Each course contains modules and lessons that students work through at their own pace. You can offer courses for free to grow your audience or set a price and sell them as digital products. Manage courses from the **Courses** section in the admin dashboard.
 
+## Where Courses Appear on Your Public Site
+
+When you create a course in the admin dashboard and set its status to **Published**, it becomes visible to visitors on your public site at two key URLs:
+
+| Page | URL | What It Shows |
+|---|---|---|
+| **Course catalog** | `yoursite.com/courses` | Lists all published courses with their title, short description, thumbnail, price (if paid), and enrollment count. |
+| **Course detail page** | `yoursite.com/courses/{slug}` | The full landing page for a single course -- shows the complete description, module outline, instructor name, and an Enroll or Buy button. |
+
+The `{slug}` is the URL-friendly identifier you set (or auto-generate from the title) when creating the course in the admin. For example, if you create a course titled "Photography Basics" with the slug `photography-basics`, students will find it at `yoursite.com/courses/photography-basics`.
+
+**Key points:**
+- Only courses with the **Published** status appear on these pages. Draft and Archived courses are not visible to the public.
+- **Free courses** display an **Enroll** button that grants immediate access.
+- **Paid courses** display the price and a **Buy** button that directs the visitor to checkout.
+- After enrolling, students access the course content (modules, lessons, quizzes) from the same course detail page.
+
 ## Creating a Course
 
 1. Navigate to **Courses** in the admin sidebar.
@@ -50,9 +67,9 @@ For paid courses, you can link the course to a product in the Commerce module. W
 
 ## Course Listing on Your Public Site
 
-Published courses appear on your site's course catalog page. Each course displays its title, short description, thumbnail, price (if paid), and enrollment count. Visitors can click into a course to see the full description, module outline, and an enroll button.
+Published courses appear on your site's course catalog page at `yoursite.com/courses`. Each course card displays its title, short description, thumbnail, price (if paid), and enrollment count. Visitors can click into any course to open its detail page at `yoursite.com/courses/{slug}`, where they see the full description, module outline, instructor, and an enroll or buy button.
 
-Free courses show an **Enroll** button that grants immediate access. Paid courses show the price and a **Buy** button that directs visitors to checkout.
+Free courses show an **Enroll** button that grants immediate access. Paid courses show the price and a **Buy** button that directs visitors to checkout. Only courses with the **Published** status appear in the catalog -- **Draft** and **Archived** courses are hidden from visitors.
 
 ## Sample Course
 

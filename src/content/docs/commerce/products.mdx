@@ -7,6 +7,19 @@ description: "Create and manage digital and physical products, configure pricing
 
 Products are at the heart of your commerce module. Whether you sell digital downloads, physical goods, online courses, memberships, or services, every item you offer is managed from the **Commerce > Products** section in your admin dashboard. Each product can have multiple price tiers, variants, and images, giving you the flexibility to sell however you need to.
 
+## Where Products Appear on Your Public Site
+
+When you create a product in the admin dashboard, it becomes available on your public-facing storefront at the following URLs:
+
+- **Product catalog** -- `yoursite.com/products` lists all **active** products. Each product is displayed with its name, featured image, price, and type so visitors can browse your full catalog at a glance.
+- **Individual product page** -- `yoursite.com/products/{slug}` shows the complete product detail page, including the full description, all images, every available price tier, variants, and a **Buy** button for checkout.
+
+The `{slug}` is the URL-friendly identifier you set (or auto-generate from the name) when creating the product in admin. For example, a product named "Premium Ebook" with the slug `premium-ebook` would be available at `yoursite.com/products/premium-ebook`.
+
+Only products with an **active** status appear publicly. Products set to **inactive** or **archived** are hidden from the storefront entirely.
+
+For **course**-type products, the buyer is automatically enrolled in the linked course upon purchase. After payment, they can access the course at `yoursite.com/courses/{course-slug}`.
+
 ## Creating a Product
 
 1. Navigate to **Commerce > Products** in the admin sidebar.
@@ -84,13 +97,13 @@ You can add multiple price tiers to give customers options. For example, a membe
 
 ## Product Listing on the Public Site
 
-Only products with an **active** status appear on your public storefront. Visitors can browse your product catalog, view individual product pages by slug, and see all available prices and variants.
+Only products with an **active** status appear on your public storefront at `yoursite.com/products`. Visitors can browse the full product catalog, view individual product pages at `yoursite.com/products/{slug}`, and see all available prices and variants.
 
 The public storefront supports pagination, so customers can browse through your catalog even if you have a large number of products. Products are displayed in reverse chronological order by default, with the newest products shown first.
 
 ### Public Product Page
 
-Each active product has a public page accessible at its slug URL. The product page displays the product name, description, images, all available price tiers, and any variants. Customers can select a variant and price tier before proceeding to checkout.
+Each active product has a public page accessible at `yoursite.com/products/{slug}`. The product page displays the product name, description, images, all available price tiers, and any variants. Customers can select a variant and price tier before proceeding to checkout.
 
 ## Managing Products
 

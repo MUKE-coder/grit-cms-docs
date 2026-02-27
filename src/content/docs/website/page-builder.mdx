@@ -1,0 +1,224 @@
+---
+title: "Page Builder"
+description: "Build pages visually with drag-and-drop sections, live preview, inline editing, AI content generation, and custom Tailwind CSS."
+---
+
+## Overview
+
+The Page Builder is GritCMS's visual page editor. It replaces traditional text editors with a drag-and-drop interface where you compose pages from pre-designed sections. Each section is a self-contained, responsive block of content -- a hero banner, a pricing table, a testimonial grid, or any of the 300+ sections in the library. You can customize every section's content, reorder sections freely, and see your changes in real time.
+
+## Interface Layout
+
+The page builder uses a three-panel layout:
+
+```
+┌──────────┬───────────────────────────┬──────────────┐
+│ Structure│      Preview Canvas       │   Section    │
+│          │                           │   Editor     │
+│ [drag]   │  ┌─────────────────────┐  │              │
+│ Hero     │  │ Section preview as  │  │  Heading:    │
+│ [drag]   │  │ visitors see it     │  │  [________]  │
+│ Features │  │                     │  │  Subtitle:   │
+│ [drag]   │  └─────────────────────┘  │  [________]  │
+│ CTA      │                           │  Image:      │
+│          │                           │  [________]  │
+│ [+ Add]  │                           │  Tailwind:   │
+│ [Templ]  │                           │  [________]  │
+└──────────┴───────────────────────────┴──────────────┘
+```
+
+### Structure Panel (Left)
+
+The structure panel shows a vertical list of all sections on the page, in order from top to bottom. Each section displays its name (resolved from the section library) and provides:
+
+- **Drag handle** -- Grab the grip icon to drag and reorder sections.
+- **Click to select** -- Click a section to select it for editing in the right panel.
+- **Delete button** -- Hover to reveal the trash icon. Click to remove the section from the page.
+
+The currently selected section is highlighted with an accent border.
+
+At the bottom of the panel are two action buttons:
+
+- **Add Section** -- Opens the Section Picker to browse and add sections from the library.
+- **Browse Templates** -- Opens the Template Gallery to apply a complete page template.
+
+### Preview Canvas (Center)
+
+The center panel renders your page exactly as visitors will see it. Sections are rendered in sequence using the shared section renderer, with a white background isolated from the admin dashboard theme.
+
+Click any section in the preview to select it. The selected section gets a ring highlight so you can see which section you are editing. The preview updates in real time as you edit content in the section editor.
+
+### Section Editor (Right)
+
+When a section is selected, the right panel shows a form with all editable fields for that section. The form is generated dynamically from the section's `propsSchema` -- each section defines what fields are available and what type of input they use.
+
+The editor panel also includes:
+
+- **Section name and category** in the header for reference.
+- **AI Assist button** (lightning bolt icon) to open the AI content panel.
+- **Tailwind Classes** input at the bottom for custom CSS class overrides.
+
+When no section is selected, the panel shows a placeholder message prompting you to select a section.
+
+## Adding Sections
+
+Click **Add Section** to open the Section Picker, a bottom-sheet overlay that shows the entire section library.
+
+### Browsing by Category
+
+The picker has category tabs across the top. GritCMS includes 20 section categories:
+
+| Category | Sections | Description |
+|---|---|---|
+| Hero | 25 | Landing page hero banners with headings, CTAs, and imagery |
+| Features | 25 | Feature showcases in grids, cards, bento layouts, and more |
+| CTA | 20 | Call-to-action banners, download prompts, and conversion blocks |
+| Pricing | 20 | Pricing tables, comparison grids, and plan selectors |
+| Testimonials | 20 | Customer quotes, review carousels, and social proof |
+| FAQ | 15 | Accordion, two-column, and categorized FAQ layouts |
+| Team | 15 | Team member grids, cards, and leadership profiles |
+| Gallery | 15 | Image grids, masonry layouts, portfolios, and carousels |
+| Stats | 15 | Counter displays, progress bars, and milestone timelines |
+| Contact | 15 | Contact forms, office locations, and info cards |
+| Footer | 15 | Multi-column footers, minimal footers, and newsletter combos |
+| Header | 15 | Navigation bars, mega menus, and sticky headers |
+| Blog | 15 | Blog post grids, featured articles, and magazine layouts |
+| Logos | 10 | Client logo bars, partner grids, and trust badges |
+| Newsletter | 10 | Email signup forms, inline signups, and popup-style inputs |
+| E-commerce | 15 | Product grids, featured products, and category showcases |
+| Video | 10 | Video players, demo showcases, and video galleries |
+| About | 15 | Company stories, timelines, mission statements, and culture blocks |
+| Banner | 10 | Announcements, promo ribbons, countdown timers, and alerts |
+| Divider | 10 | Decorative dividers with waves, diagonals, gradients, and patterns |
+
+Click the **All** tab to see every section, or click a category to filter.
+
+### Searching
+
+Type in the search input to filter sections by name, description, or tags. The search works alongside the category filter -- if you have a category selected, the search narrows results within that category.
+
+### Adding to the Page
+
+Click a section card in the picker to add it to the bottom of your page. The picker closes, the new section appears in the structure panel, and it is automatically selected for editing. You can then drag it to the desired position.
+
+## Editing Sections
+
+### Text and Content Fields
+
+Most sections have editable text fields for headings, subheadings, descriptions, and button labels. Type directly in the input fields in the section editor and watch the preview update in real time.
+
+### Images
+
+Image fields accept a URL. Enter the full URL to your image (e.g., `https://yoursite.com/uploads/hero.jpg`). You can use images uploaded through GritCMS's file storage or external image URLs.
+
+### Items (Repeatable Fields)
+
+Many sections include repeatable items -- feature cards, team members, FAQ entries, pricing tiers, and so on. The items field shows each item as an expandable card with its own set of sub-fields.
+
+- **Add Item** -- Click the "Add Item" button at the bottom of the items list.
+- **Edit Item** -- Expand an item card and edit its fields (text, image, URL, etc.).
+- **Remove Item** -- Click the trash icon on an item card to delete it.
+- **Reorder Items** -- Click the grip icon on an item to move it up in the list.
+
+### Colors
+
+Color fields accept any valid CSS color value (`#hex`, `rgb()`, or named colors). A colored preview dot next to the input shows the current color.
+
+### Toggles and Selects
+
+Some sections have boolean toggles (e.g., "Show background pattern") and dropdown selects (e.g., "Layout variant"). These appear as standard switch and select inputs.
+
+## Custom CSS with Tailwind
+
+Every section has a **Tailwind Classes** input at the bottom of the editor. Any classes you enter here are applied to the section's wrapper element, allowing you to customize spacing, colors, backgrounds, borders, and more.
+
+### Common Customizations
+
+| Goal | Classes |
+|---|---|
+| Increase vertical padding | `py-24` or `py-32` |
+| Add a background color | `bg-gray-50` or `bg-indigo-900` |
+| Add a top border | `border-t border-gray-200` |
+| Round the section corners | `rounded-2xl` |
+| Limit the max width | `max-w-5xl mx-auto` |
+| Add a shadow | `shadow-lg` |
+| Hide on mobile | `hidden md:block` |
+
+Enter multiple classes separated by spaces. The classes are applied alongside the section's built-in styles.
+
+## AI Content Assistant
+
+The page builder integrates with GritCMS's AI system to help you write section content.
+
+### Opening the AI Panel
+
+1. Select a section in the page builder.
+2. Click the **AI Assist** button (lightning bolt icon) in the section editor header.
+3. The AI panel slides in from the right side.
+
+### Using Preset Prompts
+
+The panel includes six one-click presets:
+
+- **Make it more professional** -- Elevates the tone for corporate or B2B audiences.
+- **Rewrite for tech audience** -- Adjusts language for developers and technical users.
+- **Add more urgency** -- Adds time-sensitive and action-oriented language.
+- **Make it more casual** -- Lightens the tone for a friendly, approachable feel.
+- **Shorten the text** -- Condenses content while keeping the key message.
+- **Make it more persuasive** -- Strengthens the call to action and value propositions.
+
+Clicking a preset fills the prompt input and immediately starts generating.
+
+### Custom Prompts
+
+Type any instruction in the prompt field. Be specific about your context for the best results:
+
+- "Write hero copy for a project management SaaS tool called TaskFlow"
+- "Rewrite these testimonials for a fitness coaching business"
+- "Generate 6 feature descriptions for an email marketing platform"
+
+Press **Ctrl+Enter** or click **Generate** to submit.
+
+### Reviewing Changes
+
+After the AI generates content, the panel shows a diff-style preview:
+
+- **Old values** are shown with ~~strikethrough~~ in red.
+- **New values** are shown in green.
+
+Review the changes, then:
+
+- Click **Apply Changes** to update the section with the new content.
+- Click **Cancel** to discard the suggestions and keep the original content.
+
+## Reordering Sections
+
+Drag sections in the structure panel to change their order. The preview canvas updates immediately to reflect the new arrangement.
+
+1. Hover over a section in the structure panel.
+2. Grab the drag handle (grip icon on the left).
+3. Drag the section to the desired position.
+4. Release to drop.
+
+## Deleting Sections
+
+To remove a section:
+
+1. Hover over the section in the structure panel.
+2. Click the trash icon that appears.
+
+The section is immediately removed from the page. This action cannot be undone, so save your page first if you want to preserve a backup.
+
+## Tips for Building Great Pages
+
+- **Start with a template** -- Browse the template gallery for a layout close to what you need, then customize from there. It is much faster than building from scratch.
+- **Use consistent section styles** -- Stick to a similar color palette and spacing across sections for a cohesive look.
+- **Keep it focused** -- A typical landing page has 5-8 sections. Adding too many sections can overwhelm visitors.
+- **Mobile-first** -- All sections are responsive by default. Preview your page at different widths to make sure it looks good on all devices.
+- **Use AI for first drafts** -- Generate initial content with AI, then refine the language to match your brand voice.
+
+## Next Steps
+
+- [Section Library](/docs/website/sections) -- Browse all 300+ sections by category
+- [Templates](/docs/website/templates) -- Browse all 100+ page templates
+- [Pages](/docs/website/pages) -- Page settings, publishing workflow, and management

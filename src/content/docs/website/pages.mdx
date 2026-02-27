@@ -1,99 +1,163 @@
 ---
 title: "Pages"
-description: "Create and manage static pages for your website such as About, Contact, and Landing pages."
+description: "Create and manage pages for your website using the visual page builder with 300+ pre-designed sections and 100+ templates."
 ---
 
 ## Overview
 
-Pages are the building blocks of your website. Unlike blog posts, pages are standalone pieces of content that typically don't change often -- think About, Contact, Terms of Service, or Landing pages. You can create as many pages as you need from the **Website > Pages** section in your admin dashboard.
+Pages are the building blocks of your website. Unlike blog posts, pages are standalone content that typically doesn't change often -- think About, Contact, Terms of Service, or Landing pages. GritCMS includes a powerful **visual page builder** with over 300 pre-designed sections and 100+ page templates, so you can create professional pages without writing any code.
+
+## Where Pages Appear on Your Public Site
+
+Every published page is accessible on your public website at a URL based on its slug:
+
+```
+https://yoursite.com/{slug}
+```
+
+For example:
+
+- A page with slug `about` is live at `yoursite.com/about`
+- A page with slug `contact` is live at `yoursite.com/contact`
+- A page with slug `terms-of-service` is live at `yoursite.com/terms-of-service`
+
+The **home page** is a special case -- if a page has the slug `home`, it is served at the root of your site (`yoursite.com/`).
+
+Only pages with the **Published** status are visible to the public. **Draft** and **Archived** pages are hidden from visitors and will not be accessible at their URL.
+
+After editing a page in the page builder, changes take effect immediately when you save. You can click **View Live** in the admin header to open the public URL and see exactly what visitors see.
 
 ## Creating a New Page
 
 1. Navigate to **Website > Pages** in the admin sidebar.
 2. Click the **New Page** button in the top-right corner.
-3. You will be taken to the page editor where you can write your content and configure page settings.
+3. You'll be taken to the page editor with the **Settings panel** open and the **Page Builder** below it.
 
-### Writing Content with the Rich Text Editor
+### Page Settings
 
-The page editor includes a full-featured rich text editor with a formatting toolbar. You can use the toolbar buttons or keyboard shortcuts to format your content:
+Every page has a collapsible settings panel at the top with the following fields:
 
-| Format | Toolbar Button | Keyboard Shortcut |
-|---|---|---|
-| Bold | **B** | `Ctrl + B` |
-| Italic | *I* | `Ctrl + I` |
-| Heading 1 | H1 | -- |
-| Heading 2 | H2 | -- |
-| Heading 3 | H3 | -- |
-| Bulleted List | List icon | -- |
-| Numbered List | Numbered list icon | -- |
-| Link | Link icon | `Ctrl + K` |
-| Image | Image icon | -- |
-| Code Block | Code icon | -- |
+| Field | Description |
+|---|---|
+| **Title** | The page title displayed in the browser tab and at the top of the page. |
+| **Slug** | The URL path for the page. A page with slug `about` is accessible at `yoursite.com/about`. Auto-generated from the title, but editable. |
+| **Status** | **Draft** (not visible to the public), **Published** (live), or **Archived** (hidden but preserved). |
+| **Template** | Layout preset: Default, Full Width, Landing Page, or With Sidebar. |
+| **Excerpt** | A brief description of the page, used in previews and social sharing. |
+| **Meta Title** | Custom SEO title for search engines. Falls back to the page title if left blank. |
+| **Meta Description** | SEO description shown in search engine results. |
+| **OG Image** | The preview image used when the page is shared on social media. |
 
-To insert an image, click the image button in the toolbar and provide the image URL. The image will be displayed inline within your content.
+You can toggle the settings panel open or closed using the **Settings** button in the header.
 
-To insert a link, highlight the text you want to link, then click the link button or press `Ctrl + K` and enter the destination URL.
+## Building Pages with Sections
 
-### Custom HTML Content
+The page builder uses a **section-based** approach. Instead of writing content in a text editor, you build pages by adding, arranging, and customizing pre-designed sections. Each section is a self-contained block of content -- a hero banner, a feature grid, a pricing table, a testimonial carousel, and so on.
 
-For advanced layouts, you can switch to the HTML editing mode. This lets you write raw HTML directly, giving you full control over the page structure. This is useful when you need to embed third-party widgets, add custom CSS classes, or create layouts that go beyond what the rich text editor offers.
+### The Three-Panel Layout
 
-## Page Settings
+The page builder has three panels:
 
-Every page has a settings panel where you configure how it appears on your site.
+- **Left Panel (Structure)** -- A sortable list of all sections on the page. Drag sections to reorder them. Click a section to select it for editing.
+- **Center Panel (Preview)** -- A live preview of your page as visitors will see it. Click any section in the preview to select it.
+- **Right Panel (Editor)** -- A form for editing the selected section's content, including text, images, links, colors, and more.
 
-### Title
+### Adding Sections
 
-The page title is displayed at the top of the page and in the browser tab. Choose a clear, descriptive title that tells visitors what the page is about.
+1. Click the **Add Section** button at the bottom of the structure panel (or in the empty state).
+2. The **Section Picker** slides up with all 300+ sections organized by category.
+3. Browse categories using the tabs, or type in the search box to filter by name, description, or tags.
+4. Click a section card to add it to your page.
 
-### Slug
+The new section is appended to the end of the page and automatically selected for editing. For a complete list of available sections, see the [Section Library](/docs/website/sections) reference.
 
-The slug is the URL-friendly version of your title. For example, a page titled "About Us" would have the slug `about-us`, making the full URL `yoursite.com/about-us`. The slug is auto-generated from the title, but you can edit it manually if you prefer a different URL.
+### Reordering Sections
 
-### Status
+Drag sections in the structure panel to reorder them. Grab the drag handle (the grip icon on the left side of each section item) and move it to the desired position.
 
-Pages have two statuses:
+### Removing Sections
 
-- **Draft** -- The page is saved but not visible to the public. Use this while you are still working on the content.
-- **Published** -- The page is live and accessible to anyone who visits your site.
+Hover over a section in the structure panel and click the trash icon to remove it. This cannot be undone, so make sure you want to delete the section before clicking.
 
-### Featured Image
+### Editing Section Content
 
-You can set a featured image for each page. This image may be used as a banner at the top of the page or as the preview image when the page is shared on social media, depending on your theme configuration.
+When you select a section (by clicking it in the structure panel or the preview), the right panel shows a form with all editable fields. The available fields depend on the section type. Common field types include:
 
-## Page Preview and Publishing Workflow
+| Field Type | Description |
+|---|---|
+| **Text** | Single-line text input for headings, button labels, etc. |
+| **Textarea** | Multi-line text for paragraphs and descriptions. |
+| **Rich Text** | Textarea with basic formatting support. |
+| **Image** | Image URL input for photos, icons, and backgrounds. |
+| **URL** | Link input for buttons and navigation. |
+| **Color** | Color value input with preview swatch. |
+| **Select** | Dropdown for choosing between preset options. |
+| **Toggle** | On/off switch for boolean options. |
+| **Items** | Repeatable list for things like feature cards, team members, or FAQ entries. Add, remove, and edit items individually. |
 
-A typical workflow for creating a page looks like this:
+Changes appear immediately in the preview canvas as you type.
 
-1. **Create** a new page and write your content using the editor.
-2. **Save as Draft** to store your progress without making the page public.
-3. **Preview** the page to see how it will look to visitors on the public site.
-4. **Publish** the page when you are satisfied with the content.
+### Custom Tailwind Classes
 
-You can return to any published page at any time to make edits. After saving your changes, the updated content is immediately live on your site.
+At the bottom of the section editor, there is a **Tailwind Classes** input where you can add custom CSS classes to any section. This is useful for fine-tuning spacing, colors, or layout beyond what the default props offer. For example, adding `py-20 bg-gray-50` would increase the vertical padding and change the background color.
+
+## Using Templates
+
+Instead of building a page from scratch, you can start with one of the 100+ page templates. Templates are complete page layouts with pre-configured sections -- just apply a template and customize the content.
+
+1. Click the **Browse Templates** button in the structure panel.
+2. The Template Gallery opens with templates organized by category (SaaS, Agency, Portfolio, etc.).
+3. Browse or search for a template that fits your needs.
+4. Click a template card to preview its sections.
+5. Click **Use Template** to apply it to your page.
+
+Applying a template replaces all existing sections on the page. You can then customize each section individually using the section editor. See the [Templates](/docs/website/templates) guide for a full list of available templates.
+
+You can also click **Start Blank** to begin with an empty page.
+
+## AI-Assisted Content
+
+The page builder includes an AI assistant that can generate or rewrite section content for you.
+
+1. Select a section in the page builder.
+2. Click the **AI Assist** button (lightning bolt icon) in the editor panel header.
+3. The AI panel slides in from the right.
+4. Type a custom instruction (e.g., "Write copy for a SaaS project management tool") or click one of the preset prompts:
+   - Make it more professional
+   - Rewrite for tech audience
+   - Add more urgency
+   - Make it more casual
+   - Shorten the text
+   - Make it more persuasive
+5. Click **Generate** and wait for the AI to process your request.
+6. Review the proposed changes -- old values are shown with strikethrough and new values highlighted.
+7. Click **Apply Changes** to accept, or **Cancel** to discard.
+
+The AI considers the section type and its current content when generating suggestions, so results are contextually relevant.
+
+## Saving and Publishing
+
+The header bar provides two actions:
+
+- **Save Draft** -- Saves the page with its current status (draft by default). The page is not visible to the public.
+- **Publish** -- Saves the page and sets its status to Published, making it live on your site immediately.
+
+You can return to any page at any time to edit its sections. After saving, changes are live immediately.
 
 ## Managing Existing Pages
 
-The **Website > Pages** list shows all of your pages with their title, slug, status, and last updated date. From this list you can:
+The **Website > Pages** list shows all pages with their title, slug, status, and last updated date. From this list you can:
 
-- **Edit** a page by clicking on its title.
+- **Edit** a page by clicking its title, which opens the page builder with all sections loaded.
 - **Delete** a page you no longer need.
-- **Change status** between Draft and Published.
+- **Change status** between Draft, Published, and Archived.
 
-### Tips for Organizing Your Pages
+## Backward Compatibility
 
-- Use clear, descriptive titles so you can find pages quickly in the admin list.
-- Keep slugs short and readable -- `/about` is better than `/about-our-company-and-team`.
-- Start with Draft status and only publish when the content is ready for visitors.
-- Review your pages periodically to make sure the information is still accurate.
+Pages created with the older block-based editor continue to work. The system automatically detects whether a page uses the new section-based format or the legacy block format and renders it accordingly. You do not need to migrate old pages -- they will display correctly as before.
 
-## Common Use Cases
+## Next Steps
 
-| Page Type | Description |
-|---|---|
-| About | Tell visitors who you are and what you do. |
-| Contact | Provide your email, social links, or a contact form. |
-| Terms of Service | Legal terms for using your site or products. |
-| Privacy Policy | Explain how you handle visitor data. |
-| Landing Page | A focused page designed to convert visitors into subscribers or customers. |
-| FAQ | Answer common questions your audience has. |
+- [Page Builder](/docs/website/page-builder) -- Detailed guide to the visual page builder interface
+- [Section Library](/docs/website/sections) -- Browse all 300+ available sections by category
+- [Templates](/docs/website/templates) -- Browse all 100+ page templates by category
